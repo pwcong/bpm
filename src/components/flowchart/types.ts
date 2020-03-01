@@ -8,9 +8,11 @@ export interface IProps {
 export interface IConfig {
   disableContextMenu?: boolean;
   useMxRubberband?: boolean;
+  connectable?: boolean
 }
 
 export const defaultConfig: IConfig = {
   disableContextMenu: true,
-  useMxRubberband: true
+  useMxRubberband: true,
+  connectable: true
 };

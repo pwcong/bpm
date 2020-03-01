@@ -10,7 +10,8 @@ import {
   mxEvent,
   mxRubberband,
   mxGraphModel,
-  mxCell
+  mxCell,
+  // mxCellState
 } from '@/components/mxgraph';
 
 import { IProps, defaultConfig } from './types';
@@ -31,8 +32,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
-
-    let graph: any
+    let graph: any;
 
     if (ref.current) {
       const container = ref.current;
@@ -56,6 +56,28 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
 
         graph = new mxGraph(container, model);
         setGraph(graph);
+
+        // 允许选择
+        if (config.useMxRubberband) {
+          new mxRubberband(graph);
+        }
+        // 允许连线
+        if (config.connectable) {
+          graph.setConnectable(true);
+          // graph.connectionHandler.createEdgeState = function(me) {
+          //   var edge = graph.createEdge(null, null, null, null, null);
+
+          //   return new mxCellState(
+          //     this.graph.view,
+          //     edge,
+          //     this.graph.getCellStyle(edge)
+          //   );
+          // };
+
+          // Specifies the default edge style
+          // graph.getStylesheet().getDefaultEdgeStyle()['edgeStyle'] =
+          //   'orthogonalEdgeStyle';
+        }
 
         // 重写获取节点名称方法
         graph.convertValueToString = function(cell) {
@@ -92,11 +114,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
           }
         };
 
-        // 允许选择
-        if (config.useMxRubberband) {
-          new mxRubberband(graph);
-        }
-
+        //  绘图操作
         if (defaultValue) {
           const xmlDoc = mxUtils.parseXml(defaultValue);
           const dec = new mxCodec(xmlDoc);
@@ -108,7 +126,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
 
           try {
             // TODO 自定义绘图操作
-            const v1 = graph.insertVertex(
+            graph.insertVertex(
               defaultLayer,
               null,
               {
@@ -119,7 +137,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
               80,
               30
             );
-            const v2 = graph.insertVertex(
+            graph.insertVertex(
               defaultLayer,
               null,
               {
@@ -130,26 +148,25 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
               80,
               30
             );
-            graph.insertEdge(
-              defaultLayer,
-              null,
-              {
-                name: 'edge'
-              },
-              v1,
-              v2
-            );
+            // graph.insertEdge(
+            //   defaultLayer,
+            //   null,
+            //   {
+            //     name: 'edge'
+            //   },
+            //   v1,
+            //   v2
+            // );
           } finally {
             graph.getModel().endUpdate();
           }
         }
       }
     }
-    
-    return () => {
-      graph && graph.destroy()
-    }
 
+    return () => {
+      graph && graph.destroy();
+    };
   }, [key]);
 
   return (
@@ -161,7 +178,8 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
 
           const enc = new mxCodec(mxUtils.createXmlDocument());
           const node = enc.encode(graph.getModel());
-          const xml = mxUtils.getXml(node);
+          // const xml = mxUtils.getXml(node);
+          const xml = mxUtils.getPrettyXml(node);
           console.log(xml);
         }}
       >
