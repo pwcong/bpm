@@ -7,20 +7,19 @@ import {
   mxCodec,
   mxUtils,
   mxClient,
-  mxEvent,
-  mxRubberband,
   mxGraphModel,
-  mxCell,
+  mxCell
   // mxCellState
 } from '@/components/mxgraph';
 
 import { IProps, defaultConfig } from './types';
 import './style.scss';
+import { loadXml, configurate } from './utils';
 
 const cls = 'flowchart';
 
 const FlowChart: React.FunctionComponent<IProps> = props => {
-  const { className, style, defaultValue, config = defaultConfig } = props;
+  const { className, style, defaultXml, config = defaultConfig } = props;
 
   const [root, setRoot] = React.useState<any>(null);
   const [layers, setLayers] = React.useState<Array<any>>([]);
@@ -41,85 +40,23 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
       if (!mxClient.isBrowserSupported()) {
         mxUtils.error('Browser is not supported!', 200, false);
       } else {
-        // 取消画布右键弹窗
-        config.disableContextMenu && mxEvent.disableContextMenu(container);
-
+        // 创建绘图对象
         const root = new mxCell();
         setRoot(root);
-
         const defaultLayer = root.insert(new mxCell());
         setLayers([defaultLayer]);
         setCurrentLayer(defaultLayer);
-
         const model = new mxGraphModel(root);
         setModel(model);
-
         graph = new mxGraph(container, model);
         setGraph(graph);
 
-        // 允许选择
-        if (config.useMxRubberband) {
-          new mxRubberband(graph);
-        }
-        // 允许连线
-        if (config.connectable) {
-          graph.setConnectable(true);
-          // graph.connectionHandler.createEdgeState = function(me) {
-          //   var edge = graph.createEdge(null, null, null, null, null);
+        // 配置绘图对象
+        configurate(graph, config);
 
-          //   return new mxCellState(
-          //     this.graph.view,
-          //     edge,
-          //     this.graph.getCellStyle(edge)
-          //   );
-          // };
-
-          // Specifies the default edge style
-          // graph.getStylesheet().getDefaultEdgeStyle()['edgeStyle'] =
-          //   'orthogonalEdgeStyle';
-        }
-
-        // 重写获取节点名称方法
-        graph.convertValueToString = function(cell) {
-          const value = this.model.getValue(cell);
-
-          if (value != null) {
-            if (mxUtils.isNode(value)) {
-              return value.nodeName;
-            } else {
-              return value['name'];
-            }
-          }
-
-          return '';
-        };
-
-        // 重写设置节点名称方法
-        graph.cellLabelChanged = function(cell, value, autoSize) {
-          this.model.beginUpdate();
-          try {
-            const v = this.model.getValue(cell);
-            this.model.setValue(
-              cell,
-              Object.assign({}, v, {
-                name: value
-              })
-            );
-
-            if (autoSize) {
-              this.cellSizeUpdated(cell, false);
-            }
-          } finally {
-            this.model.endUpdate();
-          }
-        };
-
-        //  绘图操作
-        if (defaultValue) {
-          const xmlDoc = mxUtils.parseXml(defaultValue);
-          const dec = new mxCodec(xmlDoc);
-          const node = xmlDoc.documentElement;
-          dec.decode(node, graph.getModel());
+        // 初始化绘图内容
+        if (defaultXml) {
+          loadXml(graph, defaultXml);
         } else {
           // 开始绘图事务
           graph.getModel().beginUpdate();
@@ -144,6 +81,17 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
                 name: `World ${key}!`
               },
               200,
+              20,
+              80,
+              30
+            );
+            graph.insertVertex(
+              defaultLayer,
+              null,
+              {
+                name: `Fuck ${key}!`
+              },
+              200,
               150,
               80,
               30
@@ -165,6 +113,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
     }
 
     return () => {
+      // 销毁绘图对象
       graph && graph.destroy();
     };
   }, [key]);
@@ -183,7 +132,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
           console.log(xml);
         }}
       >
-        转换Xml数据
+        获取数据
       </button>
       <button onClick={() => setKey(key + 1)}>重新绘制</button>
     </React.Fragment>
