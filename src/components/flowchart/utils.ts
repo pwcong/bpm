@@ -12,7 +12,9 @@ import {
   mxParallelEdgeLayout,
   mxLayoutManager,
   mxCellTracker,
-  mxKeyHandler
+  mxKeyHandler,
+  mxMarker,
+  mxImage
 } from '@/components/mxgraph';
 
 import { IConfig, defaultConfig, defaultLabelProperty } from './types';
@@ -77,7 +79,9 @@ export function configurateEvents(graph, config: IConfig) {
   mxEvent.disableContextMenu(graph.container);
 
   // 代理键盘事件
-  new mxKeyHandler(graph);
+  var keyHandler = new mxKeyHandler(graph);
+  keyHandler.enter = function() {};
+  keyHandler.bindKey(37, function() {});
 
   // 框选事件
   graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt) {
@@ -95,11 +99,11 @@ export function configurateEvents(graph, config: IConfig) {
  * @param graph 绘图对象
  * @param config 配置信息
  */
-export function configurateHeighlight(graph, config: IConfig) {
+export function configurateHighlight(graph, config: IConfig) {
   if (!config.useHeighlight) {
     return;
   }
-  new mxCellTracker(graph, '#00FF00');
+  new mxCellTracker(graph, '#4285f4');
 }
 
 /**
@@ -107,7 +111,7 @@ export function configurateHeighlight(graph, config: IConfig) {
  * @param graph 绘图对象
  * @param config 配置信息
  */
-export function configurateCellLabel(graph, config: IConfig) {
+export function configurateLabel(graph, config: IConfig) {
   // 重写获取节点名称方法
   graph.convertValueToString = function(cell) {
     const value = this.model.getValue(cell);
@@ -143,6 +147,41 @@ export function configurateCellLabel(graph, config: IConfig) {
     }
   };
 }
+/**
+ * 节点配置
+ * @param graph 绘图对象
+ * @param config 配置信息
+ */
+export function configurateVertex(graph, config: IConfig) {}
+/**
+ * 连线配置
+ * @param graph 绘图对象
+ * @param config 配置信息
+ */
+export function configurateEdge(graph, config: IConfig) {
+  mxMarker.addMarker('dash', function(
+    canvas,
+    shape,
+    type,
+    pe,
+    unitX,
+    unitY,
+    size,
+    source,
+    sw,
+    filled
+  ) {
+    var nx = unitX * (size + sw + 1);
+    var ny = unitY * (size + sw + 1);
+
+    return function() {
+      canvas.begin();
+      canvas.moveTo(pe.x - nx / 2 - ny / 2, pe.y - ny / 2 + nx / 2);
+      canvas.lineTo(pe.x + ny / 2 - (3 * nx) / 2, pe.y - (3 * ny) / 2 - nx / 2);
+      canvas.stroke();
+    };
+  });
+}
 
 /**
  * 连线配置
@@ -155,6 +194,14 @@ export function configurateConnectable(graph, config: IConfig) {
 
   // 禁止空连接
   graph.setAllowDanglingEdges(false);
+
+  // 设置锚点样式
+  graph.connectionHandler.constraintHandler.pointImage = new mxImage(
+    './mxgraph/images/dot.png',
+    10,
+    10
+  );
+  graph.connectionHandler.constraintHandler.highlightColor = '#4285f4';
 
   // 设置连线锚点
   graph.getAllConnectionConstraints = function(terminal) {
@@ -173,6 +220,37 @@ export function configurateConnectable(graph, config: IConfig) {
   // 禁止连接节点
   graph.connectionHandler.isConnectableCell = function(cell) {
     return false;
+  };
+
+  // 自动计算锚点
+  const mxConnectionHandlerUpdateEdgeState =
+    graph.connectionHandler.updateEdgeState;
+  graph.connectionHandler.updateEdgeState = function(pt, constraint) {
+    if (pt != null && this.previous != null) {
+      const constraints = this.graph.getAllConnectionConstraints(this.previous);
+      let nearestConstraint: any = null;
+      let dist: any = null;
+
+      for (var i = 0; i < constraints.length; i++) {
+        var cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
+
+        if (cp != null) {
+          var tmp =
+            (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
+
+          if (dist == null || tmp < dist) {
+            nearestConstraint = constraints[i];
+            dist = tmp;
+          }
+        }
+      }
+
+      if (nearestConstraint != null) {
+        this.sourceConstraint = nearestConstraint;
+      }
+    }
+
+    mxConnectionHandlerUpdateEdgeState.apply(this, arguments);
   };
 
   // 设置拖拽边的过程出现折线，默认为直线
@@ -212,15 +290,33 @@ export function configurateRubberband(graph, config: IConfig) {
  * @param config 配置信息
  */
 export function configurateLayout(graph, config: IConfig) {
-  // Automatically handle parallel edges
   const layout = new mxParallelEdgeLayout(graph);
   const layoutMgr = new mxLayoutManager(graph);
-  // graph.alternateEdgeStyle = 'elbow=vertical';
   layoutMgr.getLayout = function(cell) {
     if (cell.getChildCount() > 0) {
       return layout;
     }
   };
+}
+
+/**
+ * 辅助线配置
+ * @param graph 绘图对象
+ * @param config 配置信息
+ */
+export function configurateGuides(graph, config: IConfig) {
+  if (!config.useGuides) {
+    return;
+  }
+  graph.graphHandler.guidesEnabled = true;
+  graph.graphHandler.useGuidesForEvent = function(me) {
+    return !mxEvent.isAltDown(me.getEvent());
+  };
+
+  // 设置辅助线颜色
+  mxConstants.GUIDE_COLOR = '#FF0000';
+  // 设置辅助线宽度
+  mxConstants.GUIDE_STROKEWIDTH = 1;
 }
 
 /**
@@ -231,6 +327,8 @@ export function configurateLayout(graph, config: IConfig) {
 export function configurate(graph, config?: IConfig) {
   config = Object.assign({}, defaultConfig, config);
 
+  graph.alternateEdgeStyle = 'elbow=vertical';
+
   graph.setMultigraph(!!config.useMultigraph);
   graph.setEnabled(!!config.enable);
   graph.setEnterStopsCellEditing(!!config.useEnterStopsCellEditing);
@@ -238,11 +336,14 @@ export function configurate(graph, config?: IConfig) {
   configurateEvents(graph, config);
   configurateStylesheet(graph, config);
   configurateLayout(graph, config);
-  configurateCellLabel(graph, config);
+  configurateLabel(graph, config);
+  configurateVertex(graph, config);
+  configurateEdge(graph, config);
   configurateConnectable(graph, config);
   configurateRubberband(graph, config);
   configurateTooltip(graph, config);
-  configurateHeighlight(graph, config);
+  configurateHighlight(graph, config);
+  configurateGuides(graph, config);
 }
 
 /**

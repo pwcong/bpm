@@ -24,6 +24,8 @@ export interface IConfig {
   useHeighlight?: boolean;
   /** 是否多连接 */
   useMultigraph?: boolean;
+  /** 是否使用辅助线 */
+  useGuides?: boolean;
 }
 
 export const defaultLabelProperty = 'name';
@@ -37,5 +39,6 @@ export const defaultConfig: IConfig = {
   useTooltip: true,
   useEnterStopsCellEditing: true,
   useHeighlight: true,
-  useMultigraph: false
+  useMultigraph: false,
+  useGuides: true
 };

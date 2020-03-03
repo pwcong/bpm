@@ -26,6 +26,7 @@ export const mxCellTracker = mxGraphFactory.mxCellTracker;
 export const mxCellOverlay = mxGraphFactory.mxCellOverlay;
 export const mxImage = mxGraphFactory.mxImage;
 export const mxKeyHandler = mxGraphFactory.mxKeyHandler;
+export const mxMarker = mxGraphFactory.mxMarker;
 
 /**
  * 全局配置

@@ -63,7 +63,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
 
           try {
             // TODO 自定义绘图操作
-            graph.insertVertex(
+            const v1 = graph.insertVertex(
               defaultLayer,
               null,
               {
@@ -74,7 +74,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
               80,
               30
             );
-            graph.insertVertex(
+            const v2 = graph.insertVertex(
               defaultLayer,
               null,
               {
@@ -96,15 +96,16 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
               80,
               30
             );
-            // graph.insertEdge(
-            //   defaultLayer,
-            //   null,
-            //   {
-            //     name: 'edge'
-            //   },
-            //   v1,
-            //   v2
-            // );
+            graph.insertEdge(
+              defaultLayer,
+              null,
+              {
+                name: 'edge'
+              },
+              v1,
+              v2,
+              'startArrow=dash'
+            );
           } finally {
             graph.getModel().endUpdate();
           }
