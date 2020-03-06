@@ -5,6 +5,9 @@ const mxGraphFactory = MxGraphFactory({
   mxBasePath: './mxgraph'
 });
 
+// 挂载MxGraph方法至window解决MxGraph内部调用问题
+Object.keys(mxGraphFactory || {}).forEach(k => (window[k] = mxGraphFactory[k]));
+
 export const mxGraph = mxGraphFactory.mxGraph;
 export const mxGraphModel = mxGraphFactory.mxGraphModel;
 export const mxCodec = mxGraphFactory.mxCodec;
@@ -27,17 +30,11 @@ export const mxCellOverlay = mxGraphFactory.mxCellOverlay;
 export const mxImage = mxGraphFactory.mxImage;
 export const mxKeyHandler = mxGraphFactory.mxKeyHandler;
 export const mxMarker = mxGraphFactory.mxMarker;
-
-/**
- * 全局配置
- */
-function globalConfigurate() {
-  // 挂载MxGraph方法至window解决MxGraph内部调用问题
-  Object.keys(mxGraphFactory || {}).forEach(
-    k => (window[k] = mxGraphFactory[k])
-  );
-}
-
-globalConfigurate();
+export const mxUndoManager = mxGraphFactory.mxUndoManager;
+export const mxEventSource = mxGraphFactory.mxEventSource;
+export const mxPopupMenu = mxGraphFactory.mxPopupMenu;
+export const mxResources = mxGraphFactory.mxResources;
+export const mxGeometry = mxGraphFactory.mxGeometry;
+export const mxEventObject = mxGraphFactory.mxEventObject;
 
 export default mxGraphFactory;
