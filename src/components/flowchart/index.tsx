@@ -3,7 +3,6 @@ import React from 'react';
 import classnames from 'classnames';
 
 import EditorUI from './components/editorui';
-import Editor from './components/editor';
 import Menubar from './components/menubar';
 import Toolbar from './components/toolbar';
 
@@ -23,7 +22,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
     if (ref.current) {
       const container = ref.current;
 
-      _editorUi = new EditorUI(new Editor(null, true), container);
+      _editorUi = new EditorUI(container);
       setEditorUi(_editorUi);
     }
 

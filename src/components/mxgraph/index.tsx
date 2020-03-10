@@ -36,5 +36,11 @@ export const mxPopupMenu = mxGraphFactory.mxPopupMenu;
 export const mxResources = mxGraphFactory.mxResources;
 export const mxGeometry = mxGraphFactory.mxGeometry;
 export const mxEventObject = mxGraphFactory.mxEventObject;
+export const mxGraphView = mxGraphFactory.mxGraphView;
+export const mxCellRenderer = mxGraphFactory.mxCellRenderer;
+export const mxStencil = mxGraphFactory.mxStencil;
+export const mxConnector = mxGraphFactory.mxConnector;
+export const mxShape = mxGraphFactory.mxShape;
+export const mxEllipse = mxGraphFactory.mxEllipse;
 
 export default mxGraphFactory;

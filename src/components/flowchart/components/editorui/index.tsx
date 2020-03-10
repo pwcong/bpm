@@ -9,17 +9,13 @@ export default class EditorUI extends mxEventSource {
 
   actions: Actions;
 
-  constructor(editor: Editor | null, container: HTMLElement | null) {
+  constructor(container: HTMLElement) {
     super();
 
-    this.editor = editor || new Editor(null, null);
-    this.container = container || document.body;
+    this.container = container;
 
-    const graph = this.editor.graph;
-
+    this.editor = new Editor(container, true);
     this.actions = new Actions(this);
-
-    graph.init(this.container);
   }
 
   undo = () => {

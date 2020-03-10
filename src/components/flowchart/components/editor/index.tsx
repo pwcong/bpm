@@ -10,30 +10,28 @@ import Graph from '../graph';
 export default class Editor extends mxEventSource {
   static ctrlKey = mxClient.IS_MAC ? 'Cmd' : 'Ctrl';
 
+  container: HTMLElement;
+
   graph: any;
   editable: boolean;
 
   undoManager: any;
   undoListener: any;
 
-  constructor(
-    model: any | null,
-    editable: boolean | null
-  ) {
+  constructor(container: HTMLElement, editable?: boolean) {
     super();
-    this.graph = this.createGraph(model);
-    this.editable = editable !== null ? editable : true;
-    this.undoManager = this.createUndoManager();
+    this.container = container;
+    this.editable = editable !== undefined ? editable : true;
+    this.graph = new Graph(this.container, null, null, null);
 
     this.init();
   }
 
-  createGraph = (model) => {
-    const graph = new Graph(null, model, null, null);
-    return graph;
+  init = () => {
+    this.initUndoManager();
   };
 
-  createUndoManager = () => {
+  initUndoManager = () => {
     const graph = this.graph;
     const undoMgr = new mxUndoManager();
 
@@ -70,16 +68,10 @@ export default class Editor extends mxEventSource {
     undoMgr.addListener(mxEvent.UNDO, undoHandler);
     undoMgr.addListener(mxEvent.REDO, undoHandler);
 
-    return undoMgr;
-  };
-
-  init = () => {
-    // DO NOTHING
+    this.undoManager = undoMgr;
   };
 
   destroy = () => {
-    if (this.graph !== null) {
-      this.graph.destroy();
-    }
+    this.graph && this.graph.destroy();
   };
 }

@@ -43,26 +43,25 @@ export const ToolbarItem: React.FunctionComponent<IToolbarItemProps> = props => 
         isVertex
       } = data;
 
-      const cell = new mxCell(
+      const prototype = new mxCell(
         value,
         new mxGeometry(geometry.x, geometry.y, geometry.width, geometry.height),
         style
       );
-      cell.setVertex(isVertex !== undefined ? isVertex : true);
-      console.log(cell)
+      prototype.setVertex(isVertex !== undefined ? isVertex : true);
 
       mxUtils.makeDraggable(
         container,
         editorUi.editor.graph,
-        (graph, evt) => {
+        (graph, evt, cell) => {
           graph.model.beginUpdate();
           try {
             const pt = graph.getPointForEvent(evt);
-            const vertex = graph.getModel().cloneCell(cell);
+            const vertex = graph.getModel().cloneCell(prototype);
             vertex.geometry.x = pt.x;
             vertex.geometry.y = pt.y;
 
-            graph.setSelectionCells(graph.importCells([vertex], 0, 0, graph.model.root));
+            graph.setSelectionCells(graph.importCells([vertex], 0, 0, cell));
           } finally {
             graph.model.endUpdate();
           }
