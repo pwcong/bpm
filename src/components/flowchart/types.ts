@@ -49,7 +49,7 @@ export interface ICell {
   type?: ECellType;
   value?: ICellValue;
   geometry?: ICellGeometry;
-  style?: string;
+  style?: object | string;
   component?: React.ReactNode;
   getComponent?: (
     component: React.ReactElement,

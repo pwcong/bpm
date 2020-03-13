@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { mxConstants, mxPerimeter } from '@/components/mxgraph';
 import svgGeneralStart from '@/mxgraph/images/generalStart.svg';
 
 import { ICell } from '../../types';
@@ -12,10 +13,14 @@ export const data: Array<ICell> = [
     value: {
       name: '开始事件'
     },
-    style: 'shape=rounded',
+    style: {
+      [mxConstants.STYLE_SHAPE]: mxConstants.SHAPE_IMAGE,
+      [mxConstants.STYLE_PERIMETER]: mxPerimeter.RectanglePerimeter,
+      [mxConstants.STYLE_IMAGE]: 'images/generalStart.svg'
+    },
     geometry: {
-      width: 40,
-      height: 40,
+      width: 80,
+      height: 80,
       x: 0,
       y: 0
     },

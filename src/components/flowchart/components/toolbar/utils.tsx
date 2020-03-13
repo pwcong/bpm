@@ -13,6 +13,7 @@ export function commonInit(
   const graph = editorUI.editor.graph;
 
   const {
+    key,
     value = {},
     geometry = {
       x: 0,
@@ -24,10 +25,16 @@ export function commonInit(
     type
   } = cell;
 
+  if (typeof style === 'object') {
+    const styleObj = new Object();
+    Object.keys(style).forEach(k => (styleObj[k] = style[k]));
+    graph.getStylesheet().putCellStyle(key, styleObj);
+  }
+
   const prototype = new mxCell(
     value,
     new mxGeometry(geometry.x, geometry.y, geometry.width, geometry.height),
-    style
+    typeof style === 'string' ? style : key
   );
   prototype.setVertex(type !== undefined ? type === ECellType.VERTEX : true);
 
@@ -41,6 +48,9 @@ export function commonInit(
     graph,
     (graph, evt, target) => {
       graph.model.beginUpdate();
+
+      let targetCells;
+
       try {
         const pt = graph.getPointForEvent(evt);
         const vertex = graph.getModel().cloneCell(prototype);
@@ -50,13 +60,16 @@ export function commonInit(
         const cells = [vertex];
 
         // 插入节点
-        const targetCells = graph.importCells(cells, 0, 0, target);
+        targetCells = graph.importCells(cells, 0, 0, target);
+
         // 选中新增节点
         graph.setSelectionCells(targetCells);
+
         // 滚到节点区域
         graph.scrollCellToVisible(targetCells[0]);
       } finally {
         graph.model.endUpdate();
+
         postEvent(EEventName.add);
       }
     },
