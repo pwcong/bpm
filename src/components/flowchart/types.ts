@@ -26,16 +26,16 @@ export enum ECellType {
   'EDGE' = 'EDGE'
 }
 
-export type ICellListenerCallbackEvent = CustomEvent<{
-  ref: {
-    element: HTMLElement | null;
-    render: () => void;
-  };
-  editorUI: EditorUI;
-  cell: ICell;
-}>;
+export type ICellListenerCallbackRef = {
+  element: HTMLElement | null;
+  render: () => void;
+};
 
-export type ICellListenerCallback = (event: ICellListenerCallbackEvent) => void;
+export type ICellListenerCallback = (
+  ref: ICellListenerCallbackRef,
+  editorUI: EditorUI,
+  cell: ICell
+) => void;
 
 export interface ICellListener {
   name: string;
@@ -56,6 +56,7 @@ export interface ICell {
     cell: ICell
   ) => React.ReactElement;
   listeners?: Array<ICellListener>;
+  onInit?: (element: HTMLElement, editorUI: EditorUI, cell: ICell) => void;
 }
 
 export interface ICellValue {

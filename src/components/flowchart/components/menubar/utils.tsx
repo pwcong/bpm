@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ICell, ICellListenerCallbackEvent } from '../../types';
+import { ICell, ICellListenerCallbackRef } from '../../types';
 import EditorUI from '../../components/editorui';
 
 export const getCommonComponent = (
@@ -20,7 +20,10 @@ export const getCommonComponent = (
   );
 };
 
-export const reRender = (e: ICellListenerCallbackEvent) => {
-  const { ref } = e.detail || {};
+export const reRender = (
+  ref: ICellListenerCallbackRef,
+  editorUI: EditorUI,
+  cell: ICell
+) => {
   ref && ref.render && ref.render();
 };

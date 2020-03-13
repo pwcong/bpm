@@ -3,6 +3,7 @@ import React from 'react';
 import svgGeneralStart from '@/mxgraph/images/generalStart.svg';
 
 import { ICell } from '../../types';
+import { commonInit } from './utils';
 
 export const data: Array<ICell> = [
   {
@@ -18,6 +19,7 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <img src={svgGeneralStart} />
+    component: <img src={svgGeneralStart} />,
+    onInit: commonInit
   }
 ];
