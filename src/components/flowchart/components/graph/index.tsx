@@ -8,6 +8,8 @@ import {
   mxConnectionConstraint,
   mxPoint
 } from '@/components/mxgraph';
+import { postEvent } from '@/utils/event';
+import { EEventName } from '../../config';
 
 export type IGraph = any;
 
@@ -61,11 +63,15 @@ export default class Graph extends mxGraph {
     // 取消画布右键弹窗
     mxEvent.disableContextMenu(graph.container);
 
+    // 允许编辑
     graph.setEnabled(true);
+    // 禁止重复连接
     graph.setMultigraph(false);
+    // 回车键完成输入
     graph.setEnterStopsCellEditing(true);
 
     this.initStylesheet(graph);
+    this.initEvents(graph);
     this.initGuides(graph);
     this.initConnectionHandler(graph);
   };
@@ -86,14 +92,19 @@ export default class Graph extends mxGraph {
     edgeStyle.endFill = 1;
     edgeStyle.jettySize = 'auto';
     edgeStyle.orthogonalLoop = 1;
-    // 开启贝塞尔曲线
-    // edgeStyle[mxConstants.STYLE_CURVED] = '1'
 
     // 默认图形节点的样式
     const vertexStyle = graph.getStylesheet().getDefaultVertexStyle();
     vertexStyle.strokeColor = 'grey';
     vertexStyle.fontColor = '#424242';
     vertexStyle.fontSize = 10;
+  };
+
+  initEvents = graph => {
+    // 选中元素
+    graph.getSelectionModel().addListener('change', e => {
+      postEvent(EEventName.select, e);
+    });
   };
 
   initConnectionHandler = graph => {
@@ -126,43 +137,6 @@ export default class Graph extends mxGraph {
       return null;
     };
 
-    // 自动计算锚点
-    const mxConnectionHandlerUpdateEdgeState =
-      graph.connectionHandler.updateEdgeState;
-    graph.connectionHandler.updateEdgeState = function(pt, constraint) {
-      debugger
-      if (pt != null && this.previous != null) {
-        const constraints = this.graph.getAllConnectionConstraints(
-          this.previous
-        );
-        let nearestConstraint: any = null;
-        let dist: any = null;
-
-        for (let i = 0; i < constraints.length; i++) {
-          const cp = this.graph.getConnectionPoint(
-            this.previous,
-            constraints[i]
-          );
-
-          if (cp != null) {
-            const tmp =
-              (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
-
-            if (dist == null || tmp < dist) {
-              nearestConstraint = constraints[i];
-              dist = tmp;
-            }
-          }
-        }
-
-        if (nearestConstraint != null) {
-          this.sourceConstraint = nearestConstraint;
-        }
-      }
-
-      mxConnectionHandlerUpdateEdgeState.apply(this, arguments);
-    };
-
     // 禁止连接节点
     graph.connectionHandler.isConnectableCell = function(cell) {
       return false;
@@ -170,10 +144,13 @@ export default class Graph extends mxGraph {
   };
 
   initGuides = graph => {
+    // 设置允许辅助线
     graph.graphHandler.guidesEnabled = true;
-    graph.graphHandler.useGuidesForEvent = function(me) {
-      return !mxEvent.isAltDown(me.getEvent());
-    };
+    // graph.graphHandler.useGuidesForEvent = function(me) {
+    //   return !mxEvent.isAltDown(me.getEvent());
+    // };
+
+    // 设置步进距离
     graph.gridSize = 10;
 
     // 设置辅助线颜色

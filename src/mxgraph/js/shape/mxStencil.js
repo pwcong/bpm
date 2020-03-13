@@ -307,7 +307,7 @@ mxStencil.prototype.parseDescription = function()
 	
 	// Possible values for strokewidth are all numbers and "inherit"
 	// where the inherit means take the value from the style (ie. the
-	// user-defined stroke-width). Note that the strokewidth is scaled
+	// user-defined strokeWidth). Note that the strokewidth is scaled
 	// by the minimum scaling that is used to draw the shape (sx, sy).
 	var sw = this.desc.getAttribute('strokewidth');
 	this.strokewidth = (sw != null) ? sw : '1';

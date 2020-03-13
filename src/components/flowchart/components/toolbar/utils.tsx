@@ -2,6 +2,8 @@ import { mxCell, mxGeometry, mxUtils } from '@/components/mxgraph';
 
 import { ICell, ECellType } from '../../types';
 import EditorUI from '../editorui';
+import { postEvent } from '@/utils/event';
+import { EEventName } from '../../config';
 
 export function commonInit(
   element: HTMLElement,
@@ -48,16 +50,14 @@ export function commonInit(
         const cells = [vertex];
 
         // 插入节点
-        graph.importCells(cells, 0, 0, target);
-
-        if (cells != null && cells.length > 0) {
-          // 选中新增节点
-          graph.setSelectionCells(cells);
-          // 滚到节点区域
-          graph.scrollCellToVisible(cells[0]);
-        }
+        const targetCells = graph.importCells(cells, 0, 0, target);
+        // 选中新增节点
+        graph.setSelectionCells(targetCells);
+        // 滚到节点区域
+        graph.scrollCellToVisible(targetCells[0]);
       } finally {
         graph.model.endUpdate();
+        postEvent(EEventName.add);
       }
     },
     dragEl,

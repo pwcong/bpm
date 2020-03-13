@@ -27,6 +27,7 @@ export enum ECellType {
 }
 
 export type ICellListenerCallbackRef = {
+  event: any;
   element: HTMLElement | null;
   render: () => void;
 };

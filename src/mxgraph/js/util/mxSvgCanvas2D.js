@@ -760,7 +760,7 @@ mxSvgCanvas2D.prototype.updateStroke = function()
 	
 	if (sw != 1)
 	{
-		this.node.setAttribute('stroke-width', sw);
+		this.node.setAttribute('strokeWidth', sw);
 	}
 	
 	if (this.node.nodeName == 'path')
@@ -847,11 +847,11 @@ mxSvgCanvas2D.prototype.createDashPattern = function(scale)
 mxSvgCanvas2D.prototype.createTolerance = function(node)
 {
 	var tol = node.cloneNode(true);
-	var sw = parseFloat(tol.getAttribute('stroke-width') || 1) + this.strokeTolerance;
+	var sw = parseFloat(tol.getAttribute('strokeWidth') || 1) + this.strokeTolerance;
 	tol.setAttribute('pointer-events', 'stroke');
 	tol.setAttribute('visibility', 'hidden');
 	tol.removeAttribute('stroke-dasharray');
-	tol.setAttribute('stroke-width', sw);
+	tol.setAttribute('strokeWidth', sw);
 	tol.setAttribute('fill', 'none');
 	
 	// Workaround for Opera ignoring the visiblity attribute above while
@@ -1921,7 +1921,7 @@ mxSvgCanvas2D.prototype.addTextBackground = function(node, str, x, y, w, h, alig
 			n.setAttribute('height', Math.ceil(bbox.height));
 
 			var sw = (s.fontBorderColor != null) ? Math.max(1, this.format(s.scale)) : 0;
-			n.setAttribute('stroke-width', sw);
+			n.setAttribute('strokeWidth', sw);
 			
 			// Workaround for crisp rendering - only required if not exporting
 			if (this.root.ownerDocument == document && mxUtils.mod(sw, 2) == 1)

@@ -30,9 +30,10 @@ export const Item: React.FunctionComponent<IMenubarItemProps> = props => {
   const listenersCallback = {};
   listeners.forEach(
     l =>
-      (listenersCallback[l.name] = useClosuer<ICellListenerCallback>(() => {
+      (listenersCallback[l.name] = useClosuer<ICellListenerCallback>(event => {
         l.callback(
           {
+            event,
             element: ref.current,
             render: () => setKey(key + 1)
           },

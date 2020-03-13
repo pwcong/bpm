@@ -1,8 +1,9 @@
 import { mxEventSource } from '@/components/mxgraph';
+import { postEvent } from '@/utils/event';
 
+import { EEventName } from '../../config';
 import Editor from '../editor';
 import Actions from '../actions';
-import { postEvent } from '@/utils/event';
 
 export default class EditorUI extends mxEventSource {
   editor: Editor;
@@ -40,7 +41,7 @@ export default class EditorUI extends mxEventSource {
     } catch (e) {
       // ignore all errors
     } finally {
-      postEvent('undo');
+      postEvent(EEventName.undo);
     }
   };
 
@@ -59,7 +60,7 @@ export default class EditorUI extends mxEventSource {
     } catch (e) {
       // ignore all errors
     } finally {
-      postEvent('redo');
+      postEvent(EEventName.redo);
     }
   };
 
