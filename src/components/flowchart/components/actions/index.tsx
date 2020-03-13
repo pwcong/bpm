@@ -5,7 +5,7 @@ import {
   mxEventSource
 } from '@/components/mxgraph';
 
-import EditorUi from '../editorui';
+import EditorUI from '../editorui';
 import Editor from '../editor';
 
 export class Action extends mxEventSource {
@@ -29,17 +29,17 @@ export class Action extends mxEventSource {
 }
 
 export default class Actions {
-  editorUi: EditorUi;
+  editorUI: EditorUI;
   actions: { [key: string]: Action };
 
-  constructor(editorUi: EditorUi) {
-    this.editorUi = editorUi;
+  constructor(editorUI: EditorUI) {
+    this.editorUI = editorUI;
     this.actions = {};
     this.init();
   }
 
   init = () => {
-    const ui = this.editorUi;
+    const ui = this.editorUI;
     const editor = ui.editor;
     const graph = editor.graph;
 

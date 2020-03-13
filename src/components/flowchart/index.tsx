@@ -15,7 +15,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
   const { className, style } = props;
 
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const [editorUi, setEditorUi] = React.useState<EditorUI | null>(null);
+  const [editorUI, setEditorUi] = React.useState<EditorUI | null>(null);
 
   React.useEffect(() => {
     let _editorUi: EditorUI;
@@ -31,18 +31,22 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
     };
   }, []);
 
-  console.log((window['editorUi'] = editorUi));
+  editorUI && console.log(
+    (window['editorUI'] = editorUI),
+    (window['editor'] = editorUI.editor),
+    (window['graph'] = editorUI.editor.graph)
+  );
 
   return (
     <div className={classnames(cls, className)} style={style}>
-      {editorUi && (
+      {editorUI && (
         <div className={`${cls}-t`}>
           <div className={`${cls}-t-l`}>
-            <Menubar editorUi={editorUi} />
+            <Menubar editorUI={editorUI} />
           </div>
           <div className={`${cls}-t-s`}></div>
           <div className={`${cls}-t-r`}>
-            <Toolbar editorUi={editorUi} />
+            <Toolbar editorUI={editorUI} />
           </div>
         </div>
       )}

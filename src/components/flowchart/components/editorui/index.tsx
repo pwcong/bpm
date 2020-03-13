@@ -2,6 +2,7 @@ import { mxEventSource } from '@/components/mxgraph';
 
 import Editor from '../editor';
 import Actions from '../actions';
+import { postEvent } from '@/utils/event';
 
 export default class EditorUI extends mxEventSource {
   editor: Editor;
@@ -18,6 +19,7 @@ export default class EditorUI extends mxEventSource {
     this.actions = new Actions(this);
   }
 
+  canUndo = () => this.editor.undoManager.indexOfNextAdd > 0;
   undo = () => {
     try {
       const graph = this.editor.graph;
@@ -37,9 +39,14 @@ export default class EditorUI extends mxEventSource {
       }
     } catch (e) {
       // ignore all errors
+    } finally {
+      postEvent('undo');
     }
   };
 
+  canRedo = () =>
+    this.editor.undoManager.indexOfNextAdd <
+    this.editor.undoManager.history.length;
   redo = () => {
     try {
       const graph = this.editor.graph;
@@ -51,6 +58,8 @@ export default class EditorUI extends mxEventSource {
       }
     } catch (e) {
       // ignore all errors
+    } finally {
+      postEvent('redo');
     }
   };
 

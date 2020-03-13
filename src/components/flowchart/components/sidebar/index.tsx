@@ -3,20 +3,20 @@ import React from 'react';
 import classnames from 'classnames';
 
 import { IBaseProps } from '../../types';
-import EditorUi from '../editorui';
+import EditorUI from '../editorui';
 
 export interface IProps extends IBaseProps {
-  editorUi: EditorUi;
+  editorUI: EditorUI;
 }
 
 const cls = `flowchart-sidebar`;
 
 const Sidebar: React.FunctionComponent<IProps> = props => {
-  const { editorUi, className, style } = props;
+  const { editorUI, className, style } = props;
 
   React.useEffect(() => {
     // TODO
-  }, [editorUi]);
+  }, [editorUI]);
 
   return <div className={classnames(cls, className)} style={style}></div>;
 };

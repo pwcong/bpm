@@ -2,72 +2,94 @@ import React from 'react';
 
 import classnames from 'classnames';
 
-import { IBaseProps, ICell } from '../../types';
-import { menubarData } from '../../config';
+import { useClosuer } from '@/utils/hook';
 
-import EditorUi from '../editorui';
-import { Action } from '../actions';
+import { IBaseProps, ICell, ICellListenerCallback } from '../../types';
+import EditorUI from '../editorui';
+import { data } from './config';
 
 import './style.scss';
 
 export interface IProps extends IBaseProps {
-  editorUi: EditorUi;
+  editorUI: EditorUI;
 }
 
 export interface IMenubarItemProps extends IBaseProps {
-  editorUi: EditorUi;
+  editorUI: EditorUI;
   data: ICell;
 }
 
-const cls = `flowchart-menubar`;
+export const baseCls = `flowchart-menubar`;
+export const itemCls = `${baseCls}-item`;
 
 export const MenubarItem: React.FunctionComponent<IMenubarItemProps> = props => {
-  const { className, style, children, editorUi, data } = props;
+  const { className, style, editorUI, data } = props;
 
-  const [disabled, setDisabled] = React.useState(true);
-  const [action, setAction] = React.useState<Action | null>(null);
+  const ref = React.useRef<HTMLDivElement | null>(null);
+
+  const [key, setKey] = React.useState<number>(0);
+
+  const { listeners = [] } = data;
+
+  const listenersCallback = {};
+  listeners.forEach(
+    l =>
+      (listenersCallback[l.name] = useClosuer<ICellListenerCallback>(() => {
+        l.callback(
+          new CustomEvent(l.name, {
+            detail: {
+              ref: {
+                element: ref.current,
+                render: () => setKey(key + 1)
+              },
+              editorUI,
+              cell: data
+            }
+          })
+        );
+      }))
+  );
 
   React.useEffect(() => {
-    const t = editorUi.actions.get(data.key);
-    if (t) {
-      setDisabled(false);
-      setAction(t);
-    }
-  }, [editorUi, data]);
+    listeners.forEach(l =>
+      window.addEventListener(l.name, listenersCallback[l.name])
+    );
+    return () =>
+      listeners.forEach(l =>
+        window.removeEventListener(l.name, listenersCallback[l.name])
+      );
+  }, [editorUI, data]);
 
-  const itemCls = `${cls}-item`;
+  const itemProps = {
+    style,
+    className: classnames(itemCls, className)
+  };
 
-  return (
-    <div
-      title={`${data.title}${
-        action && action.shortcut ? `(${action.shortcut})` : ''
-      }`}
-      className={classnames(itemCls, className, {
-        [`${itemCls}-disabled`]: disabled
-      })}
-      style={style}
-      onClick={() => action && action.funct && action.funct()}
-    >
-      {children}
-    </div>
-  );
+  let cmpt = <div {...itemProps}>{data.component}</div>;
+
+  if (data.getComponent) {
+    cmpt = data.getComponent(cmpt, editorUI, data);
+  }
+
+  console.log('render');
+
+  return React.cloneElement(cmpt, {
+    ref,
+    key
+  });
 };
 
 const Menubar: React.FunctionComponent<IProps> = props => {
-  const { editorUi, className, style } = props;
+  const { editorUI, className, style } = props;
 
   React.useEffect(() => {
     // DO NOTHING
-  }, [editorUi]);
+  }, [EditorUI]);
 
   return (
-    <div className={classnames(cls, className)} style={style}>
-      {menubarData.map(item => {
-        return (
-          <MenubarItem key={item.key} data={item} editorUi={editorUi}>
-            {item.component}
-          </MenubarItem>
-        );
+    <div className={classnames(baseCls, className)} style={style}>
+      {data.map(item => {
+        return <MenubarItem key={item.key} editorUI={editorUI} data={item} />;
       })}
     </div>
   );

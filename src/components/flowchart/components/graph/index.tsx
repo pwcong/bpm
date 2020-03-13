@@ -130,6 +130,7 @@ export default class Graph extends mxGraph {
     const mxConnectionHandlerUpdateEdgeState =
       graph.connectionHandler.updateEdgeState;
     graph.connectionHandler.updateEdgeState = function(pt, constraint) {
+      debugger
       if (pt != null && this.previous != null) {
         const constraints = this.graph.getAllConnectionConstraints(
           this.previous
