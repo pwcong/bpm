@@ -111,7 +111,10 @@ export const data: Array<ICell> = [
     listeners: [
       {
         name: 'select',
-        callback: reRender
+        // callback: reRender,
+        callback: (ref, editorUI: EditorUI, cell: ICell) => {
+          console.log(ref);
+        }
       }
     ]
   }
