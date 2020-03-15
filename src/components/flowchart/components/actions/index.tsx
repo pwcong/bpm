@@ -51,6 +51,7 @@ export default class Actions {
       null,
       Editor.ctrlKey + '+Z'
     );
+
     this.addAction(
       'redo',
       function() {
@@ -106,6 +107,15 @@ export default class Actions {
       },
       null,
       Editor.ctrlKey + '+Delete'
+    );
+
+    this.addAction(
+      'rubberband',
+      function() {
+        ui.rubberband();
+      },
+      null,
+      Editor.ctrlKey + '+R'
     );
   };
 

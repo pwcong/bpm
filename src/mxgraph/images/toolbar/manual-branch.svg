@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>人工决策</title>
+    <desc>Created with Sketch.</desc>
+    <g id="人工决策" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组-127">
+            <rect id="矩形" x="0" y="0" width="36" height="36"></rect>
+            <g id="编组-37复制-2" transform="translate(1.000000, 1.000000)">
+                <g id="编组-28">
+                    <polygon id="矩形复制-65" fill="#FFD58D" transform="translate(17.000000, 17.000000) rotate(-225.000000) translate(-17.000000, -17.000000) " points="5.1 5.1 28.9 5.1 28.9 28.9 5.1 28.9"></polygon>
+                    <rect id="矩形" x="7.72851116" y="7.5136346" width="16.519612" height="16.519612"></rect>
+                    <g id="编组-63" transform="translate(10.388889, 9.158247)" fill="#FFFFFF">
+                        <path d="M3.66853657,7.01329772 L9.13861491,7.01329772 C10.9543814,7.01329772 12.426351,8.48526728 12.426351,10.3010338 L12.426351,13.0887698 C12.426351,13.3649122 12.2024933,13.5887698 11.926351,13.5887698 L0.880800529,13.5887698 C0.604658154,13.5887698 0.380800529,13.3649122 0.380800529,13.0887698 L0.380800529,10.3010338 C0.380800529,8.48526728 1.85277009,7.01329772 3.66853657,7.01329772 Z" id="矩形"></path>
+                        <circle id="椭圆形" cx="6.40357574" cy="2.88695993" r="2.83424716"></circle>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

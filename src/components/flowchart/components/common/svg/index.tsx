@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import SVGDelete from './delete';
 import SVGUndo from './undo';
 import SVGRedo from './redo';
+import SVGRubberBand from './rubberband';
 
 import './style.scss';
 
@@ -17,7 +18,8 @@ export interface IProps {
 export const SVGMapper = {
   delete: SVGDelete,
   undo: SVGUndo,
-  redo: SVGRedo
+  redo: SVGRedo,
+  rubberband: SVGRubberBand
 };
 
 const cls = 'flowchart-svg';

@@ -8,5 +8,7 @@ export enum EEventName {
   /** 删除 */
   'delete' = 'delete',
   /** 选择 */
-  'select' = 'select'
+  'select' = 'select',
+  /** 框选 */
+  'rubberband' = 'rubberband'
 }

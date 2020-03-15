@@ -58,9 +58,22 @@ export default class EditorUI extends mxEventSource {
         this.editor.undoManager.redo();
       }
     } catch (e) {
-      // ignore all errors
+      // DO NOTHING
     } finally {
       postEvent(EEventName.redo);
+    }
+  };
+
+  canRubberBand = () => this.editor.graph.rubberband.enabled;
+  rubberband = () => {
+    try {
+      this.editor.graph.rubberband.setEnabled(
+        !this.editor.graph.rubberband.enabled
+      );
+    } catch (e) {
+      // DO NOTHING
+    } finally {
+      postEvent(EEventName.rubberband);
     }
   };
 

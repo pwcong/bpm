@@ -117,5 +117,36 @@ export const data: Array<ICell> = [
         callback: reRender
       }
     ]
+  },
+  {
+    key: 'rubberband',
+    title: '框选',
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) => {
+      component = getCommonComponent(component, editorUI, cell);
+      return React.cloneElement(
+        component,
+        Object.assign({}, component.props, {
+          children: (
+            <TitleSVG
+              title={cell.title}
+              name="rubberband"
+              style={{
+                color: editorUI.canRubberBand() ? '#666666' : '#cccccc'
+              }}
+            />
+          )
+        })
+      );
+    },
+    listeners: [
+      {
+        name: 'rubberband',
+        callback: reRender
+      }
+    ]
   }
 ];
