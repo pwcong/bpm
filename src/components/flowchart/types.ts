@@ -45,10 +45,11 @@ export interface ICellListener {
 
 export interface ICell {
   key: string;
-  title: string;
+  name: string;
   type?: ECellType;
   value?: ICellValue;
   geometry?: ICellGeometry;
+  constraints?: ICellConstraints;
   style?: object | string;
   component?: React.ReactNode;
   getComponent?: (
@@ -60,7 +61,10 @@ export interface ICell {
   onInit?: (element: HTMLElement, editorUI: EditorUI, cell: ICell) => void;
 }
 
+export type ICellConstraints = Array<[number, number]>;
+
 export interface ICellValue {
+  key: string;
   name: string;
 }
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { mxConstants, mxPerimeter } from '@/components/mxgraph';
 
 import { TitleIMG } from '../common/img';
-import { ICell } from '../../types';
+import { ICell, ICellConstraints } from '../../types';
 import { commonInit } from './utils';
 
 const commonStyle = {
@@ -11,15 +11,33 @@ const commonStyle = {
   [mxConstants.STYLE_PERIMETER]: mxPerimeter.RectanglePerimeter
 };
 
+const commonLabelStyle = {
+  [mxConstants.STYLE_VERTICAL_LABEL_POSITION]: 'bottom',
+  [mxConstants.STYLE_VERTICAL_ALIGN]: 'top'
+};
+
+const commonConstraints: ICellConstraints = [
+  [0.25, 0],
+  [0.5, 0],
+  [0.75, 0],
+  [0, 0.25],
+  [1, 0.25],
+  [0, 0.5],
+  [1, 0.5],
+  [0, 0.75],
+  [1, 0.75],
+  [0.25, 1],
+  [0.5, 1],
+  [0.75, 1]
+];
+
 export const data: Array<ICell> = [
   {
     key: 'generalStart',
-    title: '开始事件',
-    value: {
-      name: ''
-    },
+    name: '开始事件',
     style: {
       ...commonStyle,
+      ...commonLabelStyle,
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/general-start.svg'
     },
     geometry: {
@@ -38,12 +56,10 @@ export const data: Array<ICell> = [
   },
   {
     key: 'generalEnd',
-    title: '结束事件',
-    value: {
-      name: ''
-    },
+    name: '结束事件',
     style: {
       ...commonStyle,
+      ...commonLabelStyle,
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/general-end.svg'
     },
     geometry: {
@@ -59,10 +75,7 @@ export const data: Array<ICell> = [
   },
   {
     key: 'draft',
-    title: '起草节点',
-    value: {
-      name: '起草节点'
-    },
+    name: '起草节点',
     style: {
       ...commonStyle,
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/draft.svg'
@@ -73,6 +86,7 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
+    constraints: commonConstraints,
     component: (
       <TitleIMG src="mxgraph/images/toolbar/draft-m.svg" title="起草节点" />
     ),
@@ -80,10 +94,7 @@ export const data: Array<ICell> = [
   },
   {
     key: 'review',
-    title: '审批节点',
-    value: {
-      name: '审批节点'
-    },
+    name: '审批节点',
     style: {
       ...commonStyle,
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/review.svg'
@@ -94,6 +105,7 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
+    constraints: commonConstraints,
     component: (
       <TitleIMG src="mxgraph/images/toolbar/review-m.svg" title="审批节点" />
     ),
@@ -101,15 +113,11 @@ export const data: Array<ICell> = [
   },
   {
     key: 'conditionBranch',
-    title: '条件分支',
-    value: {
-      name: '条件分支'
-    },
+    name: '条件分支',
     style: {
       ...commonStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/condition-branch.svg',
-      [mxConstants.STYLE_VERTICAL_LABEL_POSITION]: 'bottom',
-      [mxConstants.STYLE_VERTICAL_ALIGN]: 'top'
+      ...commonLabelStyle,
+      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/condition-branch.svg'
     },
     geometry: {
       width: 36,
@@ -127,15 +135,11 @@ export const data: Array<ICell> = [
   },
   {
     key: 'manualBranch',
-    title: '人工分支',
-    value: {
-      name: '人工分支'
-    },
+    name: '人工分支',
     style: {
       ...commonStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/manual-branch.svg',
-      [mxConstants.STYLE_VERTICAL_LABEL_POSITION]: 'bottom',
-      [mxConstants.STYLE_VERTICAL_ALIGN]: 'top'
+      ...commonLabelStyle,
+      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/manual-branch.svg'
     },
     geometry: {
       width: 36,
@@ -153,15 +157,11 @@ export const data: Array<ICell> = [
   },
   {
     key: 'split',
-    title: '并行分支',
-    value: {
-      name: '并行分支'
-    },
+    name: '并行分支',
     style: {
       ...commonStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/split.svg',
-      [mxConstants.STYLE_VERTICAL_LABEL_POSITION]: 'bottom',
-      [mxConstants.STYLE_VERTICAL_ALIGN]: 'top'
+      ...commonLabelStyle,
+      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/split.svg'
     },
     geometry: {
       width: 36,
@@ -176,10 +176,7 @@ export const data: Array<ICell> = [
   },
   {
     key: 'read',
-    title: '传阅节点',
-    value: {
-      name: '传阅节点'
-    },
+    name: '传阅节点',
     style: {
       ...commonStyle,
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/read.svg'
@@ -190,6 +187,7 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
+    constraints: commonConstraints,
     component: (
       <TitleIMG src="mxgraph/images/toolbar/read-m.svg" title="传阅节点" />
     ),
@@ -197,10 +195,7 @@ export const data: Array<ICell> = [
   },
   {
     key: 'subProcess',
-    title: '子流程节点',
-    value: {
-      name: '子流程节点'
-    },
+    name: '子流程节点',
     style: {
       ...commonStyle,
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/sub-process.svg'
@@ -211,6 +206,7 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
+    constraints: commonConstraints,
     component: (
       <TitleIMG
         src="mxgraph/images/toolbar/sub-process-m.svg"
@@ -220,3 +216,8 @@ export const data: Array<ICell> = [
     onInit: commonInit
   }
 ];
+
+export const dataMap = data.reduce(
+  (p, c) => p.set(c.key, c),
+  new Map<string, ICell>()
+);

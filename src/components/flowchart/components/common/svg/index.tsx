@@ -42,11 +42,11 @@ export interface ITitleSVGProps extends IProps {
 }
 
 export const TitleSVG: React.FunctionComponent<ITitleSVGProps> = props => {
-  const { title, ...restProps } = props;
+  const { title, style, ...restProps } = props;
   return (
     <React.Fragment>
-      <SVG {...restProps} />
-      {title}
+      <SVG style={style} {...restProps} />
+      <span style={style}>{title}</span>
     </React.Fragment>
   );
 };

@@ -12,7 +12,7 @@ export const getCommonComponent = (
   return React.cloneElement(
     component,
     Object.assign({}, component.props, {
-      title: `${cell.title}${
+      title: `${cell.name}${
         action && action.shortcut ? `(${action.shortcut})` : ''
       }`,
       onClick: () => action && action.funct && action.funct()

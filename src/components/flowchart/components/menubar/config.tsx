@@ -8,7 +8,7 @@ import { getCommonComponent, reRender } from './utils';
 export const data: Array<ICell> = [
   {
     key: 'undo',
-    title: '撤销',
+    name: '撤销',
     getComponent: (
       component: React.ReactElement,
       editorUI: EditorUI,
@@ -20,7 +20,7 @@ export const data: Array<ICell> = [
         Object.assign({}, component.props, {
           children: (
             <TitleSVG
-              title={cell.title}
+              title={cell.name}
               name="undo"
               style={{
                 color: editorUI.canUndo() ? '#666666' : '#cccccc'
@@ -47,7 +47,7 @@ export const data: Array<ICell> = [
   },
   {
     key: 'redo',
-    title: '恢复',
+    name: '恢复',
     getComponent: (
       component: React.ReactElement,
       editorUI: EditorUI,
@@ -59,7 +59,7 @@ export const data: Array<ICell> = [
         Object.assign({}, component.props, {
           children: (
             <TitleSVG
-              title={cell.title}
+              title={cell.name}
               name="redo"
               style={{
                 color: editorUI.canRedo() ? '#666666' : '#cccccc'
@@ -86,7 +86,7 @@ export const data: Array<ICell> = [
   },
   {
     key: 'delete',
-    title: '删除',
+    name: '删除',
     getComponent: (
       component: React.ReactElement,
       editorUI: EditorUI,
@@ -98,7 +98,7 @@ export const data: Array<ICell> = [
         Object.assign({}, component.props, {
           children: (
             <TitleSVG
-              title={cell.title}
+              title={cell.name}
               name="delete"
               style={{
                 color:
@@ -120,7 +120,7 @@ export const data: Array<ICell> = [
   },
   {
     key: 'rubberband',
-    title: '框选',
+    name: '框选',
     getComponent: (
       component: React.ReactElement,
       editorUI: EditorUI,
@@ -132,7 +132,7 @@ export const data: Array<ICell> = [
         Object.assign({}, component.props, {
           children: (
             <TitleSVG
-              title={cell.title}
+              title={cell.name}
               name="rubberband"
               style={{
                 color: editorUI.canRubberBand() ? '#666666' : '#cccccc'

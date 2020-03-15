@@ -14,6 +14,7 @@ export function commonInit(
 
   const {
     key,
+    name,
     value = {},
     geometry = {
       x: 0,
@@ -32,7 +33,13 @@ export function commonInit(
   }
 
   const prototype = new mxCell(
-    value,
+    Object.assign(
+      {
+        key,
+        name
+      },
+      value
+    ),
     new mxGeometry(geometry.x, geometry.y, geometry.width, geometry.height),
     typeof style === 'string' ? style : key
   );

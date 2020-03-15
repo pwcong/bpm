@@ -14,6 +14,8 @@ import {
 import { postEvent } from '@/utils/event';
 import { EEventName } from '../../config';
 
+import { dataMap } from '../toolbar/config';
+
 export type IGraph = any;
 
 export default class Graph extends mxGraph {
@@ -79,7 +81,6 @@ export default class Graph extends mxGraph {
     edgeStyle['endFill'] = 1;
     edgeStyle['jettySize'] = 'auto';
     edgeStyle['selectionColor'] = 'red';
-    
 
     edgeStyle['orthogonalLoop'] = 1;
     graph.getStylesheet().putDefaultEdgeStyle(edgeStyle);
@@ -144,7 +145,17 @@ export default class Graph extends mxGraph {
 
     // 设置连线锚点
     graph.getAllConnectionConstraints = function(terminal) {
-      if (terminal != null && this.model.isVertex(terminal.cell)) {
+      if (terminal !== null && this.model.isVertex(terminal.cell)) {
+        
+        const { constraints = [] } =
+          dataMap.get((this.model.getValue(terminal.cell) || {}).key) || {};
+
+        if (constraints.length > 0) {
+          return constraints.map(
+            c => new mxConnectionConstraint(new mxPoint(c[0], c[1]), true)
+          );
+        }
+
         return [
           new mxConnectionConstraint(new mxPoint(0.5, 0), true),
           new mxConnectionConstraint(new mxPoint(0, 0.5), true),
@@ -155,12 +166,6 @@ export default class Graph extends mxGraph {
 
       return null;
     };
-
-    // graph.connectionHandler.constraintHandler.pointImage = new mxImage(
-    //   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAV9JREFUOBGlk7EvQ1EUxr9z+rSCSWPpgKFDQ0L/hjcQXUwMZovEJAbxB4hBrF3MBiZLhcHfUBJbB6xSE6K83ut+r73J65PwpGd5L/d8v3PPPfe7glQsH3bmu+Zr0wJL1so00yL2SYDrnI6cXO0V7pOIW+/F2pnNv7Tej2GxZWHVrye/AjEQ1CfLYzvn6/LJXFyAcLv1dungUERQqwaoLQaYnerVeXg2aNxGaDQjWOt6E9wUy+MrLBKwSn/nsDih2F8toDoz2EClpKiU8gjnAhxcdNB+NWHMANvCM0fd6M5V1aON0R8wN0hG89Fg9/QDrlsT5IIF7Q3MKttO75wE/T811HJOZJXTZpJnzhpeS1b9VfmBZSnitWQHp5WFTmmUJuEarypreC1ZpcMI8p6zhteSVdqTDqNJeEV/BTXUkiGrsbedPekwmuS3IsxR03djnezQVo4LsO2hHlPy3P99zt9vb8bpqgmVugAAAABJRU5ErkJggg==',
-    //   8,
-    //   8
-    // );
 
     // 锚点高亮
     graph.connectionHandler.constraintHandler.highlightColor = '#4285F4';
@@ -188,7 +193,7 @@ export default class Graph extends mxGraph {
     const mxConnectionHandlerUpdateEdgeState =
       graph.connectionHandler.updateEdgeState;
     graph.connectionHandler.updateEdgeState = function(pt, constraint) {
-      if (pt != null && this.previous != null) {
+      if (pt !== null && this.previous !== null) {
         const constraints = this.graph.getAllConnectionConstraints(
           this.previous
         );
@@ -201,18 +206,18 @@ export default class Graph extends mxGraph {
             constraints[i]
           );
 
-          if (cp != null) {
+          if (cp !== null) {
             const tmp =
               (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
 
-            if (dist == null || tmp < dist) {
+            if (dist === null || tmp < dist) {
               nearestConstraint = constraints[i];
               dist = tmp;
             }
           }
         }
 
-        if (nearestConstraint != null) {
+        if (nearestConstraint !== null) {
           this.sourceConstraint = nearestConstraint;
         }
       }
