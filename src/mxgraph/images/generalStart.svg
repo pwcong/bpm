@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="52px" height="52px" viewBox="0 0 52 52" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
-    <title>编组 12复制 4</title>
+    <title>开始事件</title>
     <desc>Created with Sketch.</desc>
-    <defs>
-        <filter x="-44.7%" y="-44.7%" width="189.5%" height="189.5%" filterUnits="objectBoundingBox" id="filter-1">
-            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
-            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
-            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
-            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
-            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.06 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
-            <feMerge>
-                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
-                <feMergeNode in="SourceGraphic"></feMergeNode>
-            </feMerge>
-        </filter>
-    </defs>
-    <g id="组件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="开始事件" transform="translate(7.000000, 5.000000)">
-            <g id="编组-12复制-4" filter="url(#filter-1)">
-                <rect id="矩形" x="0" y="0" width="38" height="38"></rect>
-                <circle id="椭圆形复制" stroke="#50E3C2" fill="#E7FEFA" cx="19" cy="19" r="19"></circle>
+    <g id="开始事件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组-26">
+            <rect id="矩形" x="0" y="0" width="36" height="36"></rect>
+            <g id="开始事件" transform="translate(2.045324, 1.838314)">
+                <g id="编组-32">
+                    <g id="开始事件">
+                        <g id="编组-12复制-4">
+                            <rect id="矩形" x="0" y="0" width="32" height="32"></rect>
+                            <circle id="椭圆形复制" stroke="#50E3C2" fill="#E7FEFA" cx="16" cy="16" r="16"></circle>
+                        </g>
+                    </g>
+                    <path d="M17.4027414,12.5265146 L21.7808716,18.2597602 C22.1160615,18.6986978 22.0319574,19.3262521 21.5930198,19.6614419 C21.4186972,19.7945615 21.2054429,19.8666751 20.9861048,19.8666751 L12.2298444,19.8666751 C11.6775597,19.8666751 11.2298444,19.4189599 11.2298444,18.8666751 C11.2298444,18.6473371 11.3019581,18.4340828 11.4350776,18.2597602 L15.8132078,12.5265146 C16.1483977,12.087577 16.775952,12.0034729 17.2148896,12.3386627 C17.2855827,12.3926468 17.3487573,12.4558214 17.4027414,12.5265146 Z" id="三角形" fill="#50E3C2" transform="translate(16.608001, 16.000026) rotate(-270.000000) translate(-16.608001, -16.000026) "></path>
+                </g>
             </g>
         </g>
     </g>

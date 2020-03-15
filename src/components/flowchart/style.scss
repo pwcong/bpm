@@ -14,21 +14,22 @@
 
   &-t {
     top: 0;
-    height: 40px;
+    height: 48px;
     display: flex;
     align-items: center;
+    padding: 0 34px;
     box-shadow: 0px 1px 8px #dddddd;
 
     &-s {
-      margin: 0 4px;
-      height: 20px;
+      margin: 0 5px;
+      height: 36px;
       width: 1px;
-      background-color: #eeeeee;
+      background-color: #dddddd;
     }
   }
 
   &-b {
-    top: 40px;
+    top: 48px;
     bottom: 0;
   }
 }

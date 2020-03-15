@@ -1,24 +1,18 @@
 import {
   mxUtils,
   mxCodec,
-  mxEvent,
-  mxRubberband,
-  mxConstants,
-  mxPerimeter,
-  mxEdgeStyle,
   mxConnectionConstraint,
   mxPoint,
   mxCellState,
   mxParallelEdgeLayout,
   mxLayoutManager,
   mxCellTracker,
-  mxKeyHandler,
-  mxMarker,
-  mxImage,
-  mxUndoManager
+  // mxMarker,
+  mxEllipse,
+  mxImage
 } from '@/components/mxgraph';
 
-import { IConfig, defaultConfig } from '../types';
+import { IConfig } from '../types';
 
 /**
  * 加载绘制绘图数据
@@ -33,160 +27,12 @@ export function loadXml(graph, xml: string) {
 }
 
 /**
- * 样式配置
- * @param graph 绘图对象
- * @param config 配置信息
- */
-export function configurateStylesheet(graph, config: IConfig) {
-  // 创建节点默认样式
-  let style = {};
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-  style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-  style[mxConstants.STYLE_STROKECOLOR] = 'gray';
-  style[mxConstants.STYLE_ROUNDED] = true;
-  style[mxConstants.STYLE_FILLCOLOR] = '#EEEEEE';
-  style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-  style[mxConstants.STYLE_FONTCOLOR] = '#774400';
-  style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-  style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-  style[mxConstants.STYLE_FONTSIZE] = '12';
-  style[mxConstants.STYLE_FONTSTYLE] = 1;
-  graph.getStylesheet().putDefaultVertexStyle(style);
-
-  // 创建线条默认样式
-  style = {};
-  style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
-  style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
-  style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-  style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-  style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-  style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
-  style[mxConstants.STYLE_FONTSIZE] = '10';
-  style[mxConstants.STYLE_ROUNDED] = true;
-  graph.getStylesheet().putDefaultEdgeStyle(style);
-
-  // TODO 添加自定义节点样式
-  // style = {}
-  // style[mxConstants.STYLE_SPACING] = '8';
-  // graph.getStylesheet().putCellStyle('bottom', style);
-}
-
-/**
- * 提示配置
- * @param graph
- * @param config
- */
-export function configurateTooltip(graph, config: IConfig) {}
-
-/**
- * 事件配置
- * @param graph 绘图对象
- * @param config 配置信息
- */
-export function configurateEvents(graph, config: IConfig) {
-  // 取消画布右键弹窗
-  mxEvent.disableContextMenu(graph.container);
-
-  // 代理键盘事件
-  const keyHandler = new mxKeyHandler(graph);
-  keyHandler.enter = function() {};
-  keyHandler.bindKey(37, function() {});
-
-  // 框选事件
-  graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt) {
-    console.log(graph.getSelectionCell());
-    console.log(graph.getSelectionCells());
-  });
-
-  // 点击事件
-  graph.addListener(mxEvent.CLICK, function(sender, evt) {});
-  graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {});
-}
-
-/**
  * 高亮配置
  * @param graph 绘图对象
  * @param config 配置信息
  */
 export function configurateHighlight(graph, config: IConfig) {
   new mxCellTracker(graph, '#4285f4');
-}
-
-/**
- * 名称配置
- * @param graph 绘图对象
- * @param config 配置信息
- */
-export function configurateValue(graph, config: IConfig) {
-  // 重写获取节点名称方法
-  graph.convertValueToString = function(cell) {
-    const value = this.model.getValue(cell);
-
-    if (value != null) {
-      if (mxUtils.isNode(value)) {
-        return value.nodeName;
-      } else {
-        return value['name'];
-      }
-    }
-
-    return '';
-  };
-
-  // 重写设置节点名称方法
-  graph.cellLabelChanged = function(cell, value, autoSize) {
-    this.model.beginUpdate();
-    try {
-      const v = this.model.getValue(cell);
-      this.model.setValue(
-        cell,
-        Object.assign({}, v, {
-          name: value
-        })
-      );
-
-      if (autoSize) {
-        this.cellSizeUpdated(cell, false);
-      }
-    } finally {
-      this.model.endUpdate();
-    }
-  };
-}
-/**
- * 节点配置
- * @param graph 绘图对象
- * @param config 配置信息
- */
-export function configurateVertex(graph, config: IConfig) {}
-/**
- * 连线配置
- * @param graph 绘图对象
- * @param config 配置信息
- */
-export function configurateEdge(graph, config: IConfig) {
-  mxMarker.addMarker('dash', function(
-    canvas,
-    shape,
-    type,
-    pe,
-    unitX,
-    unitY,
-    size,
-    source,
-    sw,
-    filled
-  ) {
-    const nx = unitX * (size + sw + 1);
-    const ny = unitY * (size + sw + 1);
-
-    return function() {
-      canvas.begin();
-      canvas.moveTo(pe.x - nx / 2 - ny / 2, pe.y - ny / 2 + nx / 2);
-      canvas.lineTo(pe.x + ny / 2 - (3 * nx) / 2, pe.y - (3 * ny) / 2 - nx / 2);
-      canvas.stroke();
-    };
-  });
 }
 
 /**
@@ -207,16 +53,33 @@ export function configurateConnectable(graph, config: IConfig) {
     10,
     10
   );
+
+  graph.connectionHandler.constraintHandler.highlightColor = '#4285F4';
+  /** hover锚点高亮 */
+  graph.connectionHandler.constraintHandler.createHighlightShape = function() {
+    const hl = new mxEllipse(null, this.highlightColor, this.highlightColor, 0);
+    hl.opacity = 30;
+    return hl;
+  };
+
   graph.connectionHandler.constraintHandler.highlightColor = '#4285f4';
 
   // 设置连线锚点
   graph.getAllConnectionConstraints = function(terminal) {
     if (terminal != null && this.model.isVertex(terminal.cell)) {
       return [
+        new mxConnectionConstraint(new mxPoint(0.25, 0), true),
         new mxConnectionConstraint(new mxPoint(0.5, 0), true),
+        new mxConnectionConstraint(new mxPoint(0.75, 0), true),
+        new mxConnectionConstraint(new mxPoint(0, 0.25), true),
         new mxConnectionConstraint(new mxPoint(0, 0.5), true),
+        new mxConnectionConstraint(new mxPoint(0, 0.75), true),
+        new mxConnectionConstraint(new mxPoint(1, 0.25), true),
         new mxConnectionConstraint(new mxPoint(1, 0.5), true),
-        new mxConnectionConstraint(new mxPoint(0.5, 1), true)
+        new mxConnectionConstraint(new mxPoint(1, 0.75), true),
+        new mxConnectionConstraint(new mxPoint(0.25, 1), true),
+        new mxConnectionConstraint(new mxPoint(0.5, 1), true),
+        new mxConnectionConstraint(new mxPoint(0.75, 1), true)
       ];
     }
 
@@ -279,15 +142,6 @@ export function configurateConnectable(graph, config: IConfig) {
 }
 
 /**
- * 框选配置
- * @param graph 绘图对象
- * @param config 配置信息
- */
-export function configurateRubberband(graph, config: IConfig) {
-  new mxRubberband(graph);
-}
-
-/**
  * 布局配置
  * @param graph 绘图对象
  * @param config 配置信息
@@ -300,116 +154,4 @@ export function configurateLayout(graph, config: IConfig) {
       return layout;
     }
   };
-}
-
-/**
- * 辅助线配置
- * @param graph 绘图对象
- * @param config 配置信息
- */
-export function configurateGuides(graph, config: IConfig) {
-  graph.graphHandler.guidesEnabled = true;
-  graph.graphHandler.useGuidesForEvent = function(me) {
-    return !mxEvent.isAltDown(me.getEvent());
-  };
-
-  // 设置辅助线颜色
-  mxConstants.GUIDE_COLOR = '#FF0000';
-  // 设置辅助线宽度
-  mxConstants.GUIDE_STROKEWIDTH = 1;
-}
-
-/**
- * 回退配置
- * @param graph 绘图对象
- * @param config 配置信息
- */
-export function configurateUndoManager(graph, config: IConfig) {
-  const undoMgr = new mxUndoManager();
-
-  const undoListener = function(sender, evt) {
-    undoMgr.undoableEditHappened(evt.getProperty('edit'));
-  };
-
-  // Installs the command history
-  const listener = function(sender, evt) {
-    undoListener.apply(arguments);
-  };
-
-  graph.getModel().addListener(mxEvent.UNDO, listener);
-  graph.getView().addListener(mxEvent.UNDO, listener);
-
-  // Keeps the selection in sync with the history
-  const undoHandler = function(sender, evt) {
-    const cand = graph.getSelectionCellsForChanges(
-      evt.getProperty('edit').changes
-    );
-    // const model = graph.getModel();
-    const cells: Array<any> = [];
-
-    for (let i = 0; i < cand.length; i++) {
-      if (graph.view.getState(cand[i]) != null) {
-        cells.push(cand[i]);
-      }
-    }
-
-    graph.setSelectionCells(cells);
-  };
-
-  undoMgr.addListener(mxEvent.UNDO, undoHandler);
-  undoMgr.addListener(mxEvent.REDO, undoHandler);
-}
-
-/**
- * 配置绘图
- * @param graph 绘图对象
- * @param config 配置信息
- */
-export function configurate(graph, config?: IConfig) {
-  config = Object.assign({}, defaultConfig, config);
-
-  graph.alternateEdgeStyle = 'elbow=vertical';
-
-  graph.setEnabled(!!config.enable);
-  graph.setMultigraph(false);
-  graph.setEnterStopsCellEditing(true);
-
-  configurateEvents(graph, config);
-  configurateStylesheet(graph, config);
-  configurateLayout(graph, config);
-  configurateValue(graph, config);
-  configurateVertex(graph, config);
-  configurateEdge(graph, config);
-  configurateConnectable(graph, config);
-  configurateRubberband(graph, config);
-  configurateTooltip(graph, config);
-  configurateHighlight(graph, config);
-  configurateGuides(graph, config);
-  configurateUndoManager(graph, config);
-}
-
-/**
- * 加载绘制绘图数据
- * @param graph 绘图对象
- */
-export function render(graph) {
-  // const overlays = graph.getCellOverlays(cell);
-  // if (overlays == null)
-  // {
-  //   // Creates a new overlay with an image and a tooltip
-  //   const overlay = new mxCellOverlay(
-  //     new mxImage('editors/images/overlays/check.png', 16, 16),
-  //     'Overlay tooltip');
-  //   // Installs a handler for clicks on the overlay
-  //   overlay.addListener(mxEvent.CLICK, function(sender, evt2)
-  //   {
-  //     mxUtils.alert('Overlay clicked');
-  //   });
-  //   // Sets the overlay for the cell in the graph
-  //   graph.addCellOverlay(cell, overlay);
-  // }
-  // else
-  // {
-  //   graph.removeCellOverlays(cell);
-  // }
 }

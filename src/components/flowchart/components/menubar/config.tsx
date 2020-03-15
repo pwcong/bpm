@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ICell } from '../../types';
 import EditorUI from '../../components/editorui';
-import SVG from '../common/svg';
+import { TitleSVG } from '../common/svg';
 import { getCommonComponent, reRender } from './utils';
 
 export const data: Array<ICell> = [
@@ -19,10 +19,11 @@ export const data: Array<ICell> = [
         component,
         Object.assign({}, component.props, {
           children: (
-            <SVG
+            <TitleSVG
+              title={cell.title}
               name="undo"
               style={{
-                color: editorUI.canUndo() ? '#333333' : '#999999'
+                color: editorUI.canUndo() ? '#666666' : '#cccccc'
               }}
             />
           )
@@ -57,10 +58,11 @@ export const data: Array<ICell> = [
         component,
         Object.assign({}, component.props, {
           children: (
-            <SVG
+            <TitleSVG
+              title={cell.title}
               name="redo"
               style={{
-                color: editorUI.canRedo() ? '#333333' : '#999999'
+                color: editorUI.canRedo() ? '#666666' : '#cccccc'
               }}
             />
           )
@@ -95,13 +97,14 @@ export const data: Array<ICell> = [
         component,
         Object.assign({}, component.props, {
           children: (
-            <SVG
+            <TitleSVG
+              title={cell.title}
               name="delete"
               style={{
                 color:
                   editorUI.editor.graph.getSelectionCells().length > 0
-                    ? '#333333'
-                    : '#999999'
+                    ? '#666666'
+                    : '#cccccc'
               }}
             />
           )
@@ -111,10 +114,7 @@ export const data: Array<ICell> = [
     listeners: [
       {
         name: 'select',
-        // callback: reRender,
-        callback: (ref, editorUI: EditorUI, cell: ICell) => {
-          console.log(ref);
-        }
+        callback: reRender
       }
     ]
   }
