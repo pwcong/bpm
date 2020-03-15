@@ -1,15 +1,6 @@
 import React from 'react';
 
 import { mxConstants, mxPerimeter } from '@/components/mxgraph';
-import svgGeneralStart from '@/mxgraph/images/toolbar/general-start.svg';
-import svgGeneralEnd from '@/mxgraph/images/toolbar/general-end.svg';
-import svgDraft from '@/mxgraph/images/toolbar/draft-m.svg';
-import svgReview from '@/mxgraph/images/toolbar/review-m.svg';
-import svgConditionBranch from '@/mxgraph/images/toolbar/condition-branch.svg';
-import svgManualBranch from '@/mxgraph/images/toolbar/manual-branch.svg';
-import svgSplit from '@/mxgraph/images/toolbar/split.svg';
-import svgRead from '@/mxgraph/images/toolbar/read-m.svg';
-import svgSubProcess from '@/mxgraph/images/toolbar/sub-process-m.svg';
 
 import { TitleIMG } from '../common/img';
 import { ICell } from '../../types';
@@ -37,7 +28,12 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <TitleIMG src={svgGeneralStart} title="开始事件" />,
+    component: (
+      <TitleIMG
+        src="mxgraph/images/toolbar/general-start.svg"
+        title="开始事件"
+      />
+    ),
     onInit: commonInit
   },
   {
@@ -56,7 +52,9 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <TitleIMG src={svgGeneralEnd} title="结束事件" />,
+    component: (
+      <TitleIMG src="mxgraph/images/toolbar/general-end.svg" title="结束事件" />
+    ),
     onInit: commonInit
   },
   {
@@ -75,7 +73,9 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <TitleIMG src={svgDraft} title="起草节点" />,
+    component: (
+      <TitleIMG src="mxgraph/images/toolbar/draft-m.svg" title="起草节点" />
+    ),
     onInit: commonInit
   },
   {
@@ -94,7 +94,9 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <TitleIMG src={svgReview} title="审批节点" />,
+    component: (
+      <TitleIMG src="mxgraph/images/toolbar/review-m.svg" title="审批节点" />
+    ),
     onInit: commonInit
   },
   {
@@ -115,7 +117,12 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <TitleIMG src={svgConditionBranch} title="条件分支" />,
+    component: (
+      <TitleIMG
+        src="mxgraph/images/toolbar/condition-branch.svg"
+        title="条件分支"
+      />
+    ),
     onInit: commonInit
   },
   {
@@ -136,7 +143,12 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <TitleIMG src={svgManualBranch} title="人工分支" />,
+    component: (
+      <TitleIMG
+        src="mxgraph/images/toolbar/manual-branch.svg"
+        title="人工分支"
+      />
+    ),
     onInit: commonInit
   },
   {
@@ -157,7 +169,9 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <TitleIMG src={svgSplit} title="并行分支" />,
+    component: (
+      <TitleIMG src="mxgraph/images/toolbar/split.svg" title="并行分支" />
+    ),
     onInit: commonInit
   },
   {
@@ -176,7 +190,9 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <TitleIMG src={svgRead} title="传阅节点" />,
+    component: (
+      <TitleIMG src="mxgraph/images/toolbar/read-m.svg" title="传阅节点" />
+    ),
     onInit: commonInit
   },
   {
@@ -195,7 +211,12 @@ export const data: Array<ICell> = [
       x: 0,
       y: 0
     },
-    component: <TitleIMG src={svgSubProcess} title="子流程节点" />,
+    component: (
+      <TitleIMG
+        src="mxgraph/images/toolbar/sub-process-m.svg"
+        title="子流程节点"
+      />
+    ),
     onInit: commonInit
   }
 ];
