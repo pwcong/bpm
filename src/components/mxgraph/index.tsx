@@ -67,8 +67,8 @@ function globalConfig() {
   // 设置线触点图标
   mxEdgeHandler.prototype.handleImage = new mxImage(
     'mxgraph/images/dot.svg',
-    5,
-    5
+    6,
+    6
   );
 
   // 设置锚点图标

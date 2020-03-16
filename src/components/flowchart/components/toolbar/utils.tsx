@@ -5,45 +5,12 @@ import { ICell, ECellType } from '../../types';
 import { EEventName } from '../../config';
 import EditorUI from '../editorui';
 
-export function commonInit(
+export function makeDraggable(
   element: HTMLElement,
-  editorUI: EditorUI,
-  cell: ICell
+  graph: any,
+  prototype: any
 ) {
-  const graph = editorUI.editor.graph;
-
-  const {
-    key,
-    name,
-    value = {},
-    geometry = {
-      x: 0,
-      y: 0,
-      width: 50,
-      height: 50
-    },
-    style = '',
-    type
-  } = cell;
-
-  if (typeof style === 'object') {
-    const styleObj = new Object();
-    Object.keys(style).forEach(k => (styleObj[k] = style[k]));
-    graph.getStylesheet().putCellStyle(key, styleObj);
-  }
-
-  const prototype = new mxCell(
-    Object.assign(
-      {
-        key,
-        name
-      },
-      value
-    ),
-    new mxGeometry(geometry.x, geometry.y, geometry.width, geometry.height),
-    typeof style === 'string' ? style : key
-  );
-  prototype.setVertex(type !== undefined ? type === ECellType.VERTEX : true);
+  const { geometry } = prototype;
 
   const dragEl = document.createElement('div');
   dragEl.style.border = '1px dashed #4285f4';
@@ -103,4 +70,47 @@ export function commonInit(
   ds.isGuidesEnabled = function() {
     return graph.graphHandler.guidesEnabled;
   };
+}
+
+export function commonInit(
+  element: HTMLElement,
+  editorUI: EditorUI,
+  cell: ICell
+) {
+  const graph = editorUI.editor.graph;
+
+  const {
+    key,
+    name,
+    value = {},
+    geometry = {
+      x: 0,
+      y: 0,
+      width: 50,
+      height: 50
+    },
+    style = '',
+    type
+  } = cell;
+
+  if (typeof style === 'object') {
+    const styleObj = new Object();
+    Object.keys(style).forEach(k => (styleObj[k] = style[k]));
+    graph.getStylesheet().putCellStyle(key, styleObj);
+  }
+
+  const prototype = new mxCell(
+    Object.assign(
+      {
+        key,
+        name
+      },
+      value
+    ),
+    new mxGeometry(geometry.x, geometry.y, geometry.width, geometry.height),
+    typeof style === 'string' ? style : key
+  );
+  prototype.setVertex(type !== undefined ? type === ECellType.VERTEX : true);
+
+  makeDraggable(element, graph, prototype);
 }

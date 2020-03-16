@@ -148,7 +148,6 @@ export default class Graph extends mxGraph {
 
     // 禁止空连接
     graph.setAllowDanglingEdges(false);
-    graph.setCellsDisconnectable(false);
 
     // 设置连线锚点
     graph.getAllConnectionConstraints = function(terminal) {
