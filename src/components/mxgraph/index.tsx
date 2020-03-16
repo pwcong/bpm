@@ -59,7 +59,7 @@ function globalConfig() {
   // 设置置入对象颜色
   mxConstants.DROP_TARGET_COLOR = '#4285f4';
   // 设置高亮颜色
-  mxConstants.HIGHLIGHT_OPACITY = 30;
+  mxConstants.HIGHLIGHT_OPACITY = 60;
   mxConstants.HIGHLIGHT_STROKEWIDTH = 2;
   mxConstants.HIGHLIGHT_COLOR = '#4285f4';
   mxConstants.OUTLINE_HIGHLIGHT_COLOR = '#4285f4';
