@@ -2,14 +2,13 @@ import {
   mxGraph,
   mxRubberband,
   mxKeyHandler,
-  // mxImage,
   mxMarker,
   mxConstants,
-  mxEllipse,
   mxEvent,
   mxCellState,
   mxConnectionConstraint,
-  mxPoint
+  mxPoint,
+  mxGraphHandler
 } from '@/components/mxgraph';
 import { postEvent } from '@/utils/event';
 import { EEventName } from '../../config';
@@ -41,6 +40,9 @@ export default class Graph extends mxGraph {
 
     // 取消画布右键弹窗
     mxEvent.disableContextMenu(graph.container);
+
+    // 公差
+    graph.setTolerance(8);
 
     // 允许编辑
     graph.setEnabled(true);
@@ -98,6 +100,29 @@ export default class Graph extends mxGraph {
     // 禁止缩放大小
     // graph.setCellsResizable(false);
 
+    // 允许拖放
+    graph.setDropEnabled(true);
+    graph.isValidDropTarget = function(cell, cells, evt) {
+      return (
+        cell != null &&
+        ((this.isSplitEnabled() && this.isSplitTarget(cell, cells, evt)) ||
+          (!this.model.isEdge(cell) &&
+            (this.isSwimlane(cell) ||
+              (this.model.getChildCount(cell) > 0 &&
+                !this.isCellCollapsed(cell)))))
+      );
+    };
+
+    // 对象切割
+    graph.isSplitTarget = function(target, cells, evt) {
+      debugger;
+      return (
+        this.model.isEdge(cells[0]) &&
+        !mxEvent.isAltDown(evt) &&
+        !mxEvent.isShiftDown(evt)
+      );
+    };
+
     mxMarker.addMarker('dash', function(
       canvas,
       shape,
@@ -146,7 +171,6 @@ export default class Graph extends mxGraph {
     // 设置连线锚点
     graph.getAllConnectionConstraints = function(terminal) {
       if (terminal !== null && this.model.isVertex(terminal.cell)) {
-        
         const { constraints = [] } =
           dataMap.get((this.model.getValue(terminal.cell) || {}).key) || {};
 
@@ -165,19 +189,6 @@ export default class Graph extends mxGraph {
       }
 
       return null;
-    };
-
-    // 锚点高亮
-    graph.connectionHandler.constraintHandler.highlightColor = '#4285F4';
-    graph.connectionHandler.constraintHandler.createHighlightShape = function() {
-      const hl = new mxEllipse(
-        null,
-        this.highlightColor,
-        this.highlightColor,
-        0
-      );
-      hl.opacity = 30;
-      return hl;
     };
 
     // 连接锚点时的样式
@@ -263,6 +274,12 @@ export default class Graph extends mxGraph {
     mxConstants.GUIDE_COLOR = '#135995';
     // 设置辅助线宽度
     mxConstants.GUIDE_STROKEWIDTH = 1;
+
+    // 设置辅助框颜色
+    graph.graphHandler.createPreviewShape = function(bounds) {
+      this.previewColor = '#4285f4';
+      return mxGraphHandler.prototype.createPreviewShape.apply(this, arguments);
+    };
   };
 
   // 重写获取节点名称方法

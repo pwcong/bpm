@@ -8,7 +8,8 @@ import { commonInit } from './utils';
 
 const commonStyle = {
   [mxConstants.STYLE_SHAPE]: mxConstants.SHAPE_IMAGE,
-  [mxConstants.STYLE_PERIMETER]: mxPerimeter.RectanglePerimeter
+  [mxConstants.STYLE_PERIMETER]: mxPerimeter.RectanglePerimeter,
+  [mxConstants.STYLE_IMAGE_ASPECT]: 'none'
 };
 
 const commonLabelStyle = {
@@ -81,8 +82,8 @@ export const data: Array<ICell> = [
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/draft.svg'
     },
     geometry: {
-      width: 174,
-      height: 54,
+      width: 160,
+      height: 40,
       x: 0,
       y: 0
     },
@@ -100,8 +101,8 @@ export const data: Array<ICell> = [
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/review.svg'
     },
     geometry: {
-      width: 174,
-      height: 54,
+      width: 160,
+      height: 40,
       x: 0,
       y: 0
     },
@@ -182,8 +183,8 @@ export const data: Array<ICell> = [
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/read.svg'
     },
     geometry: {
-      width: 174,
-      height: 54,
+      width: 160,
+      height: 40,
       x: 0,
       y: 0
     },
@@ -201,8 +202,8 @@ export const data: Array<ICell> = [
       [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/sub-process.svg'
     },
     geometry: {
-      width: 174,
-      height: 54,
+      width: 160,
+      height: 40,
       x: 0,
       y: 0
     },

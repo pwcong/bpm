@@ -44,6 +44,7 @@ export const mxVertexHandler = mxGraphFactory.mxVertexHandler;
 export const mxRectangle = mxGraphFactory.mxRectangle;
 export const mxRectangleShape = mxGraphFactory.mxRectangleShape;
 export const mxImageShape = mxGraphFactory.mxImageShape;
+export const mxGraphHandler = mxGraphFactory.mxGraphHandler;
 
 function globalConfig() {
   // 挂载MxGraph方法至window解决MxGraph内部调用问题
@@ -55,12 +56,40 @@ function globalConfig() {
   mxConstants.EDGE_SELECTION_COLOR = '#4285f4';
   // 设置点选框颜色
   mxConstants.VERTEX_SELECTION_COLOR = '#4285f4';
+  // 设置置入对象颜色
+  mxConstants.DROP_TARGET_COLOR = '#4285f4';
+  // 设置高亮颜色
+  mxConstants.HIGHLIGHT_OPACITY = 30;
+  mxConstants.HIGHLIGHT_STROKEWIDTH = 2;
+  mxConstants.HIGHLIGHT_COLOR = '#4285f4';
+  mxConstants.OUTLINE_HIGHLIGHT_COLOR = '#4285f4';
 
+  // 设置线触点图标
   mxEdgeHandler.prototype.handleImage = new mxImage(
-    'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTBweCIgaGVpZ2h0PSIxMHB4IiB2aWV3Qm94PSIwIDAgMTAgMTAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8Y2lyY2xlIHN0cm9rZT0iI0ZGRkZGRiIgZmlsbD0iIzQyODVGNCIgY3g9IjUiIGN5PSI1IiByPSI0Ij48L2NpcmNsZT4KICAgIDwvZz4KPC9zdmc+',
-    6,
-    6
+    'mxgraph/images/dot.svg',
+    5,
+    5
   );
+
+  // 设置锚点图标
+  mxConstraintHandler.prototype.pointImage = new mxImage(
+    'mxgraph/images/point.svg',
+    10,
+    10
+  );
+
+  // 设置锚点颜色
+  mxConstraintHandler.prototype.highlightColor = '#4285F4';
+  mxConstraintHandler.prototype.createHighlightShape = function() {
+    const hl = new mxEllipse(null, this.highlightColor, this.highlightColor, 0);
+    hl.opacity = 30;
+    return hl;
+  };
+
+  // mxGraph.prototype.isSplitTarget = function(target, cells, evt) {
+  //   return true;
+  //   // mxGraph.prototype.isSplitTarget.apply(this, arguments)
+  // };
 
   // 设置选框宽高锁定
   const originalVertexHandlerUnion = mxVertexHandler.prototype.union;

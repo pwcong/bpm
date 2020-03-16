@@ -31,11 +31,12 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
     };
   }, []);
 
-  editorUI && console.log(
-    (window['editorUI'] = editorUI),
-    (window['editor'] = editorUI.editor),
-    (window['graph'] = editorUI.editor.graph)
-  );
+  editorUI &&
+    console.log(
+      (window['editorUI'] = editorUI),
+      (window['editor'] = editorUI.editor),
+      (window['graph'] = editorUI.editor.graph)
+    );
 
   return (
     <div className={classnames(cls, className)} style={style}>
