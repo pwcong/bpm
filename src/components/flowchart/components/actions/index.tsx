@@ -1,9 +1,4 @@
-import {
-  mxClient,
-  mxEvent,
-  mxResources,
-  mxEventSource
-} from '@/components/mxgraph';
+import { mxClient, mxResources, mxEventSource } from '@/components/mxgraph';
 
 import EditorUI from '../editorui';
 import Editor from '../editor';
@@ -61,52 +56,15 @@ export default class Actions {
       !mxClient.IS_WIN ? Editor.ctrlKey + '+Shift+Z' : Editor.ctrlKey + '+Y'
     );
 
-    function deleteCells(includeEdges) {
-      // Cancels interactive operations
-      graph.escape();
-      const cells = graph.getDeletableCells(graph.getSelectionCells());
-
-      if (cells != null && cells.length > 0) {
-        const parents = graph.selectParentAfterDelete
-          ? graph.model.getParents(cells)
-          : null;
-        graph.removeCells(cells, includeEdges);
-
-        // Selects parents for easier editing of groups
-        if (parents != null) {
-          const select: Array<any> = [];
-
-          for (let i = 0; i < parents.length; i++) {
-            if (
-              graph.model.contains(parents[i]) &&
-              (graph.model.isVertex(parents[i]) ||
-                graph.model.isEdge(parents[i]))
-            ) {
-              select.push(parents[i]);
-            }
-          }
-
-          graph.setSelectionCells(select);
-        }
-      }
-    }
-
     this.addAction(
       'delete',
-      function(evt) {
-        deleteCells(evt != null && mxEvent.isShiftDown(evt));
+      function() {
+        if (graph.isEnabled()) {
+          graph.removeCells();
+        }
       },
       null,
       'Delete'
-    );
-
-    this.addAction(
-      'deleteAll',
-      function() {
-        deleteCells(true);
-      },
-      null,
-      Editor.ctrlKey + '+Delete'
     );
 
     this.addAction(

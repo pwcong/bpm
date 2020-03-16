@@ -1,9 +1,9 @@
+import { postEvent } from '@/utils/event';
 import { mxCell, mxGeometry, mxUtils } from '@/components/mxgraph';
 
 import { ICell, ECellType } from '../../types';
-import EditorUI from '../editorui';
-import { postEvent } from '@/utils/event';
 import { EEventName } from '../../config';
+import EditorUI from '../editorui';
 
 export function commonInit(
   element: HTMLElement,
@@ -60,14 +60,27 @@ export function commonInit(
 
       try {
         const pt = graph.getPointForEvent(evt);
+        const { x, y } = pt;
         const vertex = graph.getModel().cloneCell(prototype);
-        vertex.geometry.x = pt.x;
-        vertex.geometry.y = pt.y;
+        vertex.geometry.x = x;
+        vertex.geometry.y = y;
 
         const cells = [vertex];
 
-        // 插入节点
-        targetCells = graph.importCells(cells, 0, 0, target);
+        // 拖入对象是线条的情况下切割线条
+        if (graph.isSplitTarget(target, cells, evt)) {
+          graph.splitEdge(
+            target,
+            cells,
+            null,
+            -(geometry.width / 2),
+            -(geometry.height / 2)
+          );
+          targetCells = cells;
+        } else {
+          // 插入节点
+          targetCells = graph.importCells(cells, 0, 0, target);
+        }
 
         // 选中新增节点
         graph.setSelectionCells(targetCells);

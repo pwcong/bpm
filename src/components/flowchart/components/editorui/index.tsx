@@ -6,8 +6,10 @@ import Editor from '../editor';
 import Actions from '../actions';
 
 export default class EditorUI extends mxEventSource {
-  editor: Editor;
   container: HTMLElement;
+
+  editor: Editor;
+  graph: any;
 
   actions: Actions;
 
@@ -17,13 +19,15 @@ export default class EditorUI extends mxEventSource {
     this.container = container;
 
     this.editor = new Editor(container, true);
+    this.graph = this.editor.graph;
+
     this.actions = new Actions(this);
   }
 
   canUndo = () => this.editor.undoManager.indexOfNextAdd > 0;
   undo = () => {
     try {
-      const graph = this.editor.graph;
+      const graph = this.graph;
 
       if (graph.isEditing()) {
         // Stops editing and executes undo on graph if native undo
@@ -50,7 +54,7 @@ export default class EditorUI extends mxEventSource {
     this.editor.undoManager.history.length;
   redo = () => {
     try {
-      const graph = this.editor.graph;
+      const graph = this.graph;
 
       if (graph.isEditing()) {
         document.execCommand('redo', false);
@@ -64,16 +68,24 @@ export default class EditorUI extends mxEventSource {
     }
   };
 
-  canRubberBand = () => this.editor.graph.rubberband.enabled;
+  canRubberBand = () => this.graph.rubberband.enabled;
   rubberband = () => {
     try {
-      this.editor.graph.rubberband.setEnabled(
-        !this.editor.graph.rubberband.enabled
-      );
+      this.graph.rubberband.setEnabled(!this.graph.rubberband.enabled);
     } catch (e) {
       // DO NOTHING
     } finally {
       postEvent(EEventName.rubberband);
+    }
+  };
+
+  canDelete = () =>
+    this.graph.isEnabled() && this.graph.getSelectionCells().length > 0;
+  delete = () => {
+    try {
+      this.graph.removeCells();
+    } catch (e) {
+      // DO NOTHING
     }
   };
 

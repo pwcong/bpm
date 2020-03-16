@@ -90,10 +90,11 @@ export default class Graph extends mxGraph {
 
   initKeyHandler = graph => {
     // 键盘操作
-    const keyHandler = (this.keyHandler = new mxKeyHandler(graph));
-    keyHandler.bindKey(37, function() {
-      console.log(arguments);
-    });
+    // const keyHandler =
+    this.keyHandler = new mxKeyHandler(graph);
+    // keyHandler.bindKey(37, function() {
+    //   console.log(arguments);
+    // });
   };
 
   initCell = graph => {
@@ -102,26 +103,6 @@ export default class Graph extends mxGraph {
 
     // 允许拖放
     graph.setDropEnabled(true);
-    graph.isValidDropTarget = function(cell, cells, evt) {
-      return (
-        cell != null &&
-        ((this.isSplitEnabled() && this.isSplitTarget(cell, cells, evt)) ||
-          (!this.model.isEdge(cell) &&
-            (this.isSwimlane(cell) ||
-              (this.model.getChildCount(cell) > 0 &&
-                !this.isCellCollapsed(cell)))))
-      );
-    };
-
-    // 对象切割
-    graph.isSplitTarget = function(target, cells, evt) {
-      debugger;
-      return (
-        this.model.isEdge(cells[0]) &&
-        !mxEvent.isAltDown(evt) &&
-        !mxEvent.isShiftDown(evt)
-      );
-    };
 
     mxMarker.addMarker('dash', function(
       canvas,
@@ -167,6 +148,7 @@ export default class Graph extends mxGraph {
 
     // 禁止空连接
     graph.setAllowDanglingEdges(false);
+    graph.setCellsDisconnectable(false);
 
     // 设置连线锚点
     graph.getAllConnectionConstraints = function(terminal) {

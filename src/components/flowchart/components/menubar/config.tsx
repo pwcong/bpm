@@ -101,10 +101,7 @@ export const data: Array<ICell> = [
               title={cell.name}
               name="delete"
               style={{
-                color:
-                  editorUI.editor.graph.getSelectionCells().length > 0
-                    ? '#666666'
-                    : '#cccccc'
+                color: editorUI.canDelete() ? '#666666' : '#cccccc'
               }}
             />
           )

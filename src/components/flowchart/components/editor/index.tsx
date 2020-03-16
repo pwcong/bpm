@@ -29,6 +29,7 @@ export default class Editor extends mxEventSource {
 
   init = () => {
     this.initUndoManager();
+    this.initKeyHandler();
   };
 
   initUndoManager = () => {
@@ -69,6 +70,11 @@ export default class Editor extends mxEventSource {
     undoMgr.addListener(mxEvent.REDO, undoHandler);
 
     this.undoManager = undoMgr;
+  };
+
+  initKeyHandler = () => {
+    const keyHandler = this.graph.keyHandler;
+    keyHandler.bindKey(8, () => this.graph.removeCells());
   };
 
   destroy = () => {
