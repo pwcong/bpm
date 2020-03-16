@@ -18,11 +18,11 @@ import { dataMap } from '../toolbar/config';
 export type IGraph = any;
 
 export default class Graph extends mxGraph {
+  graph: any;
+  model: any;
+
   rubberband: any;
   keyHandler: any;
-
-  model: any;
-  cellSizeUpdated: any;
 
   constructor(
     container: HTMLElement | null,
@@ -31,7 +31,9 @@ export default class Graph extends mxGraph {
     stylesheet: string | null
   ) {
     super(container, model, renderHint, stylesheet);
-    this.init(this);
+
+    this.graph = this;
+    this.init(this.graph);
   }
 
   init = graph => {
@@ -64,17 +66,17 @@ export default class Graph extends mxGraph {
 
     // 默认点的样式
     const vertexStyle = {};
-    vertexStyle['strokeColor'] = 'grey';
-    vertexStyle['fontColor'] = '#424242';
+    vertexStyle['strokeColor'] = '#cccccc';
+    vertexStyle['fontColor'] = '#333333';
     vertexStyle['fontSize'] = 10;
     graph.getStylesheet().putDefaultVertexStyle(vertexStyle);
 
     // 默认边的样式
     const edgeStyle = {};
     edgeStyle['edgeStyle'] = 'orthogonalEdgeStyle';
-    edgeStyle['strokeColor'] = '#ccc';
-    edgeStyle['fontColor'] = '#333';
-    edgeStyle['labelBackgroundColor'] = '#E8F1FC';
+    edgeStyle['strokeColor'] = '#cccccc';
+    edgeStyle['fontColor'] = '#333333';
+    edgeStyle['labelBackgroundColor'] = '#e8f1fc';
     edgeStyle['fontSize'] = 10;
     edgeStyle['verticalLabelPosition'] = 'bottom';
     edgeStyle['verticalAlign'] = 'middle';
@@ -82,8 +84,6 @@ export default class Graph extends mxGraph {
     edgeStyle['endArrow'] = 'classic';
     edgeStyle['endFill'] = 1;
     edgeStyle['jettySize'] = 'auto';
-    edgeStyle['selectionColor'] = 'red';
-
     edgeStyle['orthogonalLoop'] = 1;
     graph.getStylesheet().putDefaultEdgeStyle(edgeStyle);
   };
@@ -282,7 +282,7 @@ export default class Graph extends mxGraph {
       );
 
       if (autoSize) {
-        this.cellSizeUpdated(cell, false);
+        this.graph.cellSizeUpdated(cell, false);
       }
     } finally {
       this.model.endUpdate();
