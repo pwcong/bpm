@@ -30,13 +30,16 @@ export default class Editor extends mxEventSource {
     super();
     this.container = container;
     this.editable = editable !== undefined ? editable : true;
-    this.graph = new Graph(this.container, null, null, null);
 
     this.editor = this;
-    this.init();
+    const graph = (this.graph = new Graph(this.container, null, null, null));
+
+    this.init(graph);
   }
 
-  init = () => {
+  init = graph => {
+    graph.setEnabled(this.editable);
+
     this.initUndoManager();
     this.initKeyHandler();
     this.initPageView();

@@ -13,7 +13,7 @@ export interface ICommonProps extends IBaseProps {
 
 export interface IConfig {
   /** 是否允许编辑 */
-  enable?: boolean;
+  editable?: boolean;
 }
 
 export type IWrappedComponentRef = {
@@ -23,7 +23,7 @@ export type IWrappedComponentRef = {
 export type IWrappedComponentRefObject = React.RefObject<IWrappedComponentRef>;
 
 export const defaultConfig: IConfig = {
-  enable: true
+  editable: true
 };
 
 export enum ECellType {

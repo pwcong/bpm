@@ -13,12 +13,12 @@ export default class EditorUI extends mxEventSource {
 
   actions: Actions;
 
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, editable?: boolean) {
     super();
 
     this.container = container;
 
-    this.editor = new Editor(container, true);
+    this.editor = new Editor(container, editable);
     this.graph = this.editor.graph;
 
     this.actions = new Actions(this);

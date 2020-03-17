@@ -47,6 +47,7 @@ export const mxImageShape = mxGraphFactory.mxImageShape;
 export const mxGraphHandler = mxGraphFactory.mxGraphHandler;
 export const mxMouseEvent = mxGraphFactory.mxMouseEvent;
 export const mxPolyline = mxGraphFactory.mxPolyline;
+export const mxOutline = mxGraphFactory.mxOutline;
 
 function globalConfig() {
   // 挂载MxGraph方法至window解决MxGraph内部调用问题
@@ -65,6 +66,10 @@ function globalConfig() {
   mxConstants.HIGHLIGHT_STROKEWIDTH = 2;
   mxConstants.HIGHLIGHT_COLOR = '#4285f4';
   mxConstants.OUTLINE_HIGHLIGHT_COLOR = '#4285f4';
+
+  // 设置导航器颜色
+  mxConstants.OUTLINE_STROKEWIDTH = 1;
+  mxConstants.OUTLINE_COLOR = '#4285f4';
 
   // 设置线触点图标
   mxEdgeHandler.prototype.handleImage = new mxImage(

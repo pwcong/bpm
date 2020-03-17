@@ -14,7 +14,8 @@ import {
   IBaseProps,
   IConfig,
   IWrappedComponentRef,
-  IWrappedComponentRefObject
+  IWrappedComponentRefObject,
+  defaultConfig
 } from './types';
 
 export * from './utils';
@@ -30,7 +31,12 @@ export interface IProps extends IBaseProps {
 const cls = 'flowchart';
 
 const FlowChart: React.FunctionComponent<IProps> = props => {
-  const { className, style, wrappedComponentRef } = props;
+  const {
+    className,
+    style,
+    wrappedComponentRef,
+    config = defaultConfig
+  } = props;
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 
@@ -47,7 +53,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
     if (ref.current) {
       const container = ref.current;
 
-      _editorUi = new EditorUI(container);
+      _editorUi = new EditorUI(container, config.editable);
       setEditorUi(_editorUi);
     }
 
@@ -60,8 +66,6 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
     componentRef.current.editorUI = editorUI;
     wrappedComponentRef && wrappedComponentRef(componentRef);
   });
-
-  console.log('render');
 
   return (
     <div

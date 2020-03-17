@@ -2,10 +2,13 @@ import React from 'react';
 
 import classnames from 'classnames';
 
-import svgZoomIn from '@/mxgraph/images/zoom-in.svg';
-import svgZoomOut from '@/mxgraph/images/zoom-out.svg';
-import svgScreen0 from '@/mxgraph/images/screen-0.svg';
-import svgScreen1 from '@/mxgraph/images/screen-1.svg';
+import { mxOutline } from '@/components/mxgraph';
+
+import svgZoomIn from '@/mxgraph/images/sidebar/zoom-in.svg';
+import svgZoomOut from '@/mxgraph/images/sidebar/zoom-out.svg';
+import svgScreen0 from '@/mxgraph/images/sidebar/screen-0.svg';
+import svgScreen1 from '@/mxgraph/images/sidebar/screen-1.svg';
+import svgOutline from '@/mxgraph/images/sidebar/outline.svg';
 
 import { ICommonProps } from '../../types';
 
@@ -19,9 +22,7 @@ export interface IProps extends ICommonProps {
 const cls = `flowchart-sidebar`;
 const itemCls = cls + '-item';
 
-export interface IZoomerProps extends ICommonProps {}
-
-const Zoomer: React.FunctionComponent<IZoomerProps> = props => {
+const Zoomer: React.FunctionComponent<ICommonProps> = props => {
   const { editorUI } = props;
 
   const [zoom, setZoom] = React.useState<number>(
@@ -78,6 +79,54 @@ const Screener: React.FunctionComponent<IScreenerProps> = props => {
   );
 };
 
+const MiniMap: React.FunctionComponent<ICommonProps> = props => {
+  const { editorUI } = props;
+
+  const ref = React.useRef<HTMLDivElement | null>(null);
+  const [active, setActive] = React.useState<boolean>(false);
+  React.useEffect(() => {
+    let outline;
+
+    if (ref.current) {
+      const container = ref.current;
+      outline = new mxOutline(editorUI.graph, container);
+      outline.setZoomEnabled(false);
+    }
+
+    return () => {
+      outline && outline.destroy();
+    };
+  }, [editorUI, active]);
+
+  const _cls = `${cls}-minimap`;
+
+  return (
+    <React.Fragment>
+      <div
+        className={_cls}
+        style={{
+          backgroundImage: `url(${svgOutline})`
+        }}
+        onClick={() => setActive(!active)}
+      ></div>
+      <div
+        className={`${_cls}-modal`}
+        style={{
+          display: active ? undefined : 'none'
+        }}
+      >
+        <div className={`${_cls}-header`}>
+          <span className={`${_cls}-title`}>导航器</span>
+          <span className={`${_cls}-close`} onClick={() => setActive(false)}>
+            ✖️
+          </span>
+        </div>
+        <div className={`${_cls}-content`} ref={ref}></div>
+      </div>
+    </React.Fragment>
+  );
+};
+
 const Sidebar: React.FunctionComponent<IProps> = props => {
   const { editorUI, className, style } = props;
 
@@ -87,6 +136,9 @@ const Sidebar: React.FunctionComponent<IProps> = props => {
 
   return (
     <div className={classnames(cls, className)} style={style}>
+      <div className={itemCls}>
+        <MiniMap editorUI={editorUI} />
+      </div>
       <div className={itemCls}>
         <Zoomer editorUI={editorUI} />
       </div>
