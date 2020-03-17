@@ -26,6 +26,29 @@ export enum ECellType {
   'EDGE' = 'EDGE'
 }
 
+export enum ECellKey {
+  /** 开始事件 */
+  'generalStart' = 'generalStart',
+  /** 结束事件 */
+  'generalEnd' = 'generalEnd',
+  /** 起草节点 */
+  'draft' = 'draft',
+  /** 审批节点 */
+  'review' = 'review',
+  /** 条件分支 */
+  'conditionBranch' = 'conditionBranch',
+  /** 人工决策 */
+  'manualBranch' = 'manualBranch',
+  /** 并行分支启动 */
+  'split' = 'split',
+  /** 并行分支结束 */
+  'join' = 'join',
+  /** 抄送节点 */
+  'send' = 'send',
+  /** 子流程节点 */
+  'startSubProcess' = 'startSubProcess'
+}
+
 export type ICellListenerCallbackRef = {
   event: any;
   element: HTMLElement | null;
@@ -58,7 +81,9 @@ export interface ICell {
     cell: ICell
   ) => React.ReactElement;
   listeners?: Array<ICellListener>;
-  onInit?: (element: HTMLElement, editorUI: EditorUI, cell: ICell) => void;
+  relations?: Array<ICell>;
+  onInitial?: (element: HTMLElement, editorUI: EditorUI, cell: ICell) => void;
+  onDestroy?: (editorUI: EditorUI, cell: ICell) => void;
 }
 
 export type ICellConstraints = Array<[number, number]>;

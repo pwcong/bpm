@@ -3,8 +3,8 @@ import React from 'react';
 import { mxConstants, mxPerimeter } from '@/components/mxgraph';
 
 import { TitleIMG } from '../common/img';
-import { ICell, ICellConstraints } from '../../types';
-import { commonInit } from './utils';
+import { ICell, ICellConstraints, ECellKey } from '../../types';
+import { commonInitial } from './utils';
 
 const commonStyle = {
   [mxConstants.STYLE_SHAPE]: mxConstants.SHAPE_IMAGE,
@@ -32,9 +32,9 @@ const commonConstraints: ICellConstraints = [
   [0.75, 1]
 ];
 
-export const data: Array<ICell> = [
-  {
-    key: 'generalStart',
+export const map = {
+  [ECellKey.generalStart]: {
+    key: ECellKey.generalStart,
     name: '开始事件',
     style: {
       ...commonStyle,
@@ -53,10 +53,10 @@ export const data: Array<ICell> = [
         title="开始事件"
       />
     ),
-    onInit: commonInit
+    onInitial: commonInitial
   },
-  {
-    key: 'generalEnd',
+  [ECellKey.generalEnd]: {
+    key: ECellKey.generalEnd,
     name: '结束事件',
     style: {
       ...commonStyle,
@@ -72,10 +72,10 @@ export const data: Array<ICell> = [
     component: (
       <TitleIMG src="mxgraph/images/toolbar/general-end.svg" title="结束事件" />
     ),
-    onInit: commonInit
+    onInitial: commonInitial
   },
-  {
-    key: 'draft',
+  [ECellKey.draft]: {
+    key: ECellKey.draft,
     name: '起草节点',
     style: {
       ...commonStyle,
@@ -91,10 +91,10 @@ export const data: Array<ICell> = [
     component: (
       <TitleIMG src="mxgraph/images/toolbar/draft-m.svg" title="起草节点" />
     ),
-    onInit: commonInit
+    onInitial: commonInitial
   },
-  {
-    key: 'review',
+  [ECellKey.review]: {
+    key: ECellKey.review,
     name: '审批节点',
     style: {
       ...commonStyle,
@@ -110,10 +110,10 @@ export const data: Array<ICell> = [
     component: (
       <TitleIMG src="mxgraph/images/toolbar/review-m.svg" title="审批节点" />
     ),
-    onInit: commonInit
+    onInitial: commonInitial
   },
-  {
-    key: 'conditionBranch',
+  [ECellKey.conditionBranch]: {
+    key: ECellKey.conditionBranch,
     name: '条件分支',
     style: {
       ...commonStyle,
@@ -132,10 +132,10 @@ export const data: Array<ICell> = [
         title="条件分支"
       />
     ),
-    onInit: commonInit
+    onInitial: commonInitial
   },
-  {
-    key: 'manualBranch',
+  [ECellKey.manualBranch]: {
+    key: ECellKey.manualBranch,
     name: '人工分支',
     style: {
       ...commonStyle,
@@ -154,10 +154,10 @@ export const data: Array<ICell> = [
         title="人工分支"
       />
     ),
-    onInit: commonInit
+    onInitial: commonInitial
   },
-  {
-    key: 'split',
+  [ECellKey.split]: {
+    key: ECellKey.split,
     name: '并行分支',
     style: {
       ...commonStyle,
@@ -173,10 +173,29 @@ export const data: Array<ICell> = [
     component: (
       <TitleIMG src="mxgraph/images/toolbar/split.svg" title="并行分支" />
     ),
-    onInit: commonInit
+    onInitial: commonInitial
   },
-  {
-    key: 'read',
+  [ECellKey.join]: {
+    key: ECellKey.join,
+    name: '并行分支',
+    style: {
+      ...commonStyle,
+      ...commonLabelStyle,
+      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/join.svg'
+    },
+    geometry: {
+      width: 36,
+      height: 36,
+      x: 0,
+      y: 0
+    },
+    component: (
+      <TitleIMG src="mxgraph/images/toolbar/join.svg" title="并行分支" />
+    ),
+    onInitial: commonInitial
+  },
+  [ECellKey.send]: {
+    key: ECellKey.send,
     name: '传阅节点',
     style: {
       ...commonStyle,
@@ -192,10 +211,10 @@ export const data: Array<ICell> = [
     component: (
       <TitleIMG src="mxgraph/images/toolbar/read-m.svg" title="传阅节点" />
     ),
-    onInit: commonInit
+    onInitial: commonInitial
   },
-  {
-    key: 'subProcess',
+  [ECellKey.startSubProcess]: {
+    key: ECellKey.startSubProcess,
     name: '子流程节点',
     style: {
       ...commonStyle,
@@ -214,11 +233,25 @@ export const data: Array<ICell> = [
         title="子流程节点"
       />
     ),
-    onInit: commonInit
+    onInitial: commonInitial
   }
+};
+
+export const data: Array<ICell> = [
+  map.generalStart,
+  map.generalEnd,
+  map.draft,
+  map.review,
+  map.conditionBranch,
+  map.manualBranch,
+  {
+    ...map.split,
+    relations: [map.join]
+  },
+  map.startSubProcess
 ];
 
-export const dataMap = data.reduce(
-  (p, c) => p.set(c.key, c),
+export const dataMap = Object.keys(map).reduce(
+  (p, c) => p.set(c, map[c]),
   new Map<string, ICell>()
 );

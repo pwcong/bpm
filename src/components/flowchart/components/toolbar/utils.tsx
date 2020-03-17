@@ -5,12 +5,94 @@ import { ICell, ECellType } from '../../types';
 import { EEventName } from '../../config';
 import EditorUI from '../editorui';
 
+export function commonGetCells(
+  editorUI: EditorUI,
+  cell: ICell,
+  x: number,
+  y: number
+) {
+  const source = commonGetCell(editorUI, cell, x, y);
+
+  const targets: Array<any> = [];
+  const { relations = [] } = cell;
+  for (let i = 0, l = relations.length; i < l; i++) {
+    const relation = relations[i];
+    const target = commonGetCell(editorUI, relation, x + 100 * (i + 1), y);
+
+    const edge = new mxCell({}, new mxGeometry(), null);
+    edge.setEdge(true);
+    edge.geometry.relative = true;
+    edge.source = source;
+    edge.target = target;
+
+    targets.push(edge, target);
+  }
+
+  return [source, ...targets];
+}
+
+export function commonGetCell(
+  editorUI: EditorUI,
+  cell: ICell,
+  x: number,
+  y: number
+) {
+  const graph = editorUI.editor.graph;
+
+  const {
+    key,
+    name,
+    value = {},
+    geometry = {
+      x: 0,
+      y: 0,
+      width: 50,
+      height: 50
+    },
+    style = '',
+    type
+  } = cell;
+
+  if (typeof style === 'object') {
+    const styleObj = new Object();
+    Object.keys(style).forEach(k => (styleObj[k] = style[k]));
+    graph.getStylesheet().putCellStyle(key, styleObj);
+  }
+
+  const prototype = new mxCell(
+    Object.assign(
+      {
+        key,
+        name
+      },
+      value
+    ),
+    new mxGeometry(geometry.x, geometry.y, geometry.width, geometry.height),
+    typeof style === 'string' ? style : key
+  );
+  prototype.setVertex(type !== undefined ? type === ECellType.VERTEX : true);
+
+  const t = graph.getModel().cloneCell(prototype);
+  t.geometry.x = x;
+  t.geometry.y = y;
+
+  return t;
+}
+
 export function makeDraggable(
   element: HTMLElement,
-  graph: any,
-  prototype: any
+  editorUI: EditorUI,
+  cell: ICell
 ) {
-  const { geometry } = prototype;
+  const graph = editorUI.editor.graph;
+  const {
+    geometry = {
+      x: 0,
+      y: 0,
+      width: 50,
+      height: 50
+    }
+  } = cell;
 
   const dragEl = document.createElement('div');
   dragEl.style.border = '1px dashed #4285f4';
@@ -28,11 +110,8 @@ export function makeDraggable(
       try {
         const pt = graph.getPointForEvent(evt);
         const { x, y } = pt;
-        const vertex = graph.getModel().cloneCell(prototype);
-        vertex.geometry.x = x;
-        vertex.geometry.y = y;
 
-        const cells = [vertex];
+        const cells = commonGetCells(editorUI, cell, x, y);
 
         // 拖入对象是线条的情况下切割线条
         if (graph.isSplitTarget(target, cells, evt)) {
@@ -72,45 +151,10 @@ export function makeDraggable(
   };
 }
 
-export function commonInit(
+export function commonInitial(
   element: HTMLElement,
   editorUI: EditorUI,
   cell: ICell
 ) {
-  const graph = editorUI.editor.graph;
-
-  const {
-    key,
-    name,
-    value = {},
-    geometry = {
-      x: 0,
-      y: 0,
-      width: 50,
-      height: 50
-    },
-    style = '',
-    type
-  } = cell;
-
-  if (typeof style === 'object') {
-    const styleObj = new Object();
-    Object.keys(style).forEach(k => (styleObj[k] = style[k]));
-    graph.getStylesheet().putCellStyle(key, styleObj);
-  }
-
-  const prototype = new mxCell(
-    Object.assign(
-      {
-        key,
-        name
-      },
-      value
-    ),
-    new mxGeometry(geometry.x, geometry.y, geometry.width, geometry.height),
-    typeof style === 'string' ? style : key
-  );
-  prototype.setVertex(type !== undefined ? type === ECellType.VERTEX : true);
-
-  makeDraggable(element, graph, prototype);
+  makeDraggable(element, editorUI, cell);
 }

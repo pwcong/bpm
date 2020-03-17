@@ -46,8 +46,8 @@ export const Item: React.FunctionComponent<IMenubarItemProps> = props => {
   React.useEffect(() => {
     ref &&
       ref.current &&
-      data.onInit &&
-      data.onInit(ref.current, editorUI, data);
+      data.onInitial &&
+      data.onInitial(ref.current, editorUI, data);
 
     listeners.forEach(l =>
       window.addEventListener(l.name, listenersCallback[l.name])

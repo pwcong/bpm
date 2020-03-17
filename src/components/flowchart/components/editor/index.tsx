@@ -91,8 +91,8 @@ export default class Editor extends mxEventSource {
 
     graph.pageScale = 1;
 
-    const iw = window.innerWidth;
-    const ih = window.innerHeight;
+    const iw = this.container.offsetWidth;
+    const ih = this.container.offsetHeight;
 
     graph.minimumGraphSize = iw > ih ? iw * 5 : ih * 5;
 
