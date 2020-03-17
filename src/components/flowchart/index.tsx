@@ -22,7 +22,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
 
   const [editorUI, setEditorUi] = React.useState<EditorUI | null>(null);
   const [topHidden, setTopHidden] = React.useState<boolean>(false);
-  const [rightHidden, setRightHidden] = React.useState<boolean>(false);
+  const [rightHidden, setRightHidden] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     let _editorUi: EditorUI;

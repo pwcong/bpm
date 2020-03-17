@@ -46,6 +46,7 @@ export const mxRectangleShape = mxGraphFactory.mxRectangleShape;
 export const mxImageShape = mxGraphFactory.mxImageShape;
 export const mxGraphHandler = mxGraphFactory.mxGraphHandler;
 export const mxMouseEvent = mxGraphFactory.mxMouseEvent;
+export const mxPolyline = mxGraphFactory.mxPolyline;
 
 function globalConfig() {
   // 挂载MxGraph方法至window解决MxGraph内部调用问题

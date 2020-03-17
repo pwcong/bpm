@@ -9,7 +9,8 @@ import {
   mxMouseEvent,
   mxRectangleShape,
   mxRectangle,
-  mxPoint
+  mxPoint,
+  mxPolyline
 } from '@/components/mxgraph';
 import Graph from '../graph';
 
@@ -94,15 +95,215 @@ export default class Editor extends mxEventSource {
     const iw = this.container.offsetWidth;
     const ih = this.container.offsetHeight;
 
-    graph.minimumGraphSize = iw > ih ? iw * 5 : ih * 5;
+    // graph.minimumGraphSize = iw > ih ? iw * 5 : ih * 5;
 
     const pw = iw * 0.8;
-    const ph = (ih - 48) * 0.8;
+    // const pw = iw;
+    const ph = ih * 0.8;
+    // const ph = ih;
+
     graph.pageFormat = new mxRectangle(0, 0, pw, ph);
+    // graph.pageFormat = new mxRectangle(0, 0, 820, 740);
+
+    graph.getPagePadding = function() {
+      return new mxPoint(pw * 0.1, ph * 0.1);
+    };
+    graph.getPageLayout = function() {
+      const size = this.getPageSize();
+      const bounds = this.getGraphBounds();
+
+      if (bounds.width == 0 || bounds.height == 0) {
+        return new mxRectangle(0, 0, 1, 1);
+      } else {
+        // Computes untransformed graph bounds
+        const x = Math.ceil(bounds.x / this.view.scale - this.view.translate.x);
+        const y = Math.ceil(bounds.y / this.view.scale - this.view.translate.y);
+        const w = Math.floor(bounds.width / this.view.scale);
+        const h = Math.floor(bounds.height / this.view.scale);
+
+        const x0 = Math.floor(x / size.width);
+        const y0 = Math.floor(y / size.height);
+        const w0 = Math.ceil((x + w) / size.width) - x0;
+        const h0 = Math.ceil((y + h) / size.height) - y0;
+
+        return new mxRectangle(x0, y0, w0, h0);
+      }
+    };
+    graph.getPageSize = function() {
+      return new mxRectangle(
+        0,
+        0,
+        this.pageFormat.width * this.pageScale,
+        this.pageFormat.height * this.pageScale
+      );
+    };
+    graph.updatePageBreaks = function(visible, width, height) {
+      const scale = this.view.scale;
+      const tr = this.view.translate;
+      const fmt = this.pageFormat;
+      const ps = scale * this.pageScale;
+
+      const bounds2 = this.view.getBackgroundPageBounds();
+
+      width = bounds2.width;
+      height = bounds2.height;
+      const bounds = new mxRectangle(
+        scale * tr.x,
+        scale * tr.y,
+        fmt.width * ps,
+        fmt.height * ps
+      );
+
+      // Does not show page breaks if the scale is too small
+      visible =
+        visible &&
+        Math.min(bounds.width, bounds.height) > this.minPageBreakDist;
+
+      const horizontalCount = visible
+        ? Math.ceil(height / bounds.height) - 1
+        : 0;
+      const verticalCount = visible ? Math.ceil(width / bounds.width) - 1 : 0;
+      const right = bounds2.x + width;
+      const bottom = bounds2.y + height;
+
+      if (this.horizontalPageBreaks == null && horizontalCount > 0) {
+        this.horizontalPageBreaks = [];
+      }
+
+      if (this.verticalPageBreaks == null && verticalCount > 0) {
+        this.verticalPageBreaks = [];
+      }
+
+      const drawPageBreaks = mxUtils.bind(this, function(breaks) {
+        if (breaks != null) {
+          const count =
+            breaks == this.horizontalPageBreaks
+              ? horizontalCount
+              : verticalCount;
+
+          for (let i = 0; i <= count; i++) {
+            const pts =
+              breaks == this.horizontalPageBreaks
+                ? [
+                    new mxPoint(
+                      Math.round(bounds2.x),
+                      Math.round(bounds2.y + (i + 1) * bounds.height)
+                    ),
+                    new mxPoint(
+                      Math.round(right),
+                      Math.round(bounds2.y + (i + 1) * bounds.height)
+                    )
+                  ]
+                : [
+                    new mxPoint(
+                      Math.round(bounds2.x + (i + 1) * bounds.width),
+                      Math.round(bounds2.y)
+                    ),
+                    new mxPoint(
+                      Math.round(bounds2.x + (i + 1) * bounds.width),
+                      Math.round(bottom)
+                    )
+                  ];
+
+            if (breaks[i] != null) {
+              breaks[i].points = pts;
+              breaks[i].redraw();
+            } else {
+              const pageBreak = new mxPolyline(pts, this.pageBreakColor);
+              pageBreak.dialect = this.dialect;
+              pageBreak.isDashed = this.pageBreakDashed;
+              pageBreak.pointerEvents = false;
+              pageBreak.init(this.view.backgroundPane);
+              pageBreak.redraw();
+
+              breaks[i] = pageBreak;
+            }
+          }
+
+          for (let i = count; i < breaks.length; i++) {
+            breaks[i].destroy();
+          }
+
+          breaks.splice(count, breaks.length - count);
+        }
+      });
+
+      drawPageBreaks(this.horizontalPageBreaks);
+      drawPageBreaks(this.verticalPageBreaks);
+    };
+
+    const graphSizeDidChange = graph.sizeDidChange;
+    graph.sizeDidChange = function() {
+      const pages = this.getPageLayout();
+      const pad = this.getPagePadding();
+      const size = this.getPageSize();
+
+      // Updates the minimum graph size
+      const minw = Math.ceil(2 * pad.x + pages.width * size.width);
+      const minh = Math.ceil(2 * pad.y + pages.height * size.height);
+
+      const min = graph.minimumGraphSize;
+
+      // LATER: Fix flicker of scrollbar size in IE quirks mode
+      // after delayed call in window.resize event handler
+      if (min == null || min.width != minw || min.height != minh) {
+        graph.minimumGraphSize = new mxRectangle(0, 0, minw, minh);
+      }
+
+      // Updates auto-translate to include padding and graph size
+      const dx = pad.x - pages.x * size.width;
+      const dy = pad.y - pages.y * size.height;
+
+      if (
+        !this.autoTranslate &&
+        (this.view.translate.x != dx || this.view.translate.y != dy)
+      ) {
+        this.autoTranslate = true;
+        this.view.x0 = pages.x;
+        this.view.y0 = pages.y;
+
+        // NOTE: THIS INVOKES THIS METHOD AGAIN. UNFORTUNATELY THERE IS NO WAY AROUND THIS SINCE THE
+        // BOUNDS ARE KNOWN AFTER THE VALIDATION AND SETTING THE TRANSLATE TRIGGERS A REVALIDATION.
+        // SHOULD MOVE TRANSLATE/SCALE TO VIEW.
+        const tx = graph.view.translate.x;
+        const ty = graph.view.translate.y;
+        graph.view.setTranslate(dx, dy);
+
+        // LATER: Fix rounding errors for small zoom
+        graph.container.scrollLeft += Math.round((dx - tx) * graph.view.scale);
+        graph.container.scrollTop += Math.round((dy - ty) * graph.view.scale);
+
+        this.autoTranslate = false;
+
+        return;
+      }
+
+      graphSizeDidChange.apply(this, arguments);
+    };
 
     const view = graph.view;
 
-    view.translate = new mxPoint((iw - pw) / 2, (ih - 48 - ph) / 2);
+    const graphViewValidate = graph.view.validate;
+    view.validate = function() {
+      if (
+        this.graph.container != null &&
+        mxUtils.hasScrollbars(this.graph.container)
+      ) {
+        const pad = this.graph.getPagePadding();
+        const size = this.graph.getPageSize();
+
+        // Updating scrollbars here causes flickering in quirks and is not needed
+        // if zoom method is always used to set the current scale on the graph.
+        // const tx = this.translate.x;
+        // const ty = this.translate.y;
+        this.translate.x = pad.x - (this.x0 || 0) * size.width;
+        this.translate.y = pad.y - (this.y0 || 0) * size.height;
+      }
+
+      graphViewValidate.apply(this, arguments);
+    };
+    // view.translate = new mxPoint((iw - pw) / 2, (ih - ph) / 2);
+    // view.translate = new mxPoint(0, 0);
 
     view.validateBackgroundPage = function() {
       const graph = this.graph;
@@ -316,29 +517,29 @@ export default class Editor extends mxEventSource {
       return this.graphBounds;
     };
     view.getBackgroundPageBounds = function() {
-      var gb = this.getGraphBounds();
+      const gb = this.getGraphBounds();
 
       // Computes unscaled, untranslated graph bounds
-      var x = gb.width > 0 ? gb.x / this.scale - this.translate.x : 0;
-      var y = gb.height > 0 ? gb.y / this.scale - this.translate.y : 0;
-      var w = gb.width / this.scale;
-      var h = gb.height / this.scale;
+      const x = gb.width > 0 ? gb.x / this.scale - this.translate.x : 0;
+      const y = gb.height > 0 ? gb.y / this.scale - this.translate.y : 0;
+      const w = gb.width / this.scale;
+      const h = gb.height / this.scale;
 
-      var fmt = this.graph.pageFormat;
-      var ps = this.graph.pageScale;
+      const fmt = this.graph.pageFormat;
+      const ps = this.graph.pageScale;
 
-      var pw = fmt.width * ps;
-      var ph = fmt.height * ps;
+      const pw = fmt.width * ps;
+      const ph = fmt.height * ps;
 
-      var x0 = Math.floor(Math.min(0, x) / pw);
-      var y0 = Math.floor(Math.min(0, y) / ph);
-      var xe = Math.ceil(Math.max(1, x + w) / pw);
-      var ye = Math.ceil(Math.max(1, y + h) / ph);
+      const x0 = Math.floor(Math.min(0, x) / pw);
+      const y0 = Math.floor(Math.min(0, y) / ph);
+      const xe = Math.ceil(Math.max(1, x + w) / pw);
+      const ye = Math.ceil(Math.max(1, y + h) / ph);
 
-      var rows = xe - x0;
-      var cols = ye - y0;
+      const rows = xe - x0;
+      const cols = ye - y0;
 
-      var bounds = new mxRectangle(
+      const bounds = new mxRectangle(
         this.scale * (this.translate.x + x0 * pw),
         this.scale * (this.translate.y + y0 * ph),
         this.scale * rows * pw,
@@ -348,7 +549,8 @@ export default class Editor extends mxEventSource {
       return bounds;
     };
 
-    graph.view.validateBackground();
+    this.graph.view.validate();
+    this.graph.sizeDidChange();
   };
 
   destroy = () => {

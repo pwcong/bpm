@@ -67,7 +67,6 @@ export interface IScreenerProps extends ICommonProps {
 
 const Screener: React.FunctionComponent<IScreenerProps> = props => {
   const { active, onToggle } = props;
-  console.log(active);
   return (
     <div
       className={`${cls}-screener`}
