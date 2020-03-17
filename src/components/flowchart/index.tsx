@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import EditorUI from './components/editorui';
 import Menubar from './components/menubar';
 import Toolbar from './components/toolbar';
+import Sidebar from './components/sidebar';
 
 import svgArrow0 from '@/mxgraph/images/arrow-0.svg';
 import svgArrow1 from '@/mxgraph/images/arrow-1.svg';
@@ -85,6 +86,16 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
                 backgroundImage: `url(${rightHidden ? svgArrow1 : svgArrow0})`
               }}
             ></div>
+            {editorUI && (
+              <Sidebar
+                editorUI={editorUI}
+                screenerActive={!topHidden || !rightHidden}
+                onToggleScreen={active => {
+                  setTopHidden(!active);
+                  setRightHidden(!active);
+                }}
+              />
+            )}
           </div>
           <div className={`${cls}-b-r-r`}></div>
         </div>

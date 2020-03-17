@@ -2,19 +2,15 @@ import React from 'react';
 
 import classnames from 'classnames';
 
-import { IBaseProps, ICell } from '../../types';
+import { ICell, ICommonProps } from '../../types';
 import CellItem from '../common/cell-item';
-import EditorUI from '../editorui';
 import { data } from './config';
 
 import './style.scss';
 
-export interface IProps extends IBaseProps {
-  editorUI: EditorUI;
-}
+export interface IProps extends ICommonProps {}
 
-export interface IToolbarItemProps extends IBaseProps {
-  editorUI: EditorUI;
+export interface IToolbarItemProps extends ICommonProps {
   data: ICell;
 }
 

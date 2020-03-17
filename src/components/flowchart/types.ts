@@ -6,6 +6,10 @@ export interface IBaseProps {
   children?: React.ReactNode;
 }
 
+export interface ICommonProps extends IBaseProps {
+  editorUI: EditorUI;
+}
+
 export interface IProps extends IBaseProps {
   config?: IConfig;
 }
