@@ -15,7 +15,7 @@ const App: React.FunctionComponent = () => {
     <div className="container">
       <FlowChart
         config={{
-          editable: false
+          // editable: false
         }}
         wrappedComponentRef={ref => {
           window['flowchart'] = ref;

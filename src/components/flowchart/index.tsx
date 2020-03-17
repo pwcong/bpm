@@ -30,7 +30,7 @@ export interface IProps extends IBaseProps {
 
 const cls = 'flowchart';
 
-const FlowChart: React.FunctionComponent<IProps> = props => {
+export const Canvas: React.FunctionComponent<IProps> = props => {
   const {
     className,
     style,
@@ -41,8 +41,6 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   const [editorUI, setEditorUi] = React.useState<EditorUI | null>(null);
-  const [topHidden, setTopHidden] = React.useState<boolean>(false);
-  const [rightHidden, setRightHidden] = React.useState<boolean>(true);
 
   const componentRef = React.useRef<IWrappedComponentRef>({
     editorUI: null
@@ -66,6 +64,31 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
     componentRef.current.editorUI = editorUI;
     wrappedComponentRef && wrappedComponentRef(componentRef);
   });
+
+  const _cls = `${cls}-canvas`;
+
+  return (
+    <div
+      ref={ref}
+      className={classnames(_cls, className, {
+        [`${_cls}-readonly`]: config.editable === false
+      })}
+      style={style}
+    ></div>
+  );
+};
+
+const FlowChart: React.FunctionComponent<IProps> = props => {
+  const {
+    className,
+    style,
+    wrappedComponentRef,
+    config = defaultConfig
+  } = props;
+
+  const [editorUI, setEditorUi] = React.useState<EditorUI | null>(null);
+  const [topHidden, setTopHidden] = React.useState<boolean>(false);
+  const [rightHidden, setRightHidden] = React.useState<boolean>(true);
 
   return (
     <div
@@ -98,7 +121,18 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
         </div>
       )}
       <div className={`${cls}-b`}>
-        <div className={`${cls}-b-l`} ref={ref}></div>
+        <div className={`${cls}-b-l`}>
+          <Canvas
+            config={config}
+            wrappedComponentRef={ref => {
+              ref &&
+                ref.current &&
+                ref.current.editorUI &&
+                setEditorUi(ref.current.editorUI);
+              wrappedComponentRef && wrappedComponentRef(ref);
+            }}
+          />
+        </div>
         <div className={`${cls}-b-r`}>
           <div className={`${cls}-b-r-l`}>
             <div
