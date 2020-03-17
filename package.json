@@ -16,6 +16,7 @@
   "dependencies": {
     "classnames": "^2.2.6",
     "cross-env": "^5.2.0",
+    "js-base64": "^2.5.2",
     "mxgraph": "^4.1.0",
     "omit.js": "^1.0.2",
     "react": "^16.9.0",

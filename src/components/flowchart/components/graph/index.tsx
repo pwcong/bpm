@@ -51,7 +51,7 @@ export default class Graph extends mxGraph {
     // 禁止重复连接
     graph.setMultigraph(false);
     // 回车键完成输入
-    graph.setEnterStopsCellEditing(true);
+    // graph.setEnterStopsCellEditing(true);
 
     this.initKeyHandler(graph);
     this.initStylesheet(graph);
@@ -250,6 +250,7 @@ export default class Graph extends mxGraph {
 
     // 设置步进距离
     graph.gridSize = 10;
+    graph.view.gridSteps = 4;
 
     // 设置辅助线颜色
     mxConstants.GUIDE_COLOR = '#135995';
