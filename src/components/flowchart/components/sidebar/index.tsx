@@ -32,7 +32,7 @@ const Zoomer: React.FunctionComponent<IZoomerProps> = props => {
 
   const zoomTo = (value: number) => {
     setZoom(value);
-    editorUI.graph.zoomTo(parseFloat((value / 100).toFixed(1)));
+    editorUI.graph.zoomTo(parseFloat((value / 100).toFixed(1)), true);
   };
 
   return (

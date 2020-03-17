@@ -53,12 +53,6 @@ export function commonGetCell(
     type
   } = cell;
 
-  if (typeof style === 'object') {
-    const styleObj = new Object();
-    Object.keys(style).forEach(k => (styleObj[k] = style[k]));
-    graph.getStylesheet().putCellStyle(key, styleObj);
-  }
-
   const prototype = new mxCell(
     Object.assign(
       {

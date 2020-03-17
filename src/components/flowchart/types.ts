@@ -1,3 +1,4 @@
+import React from 'react';
 import EditorUI from './components/editorui';
 
 export interface IBaseProps {
@@ -14,6 +15,12 @@ export interface IConfig {
   /** 是否允许编辑 */
   enable?: boolean;
 }
+
+export type IWrappedComponentRef = {
+  editorUI: EditorUI | null;
+};
+
+export type IWrappedComponentRefObject = React.RefObject<IWrappedComponentRef>;
 
 export const defaultConfig: IConfig = {
   enable: true

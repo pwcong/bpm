@@ -11,9 +11,9 @@ import {
   mxGraphHandler
 } from '@/components/mxgraph';
 import { postEvent } from '@/utils/event';
-import { EEventName } from '../../config';
 
-import { dataMap } from '../toolbar/config';
+import { EEventName } from '../../config';
+import { map, dataMap } from '../toolbar/config';
 
 export type IGraph = any;
 
@@ -86,15 +86,22 @@ export default class Graph extends mxGraph {
     edgeStyle['jettySize'] = 'auto';
     edgeStyle['orthogonalLoop'] = 1;
     graph.getStylesheet().putDefaultEdgeStyle(edgeStyle);
+
+    // 初始化节点样式
+    Object.keys(map).forEach(key => {
+      const cell = map[key];
+      const { style = '' } = cell;
+      if (typeof style === 'object') {
+        const styleObj = new Object();
+        Object.keys(style).forEach(k => (styleObj[k] = style[k]));
+        graph.getStylesheet().putCellStyle(key, styleObj);
+      }
+    });
   };
 
   initKeyHandler = graph => {
     // 键盘操作
-    // const keyHandler =
     this.keyHandler = new mxKeyHandler(graph);
-    // keyHandler.bindKey(37, function() {
-    //   console.log(arguments);
-    // });
   };
 
   initCell = graph => {

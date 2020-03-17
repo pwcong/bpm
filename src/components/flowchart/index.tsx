@@ -10,24 +10,37 @@ import Sidebar from './components/sidebar';
 import svgArrow0 from '@/mxgraph/images/arrow-0.svg';
 import svgArrow1 from '@/mxgraph/images/arrow-1.svg';
 
-import { IBaseProps, IConfig } from './types';
+import {
+  IBaseProps,
+  IConfig,
+  IWrappedComponentRef,
+  IWrappedComponentRefObject
+} from './types';
+
+export * from './utils';
+export * from './types';
 
 import './style.scss';
 
 export interface IProps extends IBaseProps {
   config?: IConfig;
+  wrappedComponentRef?: (ref: IWrappedComponentRefObject) => void;
 }
 
 const cls = 'flowchart';
 
 const FlowChart: React.FunctionComponent<IProps> = props => {
-  const { className, style } = props;
+  const { className, style, wrappedComponentRef } = props;
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   const [editorUI, setEditorUi] = React.useState<EditorUI | null>(null);
   const [topHidden, setTopHidden] = React.useState<boolean>(false);
   const [rightHidden, setRightHidden] = React.useState<boolean>(true);
+
+  const componentRef = React.useRef<IWrappedComponentRef>({
+    editorUI: null
+  });
 
   React.useEffect(() => {
     let _editorUi: EditorUI;
@@ -42,6 +55,13 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
       _editorUi.destroy();
     };
   }, []);
+
+  React.useEffect(() => {
+    componentRef.current.editorUI = editorUI;
+    wrappedComponentRef && wrappedComponentRef(componentRef);
+  });
+
+  console.log('render');
 
   return (
     <div
