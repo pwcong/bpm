@@ -10,10 +10,6 @@ export interface ICommonProps extends IBaseProps {
   editorUI: EditorUI;
 }
 
-export interface IProps extends IBaseProps {
-  config?: IConfig;
-}
-
 export interface IConfig {
   /** 是否允许编辑 */
   enable?: boolean;

@@ -10,8 +10,13 @@ import Sidebar from './components/sidebar';
 import svgArrow0 from '@/mxgraph/images/arrow-0.svg';
 import svgArrow1 from '@/mxgraph/images/arrow-1.svg';
 
-import { IProps } from './types';
+import { IBaseProps, IConfig } from './types';
+
 import './style.scss';
+
+export interface IProps extends IBaseProps {
+  config?: IConfig;
+}
 
 const cls = 'flowchart';
 
@@ -37,13 +42,6 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
       _editorUi.destroy();
     };
   }, []);
-
-  editorUI &&
-    console.log(
-      (window['editorUI'] = editorUI),
-      (window['editor'] = editorUI.editor),
-      (window['graph'] = editorUI.editor.graph)
-    );
 
   return (
     <div
