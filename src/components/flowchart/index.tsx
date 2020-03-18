@@ -112,7 +112,10 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
           <div className={`${cls}-t-b`}>
             <div
               className={`${cls}-toggler`}
-              onClick={() => setTopHidden(!topHidden)}
+              onClick={() => {
+                setTopHidden(!topHidden);
+                setTimeout(() => editorUI && editorUI.redraw(), 300);
+              }}
               style={{
                 backgroundImage: `url(${topHidden ? svgArrow1 : svgArrow0})`
               }}
@@ -149,6 +152,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
                 onToggleScreen={active => {
                   setTopHidden(!active);
                   setRightHidden(!active);
+                  setTimeout(() => editorUI && editorUI.redraw(), 300);
                 }}
               />
             )}

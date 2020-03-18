@@ -90,27 +90,26 @@ export default class Editor extends mxEventSource {
     keyHandler.bindKey(8, () => this.graph.removeCells());
   };
 
-  initPageView = () => {
+  initPageFormat = () => {
     const graph = this.graph;
-
-    graph.pageScale = 1;
 
     const iw = this.container.offsetWidth;
     const ih = this.container.offsetHeight;
 
-    // graph.minimumGraphSize = iw > ih ? iw * 5 : ih * 5;
+    graph.pageFormat = new mxRectangle(0, 0, iw * 0.8, ih * 0.8);
+  };
 
-    const pw = iw * 0.8;
-    // const pw = iw;
-    const ph = ih * 0.8;
-    // const ph = ih;
+  initPageView = () => {
+    const graph = this.graph;
 
-    graph.pageFormat = new mxRectangle(0, 0, pw, ph);
-    // graph.pageFormat = new mxRectangle(0, 0, 820, 740);
+    this.initPageFormat();
+    graph.pageScale = 1;
 
     graph.getPagePadding = function() {
-      return new mxPoint(pw * 0.1, ph * 0.1);
+      const pageFormat = this.pageFormat;
+      return new mxPoint(pageFormat.width * 0.1, pageFormat.height * 0.1);
     };
+    
     graph.getPageLayout = function() {
       const size = this.getPageSize();
       const bounds = this.getGraphBounds();

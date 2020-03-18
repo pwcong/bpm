@@ -89,6 +89,13 @@ export default class EditorUI extends mxEventSource {
     }
   };
 
+  redraw = () => {
+    this.editor.initPageFormat();
+
+    this.graph.view.validate();
+    this.graph.sizeDidChange();
+  };
+
   destroy = () => {
     if (this.editor != null) {
       this.editor.destroy();
