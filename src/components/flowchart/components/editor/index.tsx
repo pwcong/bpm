@@ -45,6 +45,7 @@ export default class Editor extends mxEventSource {
     this.initPageView();
   };
 
+  // 初始化回退管理器
   initUndoManager = () => {
     const graph = this.graph;
     const undoMgr = new mxUndoManager();
@@ -85,11 +86,13 @@ export default class Editor extends mxEventSource {
     this.undoManager = undoMgr;
   };
 
+  // 绑定键盘事件
   initKeyHandler = () => {
     const keyHandler = this.graph.keyHandler;
     keyHandler.bindKey(8, () => this.graph.removeCells());
   };
 
+  // 初始化画布区大小
   initPageFormat = () => {
     const graph = this.graph;
 
@@ -99,6 +102,7 @@ export default class Editor extends mxEventSource {
     graph.pageFormat = new mxRectangle(0, 0, iw * 0.8, ih * 0.8);
   };
 
+  // 初始化画布区绘制
   initPageView = () => {
     const graph = this.graph;
 
@@ -109,7 +113,7 @@ export default class Editor extends mxEventSource {
       const pageFormat = this.pageFormat;
       return new mxPoint(pageFormat.width * 0.1, pageFormat.height * 0.1);
     };
-    
+
     graph.getPageLayout = function() {
       const size = this.getPageSize();
       const bounds = this.getGraphBounds();
@@ -555,6 +559,7 @@ export default class Editor extends mxEventSource {
     this.graph.sizeDidChange();
   };
 
+  // 销毁对象
   destroy = () => {
     this.graph && this.graph.destroy();
   };

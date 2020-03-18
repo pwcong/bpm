@@ -111,6 +111,7 @@ export default class Graph extends mxGraph {
     // 允许拖放
     graph.setDropEnabled(true);
 
+    // 新增箭头样式
     mxMarker.addMarker('dash', function(
       canvas,
       shape,

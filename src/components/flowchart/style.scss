@@ -80,7 +80,7 @@ $cls: flowchart;
     &-l {
       background-color: #f7f7f7;
       left: 0;
-      right: 0;
+      right: 360px;
       overflow: auto;
       transition: all 0.2s;
     }
@@ -123,6 +123,9 @@ $cls: flowchart;
   }
   &-hide-top > &-b {
     top: 0;
+  }
+  &-hide-right > &-b > &-b-l {
+    right: 0;
   }
   &-hide-right > &-b > &-b-r {
     transform: translateX(100%);

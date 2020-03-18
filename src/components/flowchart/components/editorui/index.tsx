@@ -24,6 +24,7 @@ export default class EditorUI extends mxEventSource {
     this.actions = new Actions(this);
   }
 
+  // 回退判断与操作
   canUndo = () => this.editor.undoManager.indexOfNextAdd > 0;
   undo = () => {
     try {
@@ -49,6 +50,7 @@ export default class EditorUI extends mxEventSource {
     }
   };
 
+  // 重做判断与操作
   canRedo = () =>
     this.editor.undoManager.indexOfNextAdd <
     this.editor.undoManager.history.length;
@@ -68,6 +70,7 @@ export default class EditorUI extends mxEventSource {
     }
   };
 
+  // 框选判断与操作
   canRubberBand = () => this.graph.rubberband.enabled;
   rubberband = () => {
     try {
@@ -79,6 +82,7 @@ export default class EditorUI extends mxEventSource {
     }
   };
 
+  // 删除判断与操作
   canDelete = () =>
     this.graph.isEnabled() && this.graph.getSelectionCells().length > 0;
   delete = () => {
@@ -89,13 +93,16 @@ export default class EditorUI extends mxEventSource {
     }
   };
 
-  redraw = () => {
-    this.editor.initPageFormat();
-
-    this.graph.view.validate();
-    this.graph.sizeDidChange();
+  // 重绘操作
+  redraw = (delay?: number) => {
+    setTimeout(() => {
+      this.editor.initPageFormat();
+      this.graph.view.validate();
+      this.graph.sizeDidChange();
+    }, delay);
   };
 
+  // 销毁对象
   destroy = () => {
     if (this.editor != null) {
       this.editor.destroy();

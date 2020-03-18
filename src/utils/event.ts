@@ -5,3 +5,7 @@ export function postEvent(name: string, detail?: any) {
     })
   );
 }
+
+export function getEvent(name: string, callback: any) {
+  window.addEventListener(name, callback);
+}

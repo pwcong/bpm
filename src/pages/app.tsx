@@ -8,14 +8,27 @@ import FlowChart, {
 
 import './style/app.scss';
 
+export const Test: React.FunctionComponent<{
+  cells: Array<any>;
+}> = props => {
+  const { cells } = props;
+
+  return <div>{cells.map(c => c.value.key).join(';')}</div>;
+};
+
 const App: React.FunctionComponent = () => {
   const [ref, setRef] = React.useState<IWrappedComponentRefObject | null>(null);
 
   return (
     <div className="container">
       <FlowChart
-        config={{
-          // editable: false
+        config={
+          {
+            // editable: false
+          }
+        }
+        render={{
+          sidebar: cells => <Test cells={cells} />
         }}
         wrappedComponentRef={ref => {
           window['flowchart'] = ref;

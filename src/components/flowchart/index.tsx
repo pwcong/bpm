@@ -22,9 +22,11 @@ export * from './utils';
 export * from './types';
 
 import './style.scss';
+import { EEventName } from './config';
 
 export interface IProps extends IBaseProps {
   config?: IConfig;
+  onSelectCells?: (cells: Array<any>) => void;
   wrappedComponentRef?: (ref: IWrappedComponentRefObject) => void;
 }
 
@@ -34,6 +36,7 @@ export const Canvas: React.FunctionComponent<IProps> = props => {
   const {
     className,
     style,
+    onSelectCells,
     wrappedComponentRef,
     config = defaultConfig
   } = props;
@@ -61,6 +64,17 @@ export const Canvas: React.FunctionComponent<IProps> = props => {
   }, []);
 
   React.useEffect(() => {
+    const cb = (e: CustomEvent) => {
+      const { cells = [] } = e.detail || {};
+      onSelectCells && onSelectCells(cells);
+    };
+    window.addEventListener(EEventName.select, cb);
+    return () => {
+      window.removeEventListener(EEventName.select, cb);
+    };
+  }, [onSelectCells]);
+
+  React.useEffect(() => {
     componentRef.current.editorUI = editorUI;
     wrappedComponentRef && wrappedComponentRef(componentRef);
   });
@@ -78,17 +92,32 @@ export const Canvas: React.FunctionComponent<IProps> = props => {
   );
 };
 
-const FlowChart: React.FunctionComponent<IProps> = props => {
+const FlowChart: React.FunctionComponent<IProps & {
+  render?: {
+    sidebar?: (cells: Array<any>) => React.ReactNode;
+  };
+}> = props => {
   const {
     className,
     style,
     wrappedComponentRef,
-    config = defaultConfig
+    config = defaultConfig,
+    render = {}
   } = props;
 
   const [editorUI, setEditorUi] = React.useState<EditorUI | null>(null);
+  const [selectedCells, setSelectedCells] = React.useState<Array<any>>([]);
   const [topHidden, setTopHidden] = React.useState<boolean>(false);
-  const [rightHidden, setRightHidden] = React.useState<boolean>(true);
+  const [rightHidden, setRightHidden] = React.useState<boolean>(false);
+
+  const redraw = React.useCallback(() => editorUI && editorUI.redraw(300), [
+    editorUI
+  ]);
+  const onSelectCells = React.useCallback((cells: Array<any>) => {
+    setSelectedCells([...cells]);
+  }, []);
+
+  window['editorUI'] = editorUI;
 
   return (
     <div
@@ -114,7 +143,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
               className={`${cls}-toggler`}
               onClick={() => {
                 setTopHidden(!topHidden);
-                setTimeout(() => editorUI && editorUI.redraw(), 300);
+                redraw();
               }}
               style={{
                 backgroundImage: `url(${topHidden ? svgArrow1 : svgArrow0})`
@@ -127,6 +156,7 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
         <div className={`${cls}-b-l`}>
           <Canvas
             config={config}
+            onSelectCells={onSelectCells}
             wrappedComponentRef={ref => {
               ref &&
                 ref.current &&
@@ -140,7 +170,10 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
           <div className={`${cls}-b-r-l`}>
             <div
               className={`${cls}-toggler`}
-              onClick={() => setRightHidden(!rightHidden)}
+              onClick={() => {
+                setRightHidden(!rightHidden);
+                redraw();
+              }}
               style={{
                 backgroundImage: `url(${rightHidden ? svgArrow1 : svgArrow0})`
               }}
@@ -152,12 +185,14 @@ const FlowChart: React.FunctionComponent<IProps> = props => {
                 onToggleScreen={active => {
                   setTopHidden(!active);
                   setRightHidden(!active);
-                  setTimeout(() => editorUI && editorUI.redraw(), 300);
+                  redraw();
                 }}
               />
             )}
           </div>
-          <div className={`${cls}-b-r-r`}></div>
+          <div className={`${cls}-b-r-r`}>
+            {render.sidebar && render.sidebar(selectedCells)}
+          </div>
         </div>
       </div>
     </div>
