@@ -54,13 +54,13 @@ export function commonGetCell(
   } = cell;
 
   const prototype = new mxCell(
-    Object.assign(
+    JSON.stringify(Object.assign(
       {
         key,
         name
       },
       value
-    ),
+    )),
     new mxGeometry(geometry.x, geometry.y, geometry.width, geometry.height),
     typeof style === 'string' ? style : key
   );

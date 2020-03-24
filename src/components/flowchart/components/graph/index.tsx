@@ -274,20 +274,24 @@ export default class Graph extends mxGraph {
 
   // 重写获取节点名称方法
   convertValueToString = cell => {
-    const value = this.model.getValue(cell) || {};
-    return value['name'] || '';
+    try {
+      const value = JSON.parse(this.model.getValue(cell) || '{}');
+      return value['name'] || '';
+    } catch (e) {
+      return '';
+    }
   };
 
   // 重写设置节点名称方法
   cellLabelChanged = (cell, value, autoSize) => {
     this.model.beginUpdate();
     try {
-      const v = this.model.getValue(cell);
+      const v = JSON.parse(this.model.getValue(cell) || '{}');
       this.model.setValue(
         cell,
-        Object.assign({}, v, {
+        JSON.stringify(Object.assign({}, v, {
           name: value
-        })
+        }))
       );
 
       if (autoSize) {

@@ -13,7 +13,7 @@ export const Test: React.FunctionComponent<{
 }> = props => {
   const { cells } = props;
 
-  return <div>{cells.map(c => c.value.key).join(';')}</div>;
+  return <div>{cells.map(c => (c.value || {}).key).join(';')}</div>;
 };
 
 const App: React.FunctionComponent = () => {
