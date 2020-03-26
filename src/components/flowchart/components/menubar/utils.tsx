@@ -1,29 +1,64 @@
 import React from 'react';
 
+// import Tooltip from '@elements/tooltip';
+// import Dropdown from '@elements/dropdown';
+
 import { ICell, ICellListenerCallbackRef } from '../../types';
 import EditorUI from '../../components/editorui';
 
-export const getCommonComponent = (
+// import Menubar from './index';
+
+export function getCommonComponent(
   component: React.ReactElement,
+  children: React.ReactNode,
   editorUI: EditorUI,
   cell: ICell
-) => {
+) {
   const action = editorUI.actions.get(cell.key);
-  return React.cloneElement(
+
+  // const { name, relations = [] } = cell;
+
+  component = React.cloneElement(
     component,
     Object.assign({}, component.props, {
-      title: `${cell.name}${
-        action && action.shortcut ? `(${action.shortcut})` : ''
-      }`,
-      onClick: () => action && action.funct && action.funct()
+      onClick: () => action && action.funct && action.funct(),
+      children
     })
   );
-};
 
-export const reRender = (
+  // if (relations.length > 0) {
+  //   return (
+  //     <Dropdown
+  //       overlay={<Menubar editorUI={editorUI} data={relations} isSub={true} />}
+  //       // visible={true}
+  //     >
+  //       {component}
+  //     </Dropdown>
+  //   );
+  // }
+
+  // if (name && action && action.tooltip) {
+  //   return (
+  //     <Tooltip
+  //       title={
+  //         <div style={{ textAlign: 'center' }}>
+  //           <div>{name}</div>
+  //           {action && action.shortcut && <div>{action.shortcut}</div>}
+  //         </div>
+  //       }
+  //     >
+  //       {component}
+  //     </Tooltip>
+  //   );
+  // }
+
+  return component;
+}
+
+export function reRender(
   ref: ICellListenerCallbackRef,
   editorUI: EditorUI,
   cell: ICell
-) => {
+) {
   ref && ref.render && ref.render();
-};
+}

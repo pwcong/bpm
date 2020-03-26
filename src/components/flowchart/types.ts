@@ -14,17 +14,40 @@ export interface ICommonProps extends IBaseProps {
 export interface IConfig {
   /** 是否允许编辑 */
   editable?: boolean;
+  /** 菜单栏配置 */
+  menubar?: ICellsConfig;
+  /** 工具栏配置 */
+  toolbar?: ICellsConfig;
+  /** 变更操作 */
+  afterUpdateCells?: (graph) => void;
 }
 
 export type IWrappedComponentRef = {
   editorUI: EditorUI | null;
+  events: {
+    mousemove?: MouseEvent;
+    mousedown?: MouseEvent;
+  } | null;
 };
 
 export type IWrappedComponentRefObject = React.RefObject<IWrappedComponentRef>;
 
-export const defaultConfig: IConfig = {
-  editable: true
-};
+export enum EEventName {
+  /** 还原 */
+  'undo' = 'flowchart_undo',
+  /** 重做 */
+  'redo' = 'flowchart_redo',
+  /** 添加 */
+  'add' = 'flowchart_add',
+  /** 删除 */
+  'delete' = 'flowchart_delete',
+  /** 选择 */
+  'select' = 'flowchart_select',
+  /** 框选 */
+  'rubberband' = 'flowchart_rubberband',
+  /** 放大缩小 */
+  'zoom' = 'flowchart_zoom'
+}
 
 export enum ECellType {
   /** 节点 */
@@ -34,6 +57,8 @@ export enum ECellType {
 }
 
 export enum ECellKey {
+  /** 线条 */
+  'sequenceFlow' = 'sequenceFlow',
   /** 开始事件 */
   'generalStart' = 'generalStart',
   /** 结束事件 */
@@ -73,6 +98,11 @@ export interface ICellListener {
   callback: ICellListenerCallback;
 }
 
+export type ICellsConfig = {
+  data: Array<ICell>;
+  map: { [key: string]: ICell };
+};
+
 export interface ICell {
   key: string;
   name: string;
@@ -80,7 +110,8 @@ export interface ICell {
   value?: ICellValue;
   geometry?: ICellGeometry;
   constraints?: ICellConstraints;
-  style?: object | string;
+  style?: object;
+  status?: { [key: string]: object };
   component?: React.ReactNode;
   getComponent?: (
     component: React.ReactElement,
@@ -89,16 +120,20 @@ export interface ICell {
   ) => React.ReactElement;
   listeners?: Array<ICellListener>;
   relations?: Array<ICell>;
+  connections?: Array<ICell>;
+  disabled?: boolean;
   onInitial?: (element: HTMLElement, editorUI: EditorUI, cell: ICell) => void;
   onDestroy?: (editorUI: EditorUI, cell: ICell) => void;
 }
 
 export type ICellConstraints = Array<[number, number]>;
 
-export interface ICellValue {
+export type ICellMap = { [key: string]: ICell };
+
+export type ICellValue = any & {
   key: string;
   name: string;
-}
+};
 
 export interface ICellGeometry {
   x: number;

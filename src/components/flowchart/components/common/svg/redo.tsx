@@ -6,8 +6,8 @@ const SVGRedo = () => (
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
-    width="16"
-    height="16"
+    width="20"
+    height="20"
   >
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g

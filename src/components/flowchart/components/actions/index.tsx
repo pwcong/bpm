@@ -1,25 +1,29 @@
-import { mxClient, mxResources, mxEventSource } from '@/components/mxgraph';
+import { mxResources, mxEventSource } from '@/components/mxgraph';
 
 import EditorUI from '../editorui';
-import Editor from '../editor';
+
+import { data } from './config';
 
 export class Action extends mxEventSource {
-  label: string;
+  key: string;
   funct: Function | null;
   enabled: boolean | null;
   shortcut: string | null;
+  tooltip: boolean | null;
 
   constructor(
-    label: string,
+    key: string,
     funct: Function | null,
     enabled: boolean | null,
-    shortcut: string | null
+    shortcut: string | null,
+    tooltip: boolean | null
   ) {
     super();
-    this.label = label;
+    this.key = key;
     this.funct = funct;
     this.enabled = enabled !== null ? enabled : true;
     this.shortcut = shortcut;
+    this.tooltip = tooltip !== null ? tooltip : true;
   }
 }
 
@@ -35,45 +39,8 @@ export default class Actions {
 
   init = () => {
     const ui = this.editorUI;
-    const editor = ui.editor;
-    const graph = editor.graph;
-
-    this.addAction(
-      'undo',
-      function() {
-        ui.undo();
-      },
-      null,
-      Editor.ctrlKey + '+Z'
-    );
-
-    this.addAction(
-      'redo',
-      function() {
-        ui.redo();
-      },
-      null,
-      !mxClient.IS_WIN ? Editor.ctrlKey + '+Shift+Z' : Editor.ctrlKey + '+Y'
-    );
-
-    this.addAction(
-      'delete',
-      function() {
-        if (graph.isEnabled()) {
-          graph.removeCells();
-        }
-      },
-      null,
-      'Delete'
-    );
-
-    this.addAction(
-      'rubberband',
-      function() {
-        ui.rubberband();
-      },
-      null,
-      Editor.ctrlKey + '+R'
+    data.forEach(d =>
+      this.addAction(d.key, () => d.funct(ui), d.enabled, d.shortcut, d.tooltip)
     );
   };
 
@@ -81,18 +48,19 @@ export default class Actions {
     key: string,
     funct: Function | null,
     enabled: boolean | null,
-    shortcut: string | null
+    shortcut: string | null,
+    tooltip: boolean | null
   ) => {
     let title;
 
-    if (key.substring(key.length - 3) == '...') {
+    if (key.substring(key.length - 3) === '...') {
       key = key.substring(0, key.length - 3);
       title = mxResources.get(key) + '...';
     } else {
       title = mxResources.get(key);
     }
 
-    return this.put(key, new Action(title, funct, enabled, shortcut));
+    return this.put(key, new Action(title, funct, enabled, shortcut, tooltip));
   };
 
   get = (name: string) => {

@@ -2,9 +2,12 @@ import React from 'react';
 
 import { mxConstants, mxPerimeter } from '@/components/mxgraph';
 
+import { getImageBasePath } from '@/components/mxgraph/utils';
+
+import { ICell, ICellConstraints, ECellKey, ICellMap } from '../../types';
+import EditorUI from '../editorui';
 import { TitleIMG } from '../common/img';
-import { ICell, ICellConstraints, ECellKey } from '../../types';
-import { commonInitial } from './utils';
+import { commonInitial, commonStatus, getCommonComponent } from './utils';
 
 const commonStyle = {
   [mxConstants.STYLE_SHAPE]: mxConstants.SHAPE_IMAGE,
@@ -14,7 +17,8 @@ const commonStyle = {
 
 const commonLabelStyle = {
   [mxConstants.STYLE_VERTICAL_LABEL_POSITION]: 'bottom',
-  [mxConstants.STYLE_VERTICAL_ALIGN]: 'top'
+  [mxConstants.STYLE_VERTICAL_ALIGN]: 'top',
+  [mxConstants.STYLE_SPACING_TOP]: 8
 };
 
 const commonConstraints: ICellConstraints = [
@@ -32,27 +36,39 @@ const commonConstraints: ICellConstraints = [
   [0.75, 1]
 ];
 
-export const map = {
+export const map: ICellMap = {
   [ECellKey.generalStart]: {
     key: ECellKey.generalStart,
     name: '开始事件',
     style: {
       ...commonStyle,
       ...commonLabelStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/general-start.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath('toolbar/general-start.svg')
     },
+    status: commonStatus('general-start', {
+      ...commonStyle,
+      ...commonLabelStyle
+    }),
     geometry: {
-      width: 36,
-      height: 36,
+      width: 40,
+      height: 40,
       x: 0,
       y: 0
     },
-    component: (
-      <TitleIMG
-        src="mxgraph/images/toolbar/general-start.svg"
-        title="开始事件"
-      />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/general-start.svg')}
+          title="开始事件"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   },
   [ECellKey.generalEnd]: {
@@ -61,17 +77,32 @@ export const map = {
     style: {
       ...commonStyle,
       ...commonLabelStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/general-end.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath('toolbar/general-end.svg')
     },
+    status: commonStatus('general-end', {
+      ...commonStyle,
+      ...commonLabelStyle
+    }),
     geometry: {
-      width: 36,
-      height: 36,
+      width: 40,
+      height: 40,
       x: 0,
       y: 0
     },
-    component: (
-      <TitleIMG src="mxgraph/images/toolbar/general-end.svg" title="结束事件" />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/general-end.svg')}
+          title="结束事件"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   },
   [ECellKey.draft]: {
@@ -79,8 +110,9 @@ export const map = {
     name: '起草节点',
     style: {
       ...commonStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/draft.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath('toolbar/draft.svg')
     },
+    status: commonStatus(ECellKey.draft, commonStyle),
     geometry: {
       width: 160,
       height: 40,
@@ -88,9 +120,20 @@ export const map = {
       y: 0
     },
     constraints: commonConstraints,
-    component: (
-      <TitleIMG src="mxgraph/images/toolbar/draft-m.svg" title="起草节点" />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/draft-m.svg')}
+          title="起草节点"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   },
   [ECellKey.review]: {
@@ -98,8 +141,9 @@ export const map = {
     name: '审批节点',
     style: {
       ...commonStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/review.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath('toolbar/review.svg')
     },
+    status: commonStatus(ECellKey.review, commonStyle),
     geometry: {
       width: 160,
       height: 40,
@@ -107,9 +151,20 @@ export const map = {
       y: 0
     },
     constraints: commonConstraints,
-    component: (
-      <TitleIMG src="mxgraph/images/toolbar/review-m.svg" title="审批节点" />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/review-m.svg')}
+          title="审批节点"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   },
   [ECellKey.conditionBranch]: {
@@ -118,20 +173,34 @@ export const map = {
     style: {
       ...commonStyle,
       ...commonLabelStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/condition-branch.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath(
+        'toolbar/condition-branch.svg'
+      )
     },
+    status: commonStatus('condition-branch', {
+      ...commonStyle,
+      ...commonLabelStyle
+    }),
     geometry: {
-      width: 36,
-      height: 36,
+      width: 40,
+      height: 40,
       x: 0,
       y: 0
     },
-    component: (
-      <TitleIMG
-        src="mxgraph/images/toolbar/condition-branch.svg"
-        title="条件分支"
-      />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/condition-branch.svg')}
+          title="条件分支"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   },
   [ECellKey.manualBranch]: {
@@ -140,20 +209,32 @@ export const map = {
     style: {
       ...commonStyle,
       ...commonLabelStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/manual-branch.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath('toolbar/manual-branch.svg')
     },
+    status: commonStatus('manual-branch', {
+      ...commonStyle,
+      ...commonLabelStyle
+    }),
     geometry: {
-      width: 36,
-      height: 36,
+      width: 40,
+      height: 40,
       x: 0,
       y: 0
     },
-    component: (
-      <TitleIMG
-        src="mxgraph/images/toolbar/manual-branch.svg"
-        title="人工分支"
-      />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/manual-branch.svg')}
+          title="人工分支"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   },
   [ECellKey.split]: {
@@ -162,17 +243,32 @@ export const map = {
     style: {
       ...commonStyle,
       ...commonLabelStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/split.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath('toolbar/split.svg')
     },
+    status: commonStatus('split', {
+      ...commonStyle,
+      ...commonLabelStyle
+    }),
     geometry: {
-      width: 36,
-      height: 36,
+      width: 40,
+      height: 40,
       x: 0,
       y: 0
     },
-    component: (
-      <TitleIMG src="mxgraph/images/toolbar/split.svg" title="并行分支" />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/split.svg')}
+          title="并行分支"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   },
   [ECellKey.join]: {
@@ -181,17 +277,32 @@ export const map = {
     style: {
       ...commonStyle,
       ...commonLabelStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/join.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath('toolbar/join.svg')
     },
+    status: commonStatus('join', {
+      ...commonStyle,
+      ...commonLabelStyle
+    }),
     geometry: {
-      width: 36,
-      height: 36,
+      width: 40,
+      height: 40,
       x: 0,
       y: 0
     },
-    component: (
-      <TitleIMG src="mxgraph/images/toolbar/join.svg" title="并行分支" />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/join.svg')}
+          title="并行分支"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   },
   [ECellKey.send]: {
@@ -199,8 +310,9 @@ export const map = {
     name: '传阅节点',
     style: {
       ...commonStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/read.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath('toolbar/send.svg')
     },
+    status: commonStatus('send', commonStyle),
     geometry: {
       width: 160,
       height: 40,
@@ -208,9 +320,20 @@ export const map = {
       y: 0
     },
     constraints: commonConstraints,
-    component: (
-      <TitleIMG src="mxgraph/images/toolbar/read-m.svg" title="传阅节点" />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/send-m.svg')}
+          title="传阅节点"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   },
   [ECellKey.startSubProcess]: {
@@ -218,8 +341,9 @@ export const map = {
     name: '子流程节点',
     style: {
       ...commonStyle,
-      [mxConstants.STYLE_IMAGE]: 'mxgraph/images/toolbar/sub-process.svg'
+      [mxConstants.STYLE_IMAGE]: getImageBasePath('toolbar/sub-process.svg')
     },
+    status: commonStatus('sub-process', commonStyle),
     geometry: {
       width: 160,
       height: 40,
@@ -227,19 +351,44 @@ export const map = {
       y: 0
     },
     constraints: commonConstraints,
-    component: (
-      <TitleIMG
-        src="mxgraph/images/toolbar/sub-process-m.svg"
-        title="子流程节点"
-      />
-    ),
+    getComponent: (
+      component: React.ReactElement,
+      editorUI: EditorUI,
+      cell: ICell
+    ) =>
+      getCommonComponent(
+        component,
+        <TitleIMG
+          src={getImageBasePath('toolbar/sub-process-m.svg')}
+          title="子流程节点"
+        />,
+        editorUI,
+        cell
+      ),
     onInitial: commonInitial
   }
 };
 
+// const commonConnections: Array<ICell> = [
+//   map.review,
+//   map.conditionBranch,
+//   map.manualBranch,
+//   {
+//     ...map.split,
+//     relations: [map.join]
+//   },
+//   map.startSubProcess
+// ]
+
 export const data: Array<ICell> = [
-  map.generalStart,
-  map.generalEnd,
+  {
+    ...map.generalStart,
+    disabled: true
+  },
+  {
+    ...map.generalEnd,
+    disabled: true
+  },
   map.draft,
   map.review,
   map.conditionBranch,
@@ -250,8 +399,3 @@ export const data: Array<ICell> = [
   },
   map.startSubProcess
 ];
-
-export const dataMap = Object.keys(map).reduce(
-  (p, c) => p.set(c, map[c]),
-  new Map<string, ICell>()
-);

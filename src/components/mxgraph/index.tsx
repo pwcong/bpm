@@ -1,8 +1,17 @@
 import MxGraphFactory from 'mxgraph';
 
+import { getBasePath, getImageBasePath } from './utils';
+import config from './config';
+
+export { config };
+
 const mxGraphFactory = MxGraphFactory({
-  mxImageBasePath: './mxgraph/images',
-  mxBasePath: './mxgraph'
+  // mxImageBasePath: './static/mxgraph/images',
+  mxImageBasePath: getImageBasePath(),
+  // mxBasePath: './static/mxgraph'
+  mxBasePath: getBasePath(),
+  // 预加载资源
+  mxLoadResources: true
 });
 
 export const mxGraph = mxGraphFactory.mxGraph;
@@ -48,6 +57,29 @@ export const mxGraphHandler = mxGraphFactory.mxGraphHandler;
 export const mxMouseEvent = mxGraphFactory.mxMouseEvent;
 export const mxPolyline = mxGraphFactory.mxPolyline;
 export const mxOutline = mxGraphFactory.mxOutline;
+export const mxClipboard = mxGraphFactory.mxClipboard;
+export const mxSvgCanvas2D = mxGraphFactory.mxSvgCanvas2D;
+export const mxGuide = mxGraphFactory.mxGuide;
+
+export function mxCellAttributeChange(cell, attribute, value) {
+  this.cell = cell;
+  this.attribute = attribute;
+  this.value = value;
+  this.previous = value;
+}
+mxCellAttributeChange.prototype.execute = function() {
+  if (this.cell != null) {
+    const tmp = this.cell.getAttribute(this.attribute);
+
+    if (this.previous == null) {
+      this.cell.value.removeAttribute(this.attribute);
+    } else {
+      this.cell.setAttribute(this.attribute, this.previous);
+    }
+
+    this.previous = tmp;
+  }
+};
 
 function globalConfig() {
   // 挂载MxGraph方法至window解决MxGraph内部调用问题
@@ -56,37 +88,76 @@ function globalConfig() {
   );
 
   // 设置线选框颜色
-  mxConstants.EDGE_SELECTION_COLOR = '#4285f4';
+  mxConstants.EDGE_SELECTION_COLOR = config.themeColor;
   // 设置点选框颜色
-  mxConstants.VERTEX_SELECTION_COLOR = '#4285f4';
+  mxConstants.VERTEX_SELECTION_COLOR = config.themeColor;
   // 设置置入对象颜色
-  mxConstants.DROP_TARGET_COLOR = '#4285f4';
+  mxConstants.DROP_TARGET_COLOR = config.themeColor;
   // 设置高亮颜色
   mxConstants.HIGHLIGHT_OPACITY = 60;
   mxConstants.HIGHLIGHT_STROKEWIDTH = 2;
-  mxConstants.HIGHLIGHT_COLOR = '#4285f4';
-  mxConstants.OUTLINE_HIGHLIGHT_COLOR = '#4285f4';
+  mxConstants.HIGHLIGHT_COLOR = config.themeColor;
+  mxConstants.OUTLINE_HIGHLIGHT_COLOR = config.themeColor;
+  mxConstants.DEFAULT_VALID_COLOR = config.themeColor;
+  mxConstants.VALID_COLOR = config.themeColor;
+  mxConstants.HANDLE_FILLCOLOR = config.themeColor;
 
   // 设置导航器颜色
   mxConstants.OUTLINE_STROKEWIDTH = 1;
-  mxConstants.OUTLINE_COLOR = '#4285f4';
+  mxConstants.OUTLINE_COLOR = config.themeColor;
+
+  // 设置辅助线颜色
+  mxConstants.GUIDE_COLOR = config.themeColor;
+  // 设置辅助线宽度
+  mxConstants.GUIDE_STROKEWIDTH = 1;
+  // 设置辅助线为直线
+  mxGuide.prototype.createGuideShape = function() {
+    const guide = new mxPolyline(
+      [],
+      mxConstants.GUIDE_COLOR,
+      mxConstants.GUIDE_STROKEWIDTH
+    );
+
+    return guide;
+  };
+
+  // 设置弹窗
+  // mxGraph.prototype.validationAlert = function(msg) {
+  //   message.error(msg, 2);
+  // };
+
+  // 设置ID生成器
+  mxGraphModel.prototype.createId = function(cell) {
+    const id = this.nextId;
+    this.nextId++;
+
+    let res = this.prefix + id + this.postfix;
+
+    if (this.isVertex(cell)) {
+      res = `N${id}`;
+    } else if (this.isEdge(cell)) {
+      res = `E${id}`;
+    }
+
+    return res;
+  };
 
   // 设置线触点图标
   mxEdgeHandler.prototype.handleImage = new mxImage(
-    'mxgraph/images/dot.svg',
+    getImageBasePath('dot.svg'),
     6,
     6
   );
 
   // 设置锚点图标
   mxConstraintHandler.prototype.pointImage = new mxImage(
-    'mxgraph/images/point.svg',
+    getImageBasePath('point.svg'),
     10,
     10
   );
 
   // 设置锚点颜色
-  mxConstraintHandler.prototype.highlightColor = '#4285F4';
+  mxConstraintHandler.prototype.highlightColor = config.themeColor;
   mxConstraintHandler.prototype.createHighlightShape = function() {
     const hl = new mxEllipse(null, this.highlightColor, this.highlightColor, 0);
     hl.opacity = 30;
@@ -95,7 +166,9 @@ function globalConfig() {
 
   // 设置选框宽高锁定
   const originalVertexHandlerUnion = mxVertexHandler.prototype.union;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mxVertexHandler.prototype.union = function(geo, dxs, dys, index) {
+    // eslint-disable-next-line prefer-rest-params
     const result = originalVertexHandlerUnion.apply(this, arguments);
     // const lock = [0, 2, 5, 7];
     if (
@@ -124,6 +197,7 @@ function globalConfig() {
     index,
     fillColor
   ) {
+    // eslint-disable-next-line prefer-rest-params
     originalVertexHandlerCreateSizerShape.apply(this, arguments);
     switch (index) {
       case 0:
@@ -133,11 +207,16 @@ function globalConfig() {
         return new mxRectangleShape(
           bounds,
           fillColor || '#ffffff',
-          '#4285f4',
+          config.themeColor,
           1
         );
       default:
-        return new mxEllipse(bounds, fillColor || '#ffffff', '#4285F4', 1);
+        return new mxEllipse(
+          bounds,
+          fillColor || '#ffffff',
+          config.themeColor,
+          1
+        );
     }
   };
 }

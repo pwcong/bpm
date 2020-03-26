@@ -2,7 +2,10 @@ import React from 'react';
 
 import classnames from 'classnames';
 
+// import Icon from '@elements/icon';
+
 import { mxOutline } from '@/components/mxgraph';
+import { EEventName } from '@/components/flowchart/types';
 
 import svgZoomIn from '@/mxgraph/images/sidebar/zoom-in.svg';
 import svgZoomOut from '@/mxgraph/images/sidebar/zoom-out.svg';
@@ -15,11 +18,11 @@ import { ICommonProps } from '../../types';
 import './style.scss';
 
 export interface IProps extends ICommonProps {
-  screenerActive?: boolean;
+  fullscreen?: boolean;
   onToggleScreen?: (active: boolean) => void;
 }
 
-const cls = `flowchart-sidebar`;
+const cls = 'flowchart-sidebar';
 const itemCls = cls + '-item';
 
 const Zoomer: React.FunctionComponent<ICommonProps> = props => {
@@ -36,26 +39,37 @@ const Zoomer: React.FunctionComponent<ICommonProps> = props => {
     editorUI.graph.zoomTo(parseFloat((value / 100).toFixed(1)), true);
   };
 
+  React.useEffect(() => {
+    const zoomHandler = (sender, me) => {
+      const { zoom } = me.properties;
+      setZoom(parseInt(zoom));
+    };
+    editorUI.graph.addListener(EEventName.zoom, zoomHandler);
+    return () => {
+      editorUI.graph.removeListener(zoomHandler);
+    };
+  }, []);
+
   return (
     <div className={_cls}>
       <div
         className={classnames(`${_cls}-btn`, {
-          [`${_cls}-btn-disabled`]: zoom <= 50
+          [`${_cls}-btn-disabled`]: zoom <= editorUI.editor.minZoom
         })}
         style={{
           backgroundImage: `url(${svgZoomOut})`
         }}
-        onClick={() => zoom > 50 && zoomTo(zoom - 10)}
+        onClick={() => zoom > editorUI.editor.minZoom && zoomTo(zoom - 10)}
       ></div>
       <div className={`${_cls}-text`}>{zoom + '%'}</div>
       <div
         className={classnames(`${_cls}-btn`, {
-          [`${_cls}-btn-disabled`]: zoom >= 200
+          [`${_cls}-btn-disabled`]: zoom >= editorUI.editor.maxZoom
         })}
         style={{
           backgroundImage: `url(${svgZoomIn})`
         }}
-        onClick={() => zoom < 200 && zoomTo(zoom + 10)}
+        onClick={() => zoom < editorUI.editor.maxZoom && zoomTo(zoom + 10)}
       ></div>
     </div>
   );
@@ -72,7 +86,7 @@ const Screener: React.FunctionComponent<IScreenerProps> = props => {
     <div
       className={`${cls}-screener`}
       style={{
-        backgroundImage: `url(${!!active ? svgScreen1 : svgScreen0})`
+        backgroundImage: `url(${!active ? svgScreen1 : svgScreen0})`
       }}
       onClick={() => onToggle && onToggle(!active)}
     ></div>
@@ -94,7 +108,12 @@ const MiniMap: React.FunctionComponent<ICommonProps> = props => {
     }
 
     return () => {
-      outline && outline.destroy();
+      // 销毁报错问题
+      try {
+        outline && outline.destroy();
+      } catch (e) {
+        // DO NOTHING
+      }
     };
   }, [editorUI, active]);
 
@@ -118,7 +137,8 @@ const MiniMap: React.FunctionComponent<ICommonProps> = props => {
         <div className={`${_cls}-header`}>
           <span className={`${_cls}-title`}>导航器</span>
           <span className={`${_cls}-close`} onClick={() => setActive(false)}>
-            ✖️
+            {/* <Icon name="iframe-close" /> */}
+            x
           </span>
         </div>
         <div className={`${_cls}-content`} ref={ref}></div>
@@ -146,7 +166,7 @@ const Sidebar: React.FunctionComponent<IProps> = props => {
         <Screener
           editorUI={editorUI}
           onToggle={props.onToggleScreen}
-          active={props.screenerActive}
+          active={props.fullscreen}
         />
       </div>
     </div>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="159px" height="38px" viewBox="0 0 159 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>起草节点异常</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0.357864376" y="0" width="158" height="38" rx="4"></rect>
+        <rect id="path-3" x="0.357864376" y="0" width="158" height="38" rx="4"></rect>
+    </defs>
+    <g id="起草节点异常" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组-89">
+            <rect id="矩形复制-116" fill="#FFFFFF" x="0.767139117" y="0" width="156.968882" height="38" rx="4"></rect>
+            <g id="矩形复制-104">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <rect stroke="#4285F4" x="0.857864376" y="0.5" width="157" height="37" rx="4"></rect>
+                <rect id="矩形" fill="#4285F4" mask="url(#mask-2)" x="-5.20302161" y="-4" width="9.12177197" height="47.5"></rect>
+                <rect id="矩形" fill="#4285F4" opacity="0.1" mask="url(#mask-2)" x="10.5" y="5" width="28" height="28" rx="4"></rect>
+            </g>
+            <g id="编组-69复制-10" transform="translate(14.828937, 9.000000)">
+                <rect id="矩形复制-70" x="0" y="0" width="20" height="20"></rect>
+                <g id="编组-68" transform="translate(2.500000, 2.042710)">
+                    <polygon id="矩形复制-71" fill="#4285F4" points="0 0 13 0 13 12.225819 9.03795251 16 0 16"></polygon>
+                    <path d="M4.82053328,10.4882996 L13.2508608,3.15992774 C13.6676754,2.79759635 14.299298,2.8417637 14.6616294,3.2585783 L14.6616294,3.2585783 C15.0239608,3.67539289 14.9797934,4.30701551 14.5629788,4.6693469 L6.13265134,11.9977188 L4.15873124,12.5754318 C4.05272129,12.606458 3.9416315,12.5456717 3.91060526,12.4396618 C3.89647713,12.391389 3.90105629,12.3395653 3.9234302,12.2945179 L4.82053328,10.4882996 Z" id="矩形复制-72" stroke="#4285F4" fill="#FFFFFF"></path>
+                    <path d="M2.5,3.91081559 L9.05407519,3.91081559" id="路径-46复制-2" stroke="#FFFFFF" stroke-width="1.2"></path>
+                    <path d="M2.5,6.85460789 L5.00444753,6.85460789" id="路径-46复制-3" stroke="#FFFFFF" stroke-width="1.2"></path>
+                    <path d="M9.22274262,15.3912899 L12.5296137,12.2676967 C12.5697629,12.2297727 12.5715668,12.1664819 12.5336428,12.1263327 C12.5147521,12.1063336 12.4884567,12.0950001 12.4609463,12.0950001 L9.05407519,12.0950001 L9.05407519,15.3185934 C9.05407519,15.3738219 9.09884671,15.4185934 9.15407519,15.4185934 C9.17961084,15.4185934 9.20417909,15.4088246 9.22274262,15.3912899 Z" id="路径-46" stroke="#4285F4" stroke-width="0.6" fill="#FFFFFF"></path>
+                </g>
+            </g>
+            <g id="矩形复制-117">
+                <mask id="mask-4" fill="white">
+                    <use xlink:href="#path-3"></use>
+                </mask>
+                <rect stroke="#F33333" x="0.857864376" y="0.5" width="157" height="37" rx="4"></rect>
+                <rect id="矩形" fill="#4285F4" opacity="0.1" mask="url(#mask-4)" x="10.5" y="5" width="28" height="28" rx="4"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

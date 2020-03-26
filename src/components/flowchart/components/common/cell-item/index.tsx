@@ -2,7 +2,7 @@ import React from 'react';
 
 import classnames from 'classnames';
 
-import { useClosuer } from '@/utils/hook';
+import { useClosuer } from '@/components/flowchart/utils/hook';
 
 import { IBaseProps, ICell, ICellListenerCallback } from '../../../types';
 import EditorUI from '../../editorui';
@@ -16,7 +16,7 @@ export interface IMenubarItemProps extends IBaseProps {
   data: ICell;
 }
 
-export const cls = `flowchart-cell-item`;
+export const cls = 'flowchart-cell-item';
 
 export const Item: React.FunctionComponent<IMenubarItemProps> = props => {
   const { className, style, editorUI, data } = props;

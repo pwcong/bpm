@@ -2,41 +2,46 @@ import React from 'react';
 
 import classnames from 'classnames';
 
-import { ICell, ICommonProps } from '../../types';
+import { ICommonProps, ICell } from '../../types';
 import CellItem from '../common/cell-item';
 import EditorUI from '../editorui';
-import { data } from './config';
+
+export * from './config';
 
 import './style.scss';
 
-export interface IProps extends ICommonProps {}
-
-export interface IMenubarItemProps extends ICommonProps {
-  data: ICell;
+export interface IProps extends ICommonProps {
+  data: Array<ICell>;
+  isSub?: boolean;
 }
 
-export const baseCls = `flowchart-menubar`;
+export const baseCls = 'flowchart-menubar';
 export const itemCls = `${baseCls}-item`;
 
 const Menubar: React.FunctionComponent<IProps> = props => {
-  const { editorUI, className, style } = props;
+  const { editorUI, className, style, data, isSub } = props;
 
   React.useEffect(() => {
     // DO NOTHING
   }, [EditorUI]);
 
   return (
-    <div className={classnames(baseCls, className)} style={style}>
-      {data.map(item => {
-        return (
-          <CellItem
-            className={itemCls}
-            key={item.key}
-            editorUI={editorUI}
-            data={item}
-          />
-        );
+    <div
+      className={classnames(baseCls, className, {
+        [`${baseCls}-sub`]: !!isSub
       })}
+      style={style}
+    >
+      {data.map(item => (
+        <CellItem
+          className={itemCls}
+          key={item.key}
+          data={item}
+          editorUI={editorUI}
+        >
+          {item.component}
+        </CellItem>
+      ))}
     </div>
   );
 };

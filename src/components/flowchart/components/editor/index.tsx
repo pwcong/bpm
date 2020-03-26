@@ -1,4 +1,5 @@
 import { Base64 } from 'js-base64';
+
 import {
   mxEventSource,
   mxUndoManager,
@@ -12,36 +13,52 @@ import {
   mxPoint,
   mxPolyline
 } from '@/components/mxgraph';
+
+import { IConfig } from '../../types';
 import Graph from '../graph';
 
 export default class Editor extends mxEventSource {
-  static ctrlKey = mxClient.IS_MAC ? 'Cmd' : 'Ctrl';
+  static ctrlKey = mxClient.IS_MAC ? 'Command' : 'Ctrl';
 
   container: HTMLElement;
 
   editor: any;
   graph: any;
-  editable: boolean;
+  maxZoom = 200;
+  minZoom = 30;
 
   undoManager: any;
   undoListener: any;
 
-  constructor(container: HTMLElement, editable?: boolean) {
+  constructor(container: HTMLElement, config?: IConfig) {
     super();
     this.container = container;
-    this.editable = editable !== undefined ? editable : true;
+
+    config = config || {};
 
     this.editor = this;
-    const graph = (this.graph = new Graph(this.container, null, null, null));
 
-    this.init(graph);
+    this.graph = new Graph(this.container, null, null, null, {
+      ...config,
+      menubar: config.menubar
+        ? config.menubar
+        : {
+            data: [],
+            map: {}
+          },
+      toolbar: config.toolbar
+        ? config.toolbar
+        : {
+            data: [],
+            map: {}
+          }
+    });
+
+    this.init();
   }
 
-  init = graph => {
-    graph.setEnabled(this.editable);
-
+  init = () => {
     this.initUndoManager();
-    this.initKeyHandler();
     this.initPageView();
   };
 
@@ -55,7 +72,9 @@ export default class Editor extends mxEventSource {
     };
 
     // Installs the command history
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const listener = mxUtils.bind(this, function(sender, evt) {
+      // @ts-ignore
       this.undoListener.apply(this, arguments);
     });
 
@@ -86,12 +105,6 @@ export default class Editor extends mxEventSource {
     this.undoManager = undoMgr;
   };
 
-  // 绑定键盘事件
-  initKeyHandler = () => {
-    const keyHandler = this.graph.keyHandler;
-    keyHandler.bindKey(8, () => this.graph.removeCells());
-  };
-
   // 初始化画布区大小
   initPageFormat = () => {
     const graph = this.graph;
@@ -99,7 +112,7 @@ export default class Editor extends mxEventSource {
     const iw = this.container.offsetWidth;
     const ih = this.container.offsetHeight;
 
-    graph.pageFormat = new mxRectangle(0, 0, iw * 0.8, ih * 0.8);
+    graph.pageFormat = new mxRectangle(0, 0, iw - 260, ih - 220);
   };
 
   // 初始化画布区绘制
@@ -110,15 +123,14 @@ export default class Editor extends mxEventSource {
     graph.pageScale = 1;
 
     graph.getPagePadding = function() {
-      const pageFormat = this.pageFormat;
-      return new mxPoint(pageFormat.width * 0.1, pageFormat.height * 0.1);
+      return new mxPoint(130, 110);
     };
 
     graph.getPageLayout = function() {
       const size = this.getPageSize();
       const bounds = this.getGraphBounds();
 
-      if (bounds.width == 0 || bounds.height == 0) {
+      if (bounds.width === 0 || bounds.height === 0) {
         return new mxRectangle(0, 0, 1, 1);
       } else {
         // Computes untransformed graph bounds
@@ -183,13 +195,13 @@ export default class Editor extends mxEventSource {
       const drawPageBreaks = mxUtils.bind(this, function(breaks) {
         if (breaks != null) {
           const count =
-            breaks == this.horizontalPageBreaks
+            breaks === this.horizontalPageBreaks
               ? horizontalCount
               : verticalCount;
 
           for (let i = 0; i <= count; i++) {
             const pts =
-              breaks == this.horizontalPageBreaks
+              breaks === this.horizontalPageBreaks
                 ? [
                     new mxPoint(
                       Math.round(bounds2.x),
@@ -252,7 +264,7 @@ export default class Editor extends mxEventSource {
 
       // LATER: Fix flicker of scrollbar size in IE quirks mode
       // after delayed call in window.resize event handler
-      if (min == null || min.width != minw || min.height != minh) {
+      if (min == null || min.width !== minw || min.height !== minh) {
         graph.minimumGraphSize = new mxRectangle(0, 0, minw, minh);
       }
 
@@ -262,7 +274,7 @@ export default class Editor extends mxEventSource {
 
       if (
         !this.autoTranslate &&
-        (this.view.translate.x != dx || this.view.translate.y != dy)
+        (this.view.translate.x !== dx || this.view.translate.y !== dy)
       ) {
         this.autoTranslate = true;
         this.view.x0 = pages.x;
@@ -322,7 +334,7 @@ export default class Editor extends mxEventSource {
 
         while (
           firstChild != null &&
-          firstChild.nodeType != mxConstants.NODETYPE_ELEMENT
+          firstChild.nodeType !== mxConstants.NODETYPE_ELEMENT
         ) {
           firstChild = firstChild.nextSibling;
         }
@@ -561,6 +573,14 @@ export default class Editor extends mxEventSource {
 
   // 销毁对象
   destroy = () => {
-    this.graph && this.graph.destroy();
+    try {
+      this.graph && this.graph.destroy();
+
+      const { keyHandler } = this.graph;
+
+      keyHandler && keyHandler.destroy();
+    } catch (e) {
+      // DO NOTHING
+    }
   };
 }
