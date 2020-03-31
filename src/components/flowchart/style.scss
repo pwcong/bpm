@@ -104,10 +104,10 @@ $cls: flowchart;
         .#{$cls}-toggler {
           position: absolute;
           top: 50%;
-          left: -52px;
-          transform: rotate(90deg) translateY(-50%) translateX(-50%);
-          width: 75px;
-          height: 14px;
+          transform: translateY(-50%);
+          left: -14px;
+          width: 14px;
+          height: 75px;
         }
       }
 
@@ -152,8 +152,15 @@ $cls: flowchart;
 
   &-toggler {
     cursor: pointer;
+    color: #ededed;
     background-size: 100% 100%;
     background-repeat: no-repeat;
+    opacity: 0.6;
+
+    &:hover {
+      color: #e5e5e5;
+      opacity: 1;
+    }
   }
 
   &-sidebar {

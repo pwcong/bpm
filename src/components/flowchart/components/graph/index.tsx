@@ -13,8 +13,8 @@ import {
   config as mxConfig
 } from '@/components/mxgraph';
 
-import { IConfig } from '../../types';
-import { parseJSON, putStyle } from '../../utils';
+import { IConfig, IBaseConfig } from '../../types';
+import { parseJSON, putStyle, getBaseConfig } from '../../utils';
 
 import {
   defaultVertexStyle,
@@ -30,7 +30,7 @@ export default class Graph extends mxGraph {
   rubberband: any;
   keyHandler: any;
 
-  config: IConfig;
+  config: IBaseConfig;
   editable: boolean;
 
   constructor(
@@ -42,9 +42,8 @@ export default class Graph extends mxGraph {
   ) {
     super(container, model, renderHint, stylesheet);
 
-    this.config = extraConfig;
-    this.editable =
-      this.config.editable !== undefined ? this.config.editable : true;
+    this.config = getBaseConfig(extraConfig);
+    this.editable = this.config.editable;
 
     this.graph = this;
     this.init(this.graph);
@@ -62,6 +61,9 @@ export default class Graph extends mxGraph {
 
     // 允许编辑
     graph.setEnabled(true);
+
+    // 允许拖动
+    graph.setPanning(true);
 
     // 使用html标签
     // graph.setHtmlLabels(true)
@@ -91,11 +93,8 @@ export default class Graph extends mxGraph {
     );
 
     // 初始化节点样式
-    Object.keys(
-      (this.config.toolbar || ({} as any)).map || ({} as any)
-    ).forEach(key => {
-      const cell =
-        ((this.config.toolbar || ({} as any)).map || {})[key] || ({} as any);
+    Object.keys(this.config.toolbar.map).forEach(key => {
+      const cell = this.config.toolbar.map[key] || ({} as any);
       const { style = {}, status = {} } = cell;
       putStyle(graph, key, style);
       Object.keys(status).forEach(s =>
@@ -162,8 +161,7 @@ export default class Graph extends mxGraph {
     graph.getAllConnectionConstraints = function(terminal) {
       if (terminal != null && this.model.isVertex(terminal.cell)) {
         const { constraints = [] } =
-          // @ts-ignore
-          ((config.toolbar || {}).map || {})[
+          config.toolbar.map[
             parseJSON(this.model.getValue(terminal.cell), {}).key
           ] || {};
 

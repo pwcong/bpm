@@ -1,6 +1,10 @@
 import React from 'react';
 import EditorUI from './components/editorui';
 
+export type IPicker<T> = {
+  [K in keyof T]?: T[K];
+};
+
 export interface IBaseProps {
   className?: string;
   style?: React.CSSProperties;
@@ -11,16 +15,18 @@ export interface ICommonProps extends IBaseProps {
   editorUI: EditorUI;
 }
 
-export interface IConfig {
+export interface IBaseConfig {
   /** 是否允许编辑 */
-  editable?: boolean;
+  editable: boolean;
   /** 菜单栏配置 */
-  menubar?: ICellsConfig;
+  menubar: ICellsConfig;
   /** 工具栏配置 */
-  toolbar?: ICellsConfig;
+  toolbar: ICellsConfig;
   /** 变更操作 */
-  afterUpdateCells?: (graph) => void;
+  afterUpdateCells: (graph) => void;
 }
+
+export type IConfig = IPicker<IBaseConfig>;
 
 export type IWrappedComponentRef = {
   editorUI: EditorUI | null;
@@ -123,8 +129,11 @@ export interface ICell {
   connections?: Array<ICell>;
   disabled?: boolean;
   onInitial?: (element: HTMLElement, editorUI: EditorUI, cell: ICell) => void;
+  afterInitial?: (cell: any) => any;
   onDestroy?: (editorUI: EditorUI, cell: ICell) => void;
 }
+
+export type ICells = Array<ICell>;
 
 export type ICellConstraints = Array<[number, number]>;
 

@@ -1,4 +1,5 @@
 import { mxUtils, mxCodec, mxClient, mxEvent } from '@/components/mxgraph';
+import { IConfig, IBaseConfig } from '../types';
 /**
  * 加载绘图数据
  * @param graph 绘图对象
@@ -151,4 +152,30 @@ export function updateCells(
  */
 export function isZoomWheelEvent(evt) {
   return mxClient.IS_MAC ? mxEvent.isMetaDown(evt) : mxEvent.isControlDown(evt);
+}
+
+/**
+ * 获取拓展配置信息
+ * @param config 绘图配置
+ */
+export function getBaseConfig(config: IConfig): IBaseConfig {
+  const {
+    editable = true,
+    menubar = {
+      data: [],
+      map: {}
+    },
+    toolbar = {
+      data: [],
+      map: {}
+    },
+    afterUpdateCells = () => {}
+  } = config;
+
+  return {
+    editable,
+    menubar,
+    toolbar,
+    afterUpdateCells
+  };
 }

@@ -117,7 +117,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="rubberband"
           style={{
-            color: editorUI.canRubberBand() ? '#666666' : '#cccccc'
+            color: editorUI.canRubberBand() ? '#4285f4' : '#666666'
           }}
         />,
         editorUI,
@@ -335,6 +335,6 @@ export const data: Array<ICell> = [
       map.alignLRCenter,
       map.alignRight
     ]
-  },
-  map.rubberband
+  }
+  // map.rubberband,
 ];

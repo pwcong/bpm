@@ -14,7 +14,8 @@ import {
   mxPolyline
 } from '@/components/mxgraph';
 
-import { IConfig } from '../../types';
+import { getBaseConfig } from '../../utils';
+import { IConfig, IBaseConfig } from '../../types';
 import Graph from '../graph';
 
 export default class Editor extends mxEventSource {
@@ -22,8 +23,10 @@ export default class Editor extends mxEventSource {
 
   container: HTMLElement;
 
+  config: IBaseConfig;
   editor: any;
   graph: any;
+
   maxZoom = 200;
   minZoom = 30;
 
@@ -34,25 +37,10 @@ export default class Editor extends mxEventSource {
     super();
     this.container = container;
 
-    config = config || {};
+    this.config = getBaseConfig(config || {});
 
     this.editor = this;
-
-    this.graph = new Graph(this.container, null, null, null, {
-      ...config,
-      menubar: config.menubar
-        ? config.menubar
-        : {
-            data: [],
-            map: {}
-          },
-      toolbar: config.toolbar
-        ? config.toolbar
-        : {
-            data: [],
-            map: {}
-          }
-    });
+    this.graph = new Graph(this.container, null, null, null, this.config);
 
     this.init();
   }

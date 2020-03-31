@@ -13,21 +13,24 @@ import Toolbar, {
 } from './components/toolbar';
 import Sidebar from './components/sidebar';
 
-import svgArrow0 from '@/mxgraph/images/arrow-0.svg';
-import svgArrow1 from '@/mxgraph/images/arrow-1.svg';
+import svgArrowT0 from '@/mxgraph/images/arrow-t-0.svg';
+import svgArrowT1 from '@/mxgraph/images/arrow-t-1.svg';
+import svgArrowR0 from '@/mxgraph/images/arrow-r-0.svg';
+import svgArrowR1 from '@/mxgraph/images/arrow-r-1.svg';
 
 import {
   IBaseProps,
   IConfig,
   IWrappedComponentRef,
-  IWrappedComponentRefObject,
-  EEventName
+  IWrappedComponentRefObject
 } from './types';
 
 export * from './utils';
 export * from './types';
 
 import './style.scss';
+import { EEventName } from './types';
+import { debounce } from './utils';
 
 export interface IProps extends IBaseProps {
   config?: IConfig;
@@ -168,6 +171,12 @@ const FlowChart: React.FunctionComponent<IProps & {
   }, []);
 
   React.useEffect(() => {
+    const resize = debounce(() => redraw(), 100);
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, [editorUI]);
+
+  React.useEffect(() => {
     onToggleScreen && onToggleScreen(topHidden);
   }, [topHidden]);
 
@@ -205,7 +214,7 @@ const FlowChart: React.FunctionComponent<IProps & {
                 redraw();
               }}
               style={{
-                backgroundImage: `url(${topHidden ? svgArrow1 : svgArrow0})`
+                backgroundImage: `url(${topHidden ? svgArrowT0 : svgArrowT1})`
               }}
             ></div>
           </div>
@@ -234,7 +243,7 @@ const FlowChart: React.FunctionComponent<IProps & {
                 redraw();
               }}
               style={{
-                backgroundImage: `url(${rightHidden ? svgArrow1 : svgArrow0})`
+                backgroundImage: `url(${rightHidden ? svgArrowR0 : svgArrowR1})`
               }}
             ></div>
             {editorUI && (

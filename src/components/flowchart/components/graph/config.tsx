@@ -18,7 +18,8 @@ export const defaultEdgeStyle = {
   [mxConstants.STYLE_STARTARROW]: '',
   [mxConstants.STYLE_ENDFILL]: 1,
   [mxConstants.STYLE_JETTYSIZE]: 'auto',
-  [mxConstants.STYLE_ORTHOGONAL_LOOP]: 1
+  [mxConstants.STYLE_ORTHOGONAL_LOOP]: 1,
+  [mxConstants.STYLE_LABEL_PADDING]: 6
 };
 
 export const defaultExtraStyle: { [key: string]: object } = {

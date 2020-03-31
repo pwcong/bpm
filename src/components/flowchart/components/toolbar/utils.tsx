@@ -1,5 +1,9 @@
 import React from 'react';
-import { postEvent, getCells, parseJSON } from '@/components/flowchart/utils';
+import {
+  postEvent,
+  getCells,
+  parseJSON
+} from '@/components/flowchart/utils';
 import {
   mxCell,
   mxGeometry,
@@ -9,7 +13,7 @@ import {
 } from '@/components/mxgraph';
 import { getImageBasePath } from '@/components/mxgraph/utils';
 
-import { ICell, ECellType, EEventName } from '../../types';
+import { ICell, ECellType, EEventName, ICellGeometry } from '../../types';
 import EditorUI from '../editorui';
 
 export function commonGetCells(
@@ -78,7 +82,7 @@ export function commonGetCell(
   t.geometry.x = x;
   t.geometry.y = y;
 
-  return t;
+  return cell.afterInitial ? cell.afterInitial(t) : t;
 }
 
 export function getCommonComponent(
@@ -87,67 +91,11 @@ export function getCommonComponent(
   editorUI: EditorUI,
   cell: ICell
 ) {
-  const graph = editorUI.graph;
-
   return React.cloneElement(
     component,
     Object.assign({}, component.props, {
       onClick: () => {
-        graph.model.beginUpdate();
-
-        let targetCells;
-
-        try {
-          let target;
-
-          const allVertexs = getCells(graph.model.cells).filter(c =>
-            graph.model.isVertex(c)
-          );
-          const selectedVertexs = getCells(
-            graph.getSelectionCells()
-          ).filter(c => graph.model.isVertex(c));
-
-          if (selectedVertexs.length > 0) {
-            target = selectedVertexs[0];
-          } else if (allVertexs.length > 0) {
-            target = allVertexs[allVertexs.length - 1];
-          }
-
-          let x = 20;
-          let y = 20;
-          if (!!target) {
-            const geo = target.getGeometry();
-            x = geo.x;
-            y = geo.y + geo.height + 50;
-          }
-
-          const cells = commonGetCells(editorUI, cell, x, y);
-
-          targetCells = graph.importCells(cells, 0, 0);
-
-          if (targetCells.length > 0) {
-            // 若新增目标节点有多个，则给目标节点添加标记
-            if (targetCells.length > 1) {
-              relateCells(graph, targetCells);
-            }
-
-            // 若存在选中节点，则自动连线
-            if (!!target) {
-              const source = targetCells[0];
-              graph.insertEdge(null, null, '', target, source);
-            }
-          }
-
-          // 选中新增节点
-          graph.setSelectionCells(targetCells);
-
-          // 滚到节点区域
-          graph.scrollCellToVisible(targetCells[0]);
-        } finally {
-          graph.model.endUpdate();
-
-          postEvent(EEventName.add);
-        }
+        makeClickable(editorUI, cell);
       },
       children
     })
@@ -173,6 +121,113 @@ export function relateCells(graph, cells: Array<any>) {
   }
 }
 
+enum EDirection {
+  'north' = 'north',
+  'east' = 'east',
+  'west' = 'west',
+  'south' = 'south'
+}
+
+export function makeClickable(
+  editorUI: EditorUI,
+  cell: ICell,
+  target?: any,
+  direction?: EDirection
+) {
+  const graph = editorUI.graph;
+
+  graph.model.beginUpdate();
+
+  let targetCells;
+
+  try {
+    const allVertexs = getCells(graph.model.cells).filter(c =>
+      graph.model.isVertex(c)
+    );
+    const selectedVertexs = getCells(graph.getSelectionCells()).filter(c =>
+      graph.model.isVertex(c)
+    );
+
+    let drop;
+
+    if (target) {
+      drop = target;
+    } else {
+      if (selectedVertexs.length > 0) {
+        drop = selectedVertexs[0];
+      } else if (allVertexs.length > 0) {
+        drop = allVertexs[allVertexs.length - 1];
+      }
+    }
+
+    let x = 20;
+    let y = 20;
+
+    const hasDrop = !!drop;
+
+    if (hasDrop) {
+      const geo = drop.getGeometry() || ({} as ICellGeometry);
+
+      const { x: _x, y: _y, width: _width, height: _height } = geo;
+
+      if (direction) {
+        switch (direction) {
+          case EDirection.east:
+            x = _x + _width + 50;
+            y = _y;
+            break;
+          case EDirection.south:
+            x = _x;
+            y = _y + _height + 50;
+            break;
+          case EDirection.west:
+            x =
+              _x - ((cell.geometry || ({} as ICellGeometry)).width || 50 + 50);
+            y = _y;
+            break;
+          case EDirection.north:
+            x = _x;
+            y =
+              _y - ((cell.geometry || ({} as ICellGeometry)).height || 50 + 50);
+            break;
+          default:
+            break;
+        }
+      } else {
+        x = _x;
+        y = _y + _height + 50;
+      }
+    }
+
+    const cells = commonGetCells(editorUI, cell, x, y);
+
+    targetCells = graph.importCells(cells, 0, 0);
+
+    if (targetCells.length > 0) {
+      // 若新增目标节点有多个，则给目标节点添加标记
+      if (targetCells.length > 1) {
+        relateCells(graph, targetCells);
+      }
+
+      // 若存在选中节点，则自动连线
+      if (hasDrop) {
+        const source = targetCells[0];
+        graph.insertEdge(null, null, '', drop, source);
+      }
+    }
+
+    // 选中新增节点
+    graph.setSelectionCells(targetCells);
+
+    // 滚到节点区域
+    graph.scrollCellToVisible(targetCells[0]);
+  } finally {
+    graph.model.endUpdate();
+
+    postEvent(EEventName.add);
+  }
+}
+
 export function makeDraggable(
   element: HTMLElement,
   editorUI: EditorUI,
@@ -189,6 +244,8 @@ export function makeDraggable(
   } = cell;
 
   const dragEl = document.createElement('div');
+  dragEl.style.position = 'relative';
+  dragEl.style.transform = 'translate(-50%, -50%)';
   dragEl.style.border = `1px dashed ${mxConfig.themeColor}`;
   dragEl.style.width = `${geometry.width || 0}px`;
   dragEl.style.height = `${geometry.height || 0}px`;
@@ -210,19 +267,16 @@ export function makeDraggable(
 
       try {
         const pt = graph.getPointForEvent(evt);
-        const { x, y } = pt;
+        let { x, y } = pt;
+
+        x = x - geometry.width / 2;
+        y = y - geometry.height / 2;
 
         const cells = commonGetCells(editorUI, cell, x, y);
 
         // 拖入对象是线条的情况下切割线条
         if (graph.isSplitTarget(drop, cells, evt)) {
-          graph.splitEdge(
-            drop,
-            cells,
-            null,
-            -(geometry.width / 2),
-            -(geometry.height / 2)
-          );
+          graph.splitEdge(drop, cells, null, 0, 0);
           targetCells = cells;
         } else {
           // 插入节点

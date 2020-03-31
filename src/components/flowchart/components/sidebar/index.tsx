@@ -2,16 +2,16 @@ import React from 'react';
 
 import classnames from 'classnames';
 
-// import Icon from '@elements/icon';
-
 import { mxOutline } from '@/components/mxgraph';
-import { EEventName } from '@/components/flowchart/types';
 
 import svgZoomIn from '@/mxgraph/images/sidebar/zoom-in.svg';
 import svgZoomOut from '@/mxgraph/images/sidebar/zoom-out.svg';
 import svgScreen0 from '@/mxgraph/images/sidebar/screen-0.svg';
 import svgScreen1 from '@/mxgraph/images/sidebar/screen-1.svg';
 import svgOutline from '@/mxgraph/images/sidebar/outline.svg';
+import svgDelete from '@/mxgraph/images/sidebar/delete.svg';
+
+import { EEventName } from '../../../flowchart/types';
 
 import { ICommonProps } from '../../types';
 
@@ -137,8 +137,7 @@ const MiniMap: React.FunctionComponent<ICommonProps> = props => {
         <div className={`${_cls}-header`}>
           <span className={`${_cls}-title`}>导航器</span>
           <span className={`${_cls}-close`} onClick={() => setActive(false)}>
-            {/* <Icon name="iframe-close" /> */}
-            x
+            <img src={svgDelete} />
           </span>
         </div>
         <div className={`${_cls}-content`} ref={ref}></div>

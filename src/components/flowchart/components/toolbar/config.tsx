@@ -369,27 +369,7 @@ export const map: ICellMap = {
   }
 };
 
-// const commonConnections: Array<ICell> = [
-//   map.review,
-//   map.conditionBranch,
-//   map.manualBranch,
-//   {
-//     ...map.split,
-//     relations: [map.join]
-//   },
-//   map.startSubProcess
-// ]
-
-export const data: Array<ICell> = [
-  {
-    ...map.generalStart,
-    disabled: true
-  },
-  {
-    ...map.generalEnd,
-    disabled: true
-  },
-  map.draft,
+const commonConnections: Array<ICell> = [
   map.review,
   map.conditionBranch,
   map.manualBranch,
@@ -398,4 +378,41 @@ export const data: Array<ICell> = [
     relations: [map.join]
   },
   map.startSubProcess
+];
+
+export const data: Array<ICell> = [
+  {
+    ...map.generalStart,
+    disabled: true,
+    connections: commonConnections
+  },
+  {
+    ...map.generalEnd,
+    disabled: true
+  },
+  {
+    ...map.draft,
+    connections: commonConnections
+  },
+  {
+    ...map.review,
+    connections: commonConnections
+  },
+  {
+    ...map.conditionBranch,
+    connections: commonConnections
+  },
+  {
+    ...map.manualBranch,
+    connections: commonConnections
+  },
+  {
+    ...map.split,
+    relations: [map.join],
+    connections: commonConnections
+  },
+  {
+    ...map.startSubProcess,
+    connections: commonConnections
+  }
 ];

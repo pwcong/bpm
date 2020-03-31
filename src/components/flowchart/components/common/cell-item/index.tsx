@@ -3,9 +3,8 @@ import React from 'react';
 import classnames from 'classnames';
 
 import { useClosuer } from '@/components/flowchart/utils/hook';
-
-import { IBaseProps, ICell, ICellListenerCallback } from '../../../types';
-import EditorUI from '../../editorui';
+import { IBaseProps, ICell, ICellListenerCallback } from '@/components/flowchart/types';
+import EditorUI from '@/components/flowchart/components/editorui';
 
 export interface IProps extends IBaseProps {
   editorUI: EditorUI;
@@ -52,10 +51,13 @@ export const Item: React.FunctionComponent<IMenubarItemProps> = props => {
     listeners.forEach(l =>
       window.addEventListener(l.name, listenersCallback[l.name])
     );
-    return () =>
+    return () => {
+      data.onDestroy && data.onDestroy(editorUI, data);
+
       listeners.forEach(l =>
         window.removeEventListener(l.name, listenersCallback[l.name])
       );
+    };
   }, [editorUI, data]);
 
   const itemProps = {
