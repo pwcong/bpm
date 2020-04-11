@@ -10,7 +10,8 @@ import {
   mxPoint,
   mxGraphHandler,
   mxRectangle,
-  config as mxConfig
+  mxMultiplicity,
+  config as mxConfig,
 } from '@/components/mxgraph';
 
 import { IConfig, IBaseConfig } from '../../types';
@@ -19,7 +20,7 @@ import { parseJSON, putStyle, getBaseConfig } from '../../utils';
 import {
   defaultVertexStyle,
   defaultEdgeStyle,
-  defaultExtraStyle
+  defaultExtraStyle,
 } from './config';
 import { getDot } from './utils';
 
@@ -49,12 +50,15 @@ export default class Graph extends mxGraph {
     this.init(this.graph);
   }
 
-  init = graph => {
+  init = (graph) => {
     // 允许框选
     this.rubberband = new mxRubberband(graph);
 
     // 取消画布右键弹窗
     mxEvent.disableContextMenu(graph.container);
+
+    // 设置HTML标签
+    // graph.setHtmlLabels(true)
 
     // 公差计算
     graph.setTolerance(8);
@@ -66,19 +70,20 @@ export default class Graph extends mxGraph {
     graph.setPanning(true);
 
     // 使用html标签
-    // graph.setHtmlLabels(true)
+    !mxClient.IS_IE && graph.setHtmlLabels(true);
 
     // 回车键完成输入
-    // graph.setEnterStopsCellEditing(true);
+    // graph.setEnterStopsCellEditing(true)
 
     this.initKeyHandler(graph);
     this.initStylesheet(graph);
     this.initGuides(graph);
     this.initConnection(graph);
     this.initCells(graph);
+    this.initMarker(graph);
   };
 
-  initStylesheet = graph => {
+  initStylesheet = (graph) => {
     graph.alternateEdgeStyle = 'elbow=vertical';
 
     // 默认点的样式
@@ -88,49 +93,57 @@ export default class Graph extends mxGraph {
     graph.getStylesheet().putDefaultEdgeStyle(defaultEdgeStyle);
 
     // 默认拓展样式
-    Object.keys(defaultExtraStyle).forEach(key =>
+    Object.keys(defaultExtraStyle).forEach((key) =>
       putStyle(graph, key, defaultExtraStyle[key])
     );
 
     // 初始化节点样式
-    Object.keys(this.config.toolbar.map).forEach(key => {
+    Object.keys(this.config.toolbar.map).forEach((key) => {
       const cell = this.config.toolbar.map[key] || ({} as any);
       const { style = {}, status = {} } = cell;
       putStyle(graph, key, style);
-      Object.keys(status).forEach(s =>
+      Object.keys(status).forEach((s) =>
         putStyle(graph, `${key}#${s}`, status[s])
       );
     });
   };
 
-  initKeyHandler = graph => {
+  initKeyHandler = (graph) => {
     // 键盘操作
     this.keyHandler = new mxKeyHandler(graph);
 
     /** 兼容mac meta和window control */
-    this.keyHandler.isControlDown = function(evt) {
+    this.keyHandler.isControlDown = function (evt) {
       return mxEvent.isControlDown(evt) || (mxClient.IS_MAC && evt.metaKey);
     };
 
     this.keyHandler.setEnabled(this.editable);
   };
 
-  initCells = graph => {
-    // 禁止缩放大小
-    // graph.setCellsResizable(false);
+  initCells = (graph) => {
+    // 是否锁定节点
+    graph.setCellsLocked(!this.editable);
 
-    graph.setCellsEditable(this.editable);
-    graph.setCellsMovable(this.editable);
-    graph.setCellsResizable(this.editable);
-    graph.setEdgeLabelsMovable(this.editable);
+    graph.setCellsEditable(true);
+    graph.setCellsMovable(true);
+    graph.setCellsResizable(true);
+    graph.setEdgeLabelsMovable(true);
 
     // 允许拖放
-    graph.setDropEnabled(this.editable);
+    graph.setDropEnabled(true);
 
+    // 设置气泡提示
+    graph.setTooltips(true);
+    graph.getTooltipForCell = function (cell) {
+      return this.convertValueToString(cell);
+    };
+  };
+
+  initMarker = (graph) => {
     // 高亮斜线逻辑
-    mxMarker.addMarker('dash', function(c, shape) {
+    mxMarker.addMarker('dash', function (c, shape) {
       const dot = getDot(shape.points, shape.scale);
-      return function() {
+      return function () {
         c.begin();
         // pe为起点
         // c.moveTo(pe.x - nx / 2 - ny / 2, pe.y - ny / 2 + nx / 2)
@@ -145,20 +158,42 @@ export default class Graph extends mxGraph {
     });
   };
 
-  initConnection = graph => {
+  initConnection = (graph) => {
     const config = this.config;
 
     // 允许连接
-    graph.setConnectable(this.editable);
+    graph.setConnectable(true);
 
     // 禁止重复连接
     graph.setMultigraph(false);
+    // 设置连线规则
+    Object.keys(this.config.toolbar.map).forEach((key) => {
+      const cell = this.config.toolbar.map[key] || ({} as any);
+      const { multiplicities = [] } = cell;
+
+      multiplicities.forEach((m) => {
+        graph.multiplicities.push(
+          new mxMultiplicity(
+            m.source,
+            key,
+            m.attr,
+            m.value,
+            m.min,
+            m.max,
+            m.validNeighbors,
+            m.countError,
+            m.typeError,
+            m.validNeighborsAllowed
+          )
+        );
+      });
+    });
 
     // 禁止空连接
     graph.setAllowDanglingEdges(false);
 
     // 设置连线锚点
-    graph.getAllConnectionConstraints = function(terminal) {
+    graph.getAllConnectionConstraints = function (terminal) {
       if (terminal != null && this.model.isVertex(terminal.cell)) {
         const { constraints = [] } =
           config.toolbar.map[
@@ -167,7 +202,7 @@ export default class Graph extends mxGraph {
 
         if (constraints.length > 0) {
           return constraints.map(
-            c => new mxConnectionConstraint(new mxPoint(c[0], c[1]), true)
+            (c) => new mxConnectionConstraint(new mxPoint(c[0], c[1]), true)
           );
         }
 
@@ -175,7 +210,7 @@ export default class Graph extends mxGraph {
           new mxConnectionConstraint(new mxPoint(0.5, 0), true),
           new mxConnectionConstraint(new mxPoint(0, 0.5), true),
           new mxConnectionConstraint(new mxPoint(1, 0.5), true),
-          new mxConnectionConstraint(new mxPoint(0.5, 1), true)
+          new mxConnectionConstraint(new mxPoint(0.5, 1), true),
         ];
       }
 
@@ -183,52 +218,52 @@ export default class Graph extends mxGraph {
     };
 
     // 连接锚点时的样式
-    graph.connectionHandler.getEdgeColor = function(valid) {
+    graph.connectionHandler.getEdgeColor = function (valid) {
       return '#4285F4';
     };
     // 连接锚点时粗细
-    graph.connectionHandler.getEdgeWidth = function(valid) {
+    graph.connectionHandler.getEdgeWidth = function (valid) {
       return 1;
     };
 
     // 自动计算锚点
-    const mxConnectionHandlerUpdateEdgeState =
-      graph.connectionHandler.updateEdgeState;
-    graph.connectionHandler.updateEdgeState = function(pt, constraint) {
-      if (pt != null && this.previous != null) {
-        const constraints = this.graph.getAllConnectionConstraints(
-          this.previous
-        );
-        let nearestConstraint: any = null;
-        let dist: any = null;
+    // const mxConnectionHandlerUpdateEdgeState =
+    //   graph.connectionHandler.updateEdgeState
+    // graph.connectionHandler.updateEdgeState = function (pt, constraint) {
+    //   if (pt != null && this.previous != null) {
+    //     const constraints = this.graph.getAllConnectionConstraints(
+    //       this.previous
+    //     )
+    //     let nearestConstraint: any = null
+    //     let dist: any = null
 
-        for (let i = 0; i < constraints.length; i++) {
-          const cp = this.graph.getConnectionPoint(
-            this.previous,
-            constraints[i]
-          );
+    //     for (let i = 0; i < constraints.length; i++) {
+    //       const cp = this.graph.getConnectionPoint(
+    //         this.previous,
+    //         constraints[i]
+    //       )
 
-          if (cp != null) {
-            const tmp =
-              (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
+    //       if (cp != null) {
+    //         const tmp =
+    //           (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y)
 
-            if (dist == null || tmp < dist) {
-              nearestConstraint = constraints[i];
-              dist = tmp;
-            }
-          }
-        }
+    //         if (dist == null || tmp < dist) {
+    //           nearestConstraint = constraints[i]
+    //           dist = tmp
+    //         }
+    //       }
+    //     }
 
-        if (nearestConstraint != null) {
-          this.sourceConstraint = nearestConstraint;
-        }
-      }
+    //     if (nearestConstraint != null) {
+    //       this.sourceConstraint = nearestConstraint
+    //     }
+    //   }
 
-      mxConnectionHandlerUpdateEdgeState.apply(this, arguments);
-    };
+    //   mxConnectionHandlerUpdateEdgeState.apply(this, arguments)
+    // }
 
     // 实时更新连线（联动自动计算锚点）
-    graph.connectionHandler.createEdgeState = function(me) {
+    graph.connectionHandler.createEdgeState = function (me) {
       const edge = graph.createEdge(
         null,
         null,
@@ -246,15 +281,15 @@ export default class Graph extends mxGraph {
     };
 
     // 禁止连接节点
-    graph.connectionHandler.isConnectableCell = function(cell) {
+    graph.connectionHandler.isConnectableCell = function (cell) {
       return false;
     };
   };
 
-  initGuides = graph => {
+  initGuides = (graph) => {
     // 设置允许辅助线
     graph.graphHandler.guidesEnabled = true;
-    graph.graphHandler.useGuidesForEvent = function(me) {
+    graph.graphHandler.useGuidesForEvent = function (me) {
       return !mxEvent.isAltDown(me.getEvent());
     };
 
@@ -263,14 +298,14 @@ export default class Graph extends mxGraph {
     graph.view.gridSteps = 4;
 
     // 设置辅助框颜色
-    graph.graphHandler.createPreviewShape = function(bounds) {
+    graph.graphHandler.createPreviewShape = function (bounds) {
       this.previewColor = mxConfig.themeColor;
       return mxGraphHandler.prototype.createPreviewShape.apply(this, arguments);
     };
 
     // 设置页面辅助线
     const graphHandlerGetGuideStates = graph.graphHandler.getGuideStates;
-    graph.graphHandler.getGuideStates = function() {
+    graph.graphHandler.getGuideStates = function () {
       let result = graphHandlerGetGuideStates.apply(this, arguments);
       // Create virtual cell state for page centers
       const guides: Array<any> = [];
@@ -312,7 +347,7 @@ export default class Graph extends mxGraph {
   };
 
   // 重写获取节点名称方法
-  convertValueToString = cell => {
+  convertValueToString = (cell) => {
     try {
       const value = parseJSON(this.model.getValue(cell), {});
       return value['name'] || '';
@@ -330,7 +365,7 @@ export default class Graph extends mxGraph {
         cell,
         JSON.stringify(
           Object.assign({}, v, {
-            name: value
+            name: value,
           })
         )
       );

@@ -1,3 +1,3 @@
 export default {
-  themeColor: '#4285f4'
+  themeColor: '#4285f4',
 };

@@ -39,7 +39,7 @@ export default class Actions {
 
   init = () => {
     const ui = this.editorUI;
-    data.forEach(d =>
+    data.forEach((d) =>
       this.addAction(d.key, () => d.funct(ui), d.enabled, d.shortcut, d.tooltip)
     );
   };

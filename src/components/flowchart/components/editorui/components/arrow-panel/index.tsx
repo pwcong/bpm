@@ -19,7 +19,7 @@ const cls = 'flowchart-arrow-panel';
 const listCls = cls + '-list';
 const itemCls = cls + '-item';
 
-const ArrowPanel: React.FunctionComponent<IProps> = props => {
+const ArrowPanel: React.FunctionComponent<IProps> = (props) => {
   const { className, style = {}, data, editorUI, position } = props;
 
   return (
@@ -28,11 +28,11 @@ const ArrowPanel: React.FunctionComponent<IProps> = props => {
       style={{
         ...style,
         left: position.x,
-        top: position.y
+        top: position.y,
       }}
     >
       <div className={listCls}>
-        {data.map(item => (
+        {data.map((item) => (
           <CellItem
             className={itemCls}
             key={item.key}

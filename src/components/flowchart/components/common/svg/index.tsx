@@ -33,12 +33,12 @@ export const SVGMapper = {
   alignBottom: SVGAlignBottom,
   alignLeft: SVGAlignLeft,
   alignLRCenter: SVGAlignLRCenter,
-  alignRight: SVGAlignRight
+  alignRight: SVGAlignRight,
 };
 
 const cls = 'flowchart-svg';
 
-const SVG: React.FunctionComponent<IProps> = props => {
+const SVG: React.FunctionComponent<IProps> = (props) => {
   const { name, className, style } = props;
   const Cmpt = SVGMapper[name];
 
@@ -56,7 +56,7 @@ export interface ITitleSVGProps extends IProps {
   tooltip?: React.ReactNode;
 }
 
-export const TitleSVG: React.FunctionComponent<ITitleSVGProps> = props => {
+export const TitleSVG: React.FunctionComponent<ITitleSVGProps> = (props) => {
   const { title, style, ...restProps } = props;
 
   return (

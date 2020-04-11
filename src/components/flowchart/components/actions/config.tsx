@@ -4,94 +4,94 @@ import Editor from '../editor';
 export const map = {
   undo: {
     key: 'undo',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.undo();
     },
     enabled: true,
     shortcut: Editor.ctrlKey + '+Z',
-    tooltip: true
+    tooltip: true,
   },
   redo: {
     key: 'redo',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.redo();
     },
     enabled: true,
     shortcut: Editor.ctrlKey + '+Shift+Z',
-    tooltip: true
+    tooltip: true,
   },
   delete: {
     key: 'delete',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.delete();
     },
     enabled: true,
     shortcut: 'Delete',
-    tooltip: true
+    tooltip: true,
   },
   rubberband: {
     key: 'rubberband',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.rubberband();
     },
     enabled: true,
     shortcut: Editor.ctrlKey + '+Left',
-    tooltip: true
+    tooltip: true,
   },
   alignTop: {
     key: 'alignTop',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.align('top');
     },
     enabled: true,
     shortcut: null,
-    tooltip: false
+    tooltip: false,
   },
   alignTBCenter: {
     key: 'alignTBCenter',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.align('tbCenter');
     },
     enabled: true,
     shortcut: null,
-    tooltip: false
+    tooltip: false,
   },
   alignBottom: {
     key: 'alignBottom',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.align('bottom');
     },
     enabled: true,
     shortcut: null,
-    tooltip: false
+    tooltip: false,
   },
   alignLeft: {
     key: 'alignLeft',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.align('left');
     },
     enabled: true,
     shortcut: null,
-    tooltip: false
+    tooltip: false,
   },
   alignLRCenter: {
     key: 'alignLRCenter',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.align('lrCenter');
     },
     enabled: true,
     shortcut: null,
-    tooltip: false
+    tooltip: false,
   },
   alignRight: {
     key: 'alignRight',
-    funct: function(editorUI: EditorUI) {
+    funct: function (editorUI: EditorUI) {
       editorUI.align('right');
     },
     enabled: true,
     shortcut: null,
-    tooltip: false
-  }
+    tooltip: false,
+  },
 };
 
 export const data = [
@@ -104,5 +104,5 @@ export const data = [
   map.alignBottom,
   map.alignLeft,
   map.alignLRCenter,
-  map.alignRight
+  map.alignRight,
 ];

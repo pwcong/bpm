@@ -5,7 +5,7 @@ import {
   mxResources,
   mxEvent,
   mxConstants,
-  mxRectangle
+  mxRectangle,
 } from '@/components/mxgraph';
 import { getImageBasePath } from '@/components/mxgraph/utils';
 
@@ -129,7 +129,7 @@ HoverIcons.prototype.tolerance = mxClient.IS_TOUCH ? 6 : 0;
 /**
  *
  */
-HoverIcons.prototype.init = function() {
+HoverIcons.prototype.init = function () {
   this.arrowUp = this.createArrow(
     this.triangleUp,
     mxResources.get('plusTooltip')
@@ -149,11 +149,11 @@ HoverIcons.prototype.init = function() {
 
   this.elts = [this.arrowUp, this.arrowRight, this.arrowDown, this.arrowLeft];
 
-  this.resetHandler = mxUtils.bind(this, function() {
+  this.resetHandler = mxUtils.bind(this, function () {
     this.reset();
   });
 
-  this.repaintHandler = mxUtils.bind(this, function() {
+  this.repaintHandler = mxUtils.bind(this, function () {
     this.repaint();
   });
 
@@ -171,7 +171,7 @@ HoverIcons.prototype.init = function() {
   // Resets the mouse point on escape
   this.graph.addListener(
     mxEvent.ESCAPE,
-    mxUtils.bind(this, function() {
+    mxUtils.bind(this, function () {
       this.mouseDownPoint = null;
     })
   );
@@ -180,7 +180,7 @@ HoverIcons.prototype.init = function() {
   mxEvent.addListener(
     this.graph.container,
     'mouseleave',
-    mxUtils.bind(this, function(evt) {
+    mxUtils.bind(this, function (evt) {
       // Workaround for IE11 firing mouseleave for touch in diagram
       if (
         evt.relatedTarget != null &&
@@ -194,14 +194,14 @@ HoverIcons.prototype.init = function() {
   // Resets current state when in-place editor starts
   this.graph.addListener(
     mxEvent.START_EDITING,
-    mxUtils.bind(this, function(evt) {
+    mxUtils.bind(this, function (evt) {
       this.reset();
     })
   );
 
   // Resets current state after update of selection state for touch events
   const graphClick = this.graph.click;
-  this.graph.click = mxUtils.bind(this, function(me) {
+  this.graph.click = mxUtils.bind(this, function (me) {
     graphClick.apply(this.graph, arguments);
 
     if (
@@ -220,7 +220,7 @@ HoverIcons.prototype.init = function() {
 
   // Implements a listener for hover and click handling
   this.graph.addMouseListener({
-    mouseDown: mxUtils.bind(this, function(sender, me) {
+    mouseDown: mxUtils.bind(this, function (sender, me) {
       connectionHandlerActive = false;
       const evt = me.getEvent();
 
@@ -236,7 +236,7 @@ HoverIcons.prototype.init = function() {
 
       this.setDisplay('none');
     }),
-    mouseMove: mxUtils.bind(this, function(sender, me) {
+    mouseMove: mxUtils.bind(this, function (sender, me) {
       const evt = me.getEvent();
 
       if (this.isResetEvent(evt)) {
@@ -256,7 +256,7 @@ HoverIcons.prototype.init = function() {
         connectionHandlerActive = true;
       }
     }),
-    mouseUp: mxUtils.bind(this, function(sender, me) {
+    mouseUp: mxUtils.bind(this, function (sender, me) {
       const evt = me.getEvent();
       // const pt = mxUtils.convertPoint(
       //   this.graph.container,
@@ -302,14 +302,14 @@ HoverIcons.prototype.init = function() {
 
       connectionHandlerActive = false;
       this.resetActiveArrow();
-    })
+    }),
   });
 };
 
 /**
  *
  */
-HoverIcons.prototype.isResetEvent = function(evt, allowShift) {
+HoverIcons.prototype.isResetEvent = function (evt, allowShift) {
   return (
     mxEvent.isAltDown(evt) ||
     (this.activeArrow == null && mxEvent.isShiftDown(evt)) ||
@@ -321,7 +321,7 @@ HoverIcons.prototype.isResetEvent = function(evt, allowShift) {
 /**
  *
  */
-HoverIcons.prototype.createArrow = function(img, tooltip) {
+HoverIcons.prototype.createArrow = function (img, tooltip) {
   let arrow: any = null;
 
   if (mxClient.IS_IE && !mxClient.IS_SVG) {
@@ -356,7 +356,7 @@ HoverIcons.prototype.createArrow = function(img, tooltip) {
 
   mxEvent.addGestureListeners(
     arrow,
-    mxUtils.bind(this, function(evt) {
+    mxUtils.bind(this, function (evt) {
       if (this.currentState != null && !this.isResetEvent(evt)) {
         this.mouseDownPoint = mxUtils.convertPoint(
           this.graph.container,
@@ -377,7 +377,7 @@ HoverIcons.prototype.createArrow = function(img, tooltip) {
   mxEvent.addListener(
     arrow,
     'mouseenter',
-    mxUtils.bind(this, function(evt) {
+    mxUtils.bind(this, function (evt) {
       // Workaround for Firefox firing mouseenter on touchend
       if (mxEvent.isMouseEvent(evt)) {
         if (this.activeArrow != null && this.activeArrow !== arrow) {
@@ -394,7 +394,7 @@ HoverIcons.prototype.createArrow = function(img, tooltip) {
   mxEvent.addListener(
     arrow,
     'mouseleave',
-    mxUtils.bind(this, function(evt) {
+    mxUtils.bind(this, function (evt) {
       // Workaround for IE11 firing this event on touch
       if (!this.graph.isMouseDown) {
         this.resetActiveArrow();
@@ -408,7 +408,7 @@ HoverIcons.prototype.createArrow = function(img, tooltip) {
 /**
  *
  */
-HoverIcons.prototype.resetActiveArrow = function() {
+HoverIcons.prototype.resetActiveArrow = function () {
   if (this.activeArrow != null) {
     mxUtils.setOpacity(this.activeArrow, this.inactiveOpacity);
     this.activeArrow = null;
@@ -418,7 +418,7 @@ HoverIcons.prototype.resetActiveArrow = function() {
 /**
  *
  */
-HoverIcons.prototype.getDirection = function() {
+HoverIcons.prototype.getDirection = function () {
   let dir = mxConstants.DIRECTION_EAST;
 
   if (this.activeArrow === this.arrowUp) {
@@ -435,7 +435,7 @@ HoverIcons.prototype.getDirection = function() {
 /**
  *
  */
-HoverIcons.prototype.visitNodes = function(visitor) {
+HoverIcons.prototype.visitNodes = function (visitor) {
   for (let i = 0; i < this.elts.length; i++) {
     if (this.elts[i] != null) {
       visitor(this.elts[i]);
@@ -446,8 +446,8 @@ HoverIcons.prototype.visitNodes = function(visitor) {
 /**
  *
  */
-HoverIcons.prototype.removeNodes = function() {
-  this.visitNodes(function(elt) {
+HoverIcons.prototype.removeNodes = function () {
+  this.visitNodes(function (elt) {
     if (elt.parentNode != null) {
       elt.parentNode.removeChild(elt);
     }
@@ -457,8 +457,8 @@ HoverIcons.prototype.removeNodes = function() {
 /**
  *
  */
-HoverIcons.prototype.setDisplay = function(display) {
-  this.visitNodes(function(elt) {
+HoverIcons.prototype.setDisplay = function (display) {
+  this.visitNodes(function (elt) {
     elt.style.display = display;
   });
 };
@@ -466,14 +466,14 @@ HoverIcons.prototype.setDisplay = function(display) {
 /**
  *
  */
-HoverIcons.prototype.isActive = function() {
+HoverIcons.prototype.isActive = function () {
   return this.activeArrow != null && this.currentState != null;
 };
 
 /**
  *
  */
-HoverIcons.prototype.drag = function(evt, x, y) {
+HoverIcons.prototype.drag = function (evt, x, y) {
   this.graph.popupMenuHandler.hideMenu();
   this.graph.stopEditing(false);
 
@@ -517,32 +517,35 @@ HoverIcons.prototype.drag = function(evt, x, y) {
 /**
  *
  */
-HoverIcons.prototype.getStateAt = function(state, x, y) {
+HoverIcons.prototype.getStateAt = function (state, x, y) {
   return this.graph.view.getState(this.graph.getCellAt(x, y));
 };
 
 /**
  *
  */
-HoverIcons.prototype.click = function(state, dir, me) {
+HoverIcons.prototype.click = function (state, dir, me) {
   const evt = me.getEvent();
-  const x = me.getGraphX();
-  const y = me.getGraphY();
 
-  const tmp = this.getStateAt(state, x, y);
+  // 穿透选中箭头下方元素
 
-  if (
-    tmp != null &&
-    this.graph.model.isEdge(tmp.cell) &&
-    !mxEvent.isControlDown(evt) &&
-    (tmp.getVisibleTerminalState(true) === state ||
-      tmp.getVisibleTerminalState(false) === state)
-  ) {
-    this.graph.setSelectionCell(tmp.cell);
-    this.reset();
-  } else if (state != null) {
-    this.clickHandler(state.cell, dir, evt);
-  }
+  // const x = me.getGraphX()
+  // const y = me.getGraphY()
+  // const tmp = this.getStateAt(state, x, y)
+  // if (
+  //   tmp != null &&
+  //   this.graph.model.isEdge(tmp.cell) &&
+  //   !mxEvent.isControlDown(evt) &&
+  //   (tmp.getVisibleTerminalState(true) === state ||
+  //     tmp.getVisibleTerminalState(false) === state)
+  // ) {
+  //   this.graph.setSelectionCell(tmp.cell)
+  //   this.reset()
+  // } else if (state != null) {
+  //   this.clickHandler(state.cell, dir, evt)
+  // }
+
+  this.clickHandler(state.cell, dir, evt);
 
   me.consume();
 };
@@ -550,7 +553,7 @@ HoverIcons.prototype.click = function(state, dir, me) {
 /**
  *
  */
-HoverIcons.prototype.reset = function(clearTimeout) {
+HoverIcons.prototype.reset = function (clearTimeout) {
   clearTimeout = clearTimeout == null ? true : clearTimeout;
 
   if (clearTimeout && this.updateThread != null) {
@@ -567,7 +570,7 @@ HoverIcons.prototype.reset = function(clearTimeout) {
 /**
  *
  */
-HoverIcons.prototype.repaint = function() {
+HoverIcons.prototype.repaint = function () {
   this.bbox = null;
 
   if (this.currentState != null) {
@@ -617,7 +620,7 @@ HoverIcons.prototype.repaint = function() {
       }
 
       // Positions arrows avoid collisions with rotation handle
-      const positionArrow = mxUtils.bind(this, function(arrow, x, y) {
+      const positionArrow = mxUtils.bind(this, function (arrow, x, y) {
         if (rotationBbox != null) {
           const bbox = new mxRectangle(
             x,
@@ -704,7 +707,7 @@ HoverIcons.prototype.repaint = function() {
 
         const currentGeo = this.graph.getCellGeometry(this.currentState.cell);
 
-        const checkCollision = mxUtils.bind(this, function(cell, arrow) {
+        const checkCollision = mxUtils.bind(this, function (cell, arrow) {
           const geo =
             this.graph.model.isVertex(cell) && this.graph.getCellGeometry(cell);
 
@@ -735,17 +738,18 @@ HoverIcons.prototype.repaint = function() {
         this.arrowDown.style.visibility = 'visible';
       }
 
-      if (this.graph.tooltipHandler.isEnabled()) {
-        this.arrowLeft.setAttribute('title', mxResources.get('plusTooltip'));
-        this.arrowRight.setAttribute('title', mxResources.get('plusTooltip'));
-        this.arrowUp.setAttribute('title', mxResources.get('plusTooltip'));
-        this.arrowDown.setAttribute('title', mxResources.get('plusTooltip'));
-      } else {
-        this.arrowLeft.removeAttribute('title');
-        this.arrowRight.removeAttribute('title');
-        this.arrowUp.removeAttribute('title');
-        this.arrowDown.removeAttribute('title');
-      }
+      // if (this.graph.tooltipHandler.isEnabled()) {
+      //   debugger
+      //   this.arrowLeft.setAttribute('title', mxResources.get('plusTooltip'))
+      //   this.arrowRight.setAttribute('title', mxResources.get('plusTooltip'))
+      //   this.arrowUp.setAttribute('title', mxResources.get('plusTooltip'))
+      //   this.arrowDown.setAttribute('title', mxResources.get('plusTooltip'))
+      // } else {
+      //   this.arrowLeft.removeAttribute('title')
+      //   this.arrowRight.removeAttribute('title')
+      //   this.arrowUp.removeAttribute('title')
+      //   this.arrowDown.removeAttribute('title')
+      // }
     } else {
       this.reset();
     }
@@ -765,12 +769,12 @@ HoverIcons.prototype.repaint = function() {
 /**
  *
  */
-HoverIcons.prototype.computeBoundingBox = function() {
+HoverIcons.prototype.computeBoundingBox = function () {
   let bbox = !this.graph.model.isEdge(this.currentState.cell)
     ? mxRectangle.fromRectangle(this.currentState)
     : null;
 
-  this.visitNodes(function(elt) {
+  this.visitNodes(function (elt) {
     if (elt.parentNode != null) {
       const tmp = new mxRectangle(
         elt.offsetLeft,
@@ -793,7 +797,7 @@ HoverIcons.prototype.computeBoundingBox = function() {
 /**
  *
  */
-HoverIcons.prototype.getState = function(state) {
+HoverIcons.prototype.getState = function (state) {
   if (state != null) {
     let cell = state.cell;
 
@@ -834,7 +838,7 @@ HoverIcons.prototype.getState = function(state) {
 /**
  *
  */
-HoverIcons.prototype.update = function(state, x, y) {
+HoverIcons.prototype.update = function (state, x, y) {
   if (
     state != null &&
     mxUtils.getValue(state.style, 'allowArrows', '1') === '0'
@@ -865,7 +869,7 @@ HoverIcons.prototype.update = function(state, x, y) {
       if (state != null) {
         // Starts timer to update current state with no mouse events
         this.updateThread = window.setTimeout(
-          mxUtils.bind(this, function() {
+          mxUtils.bind(this, function () {
             if (
               !this.isActive() &&
               !this.graph.isMouseDown &&
@@ -927,7 +931,7 @@ HoverIcons.prototype.update = function(state, x, y) {
 /**
  *
  */
-HoverIcons.prototype.setCurrentState = function(state) {
+HoverIcons.prototype.setCurrentState = function (state) {
   if (state.style['portConstraint'] !== 'eastwest') {
     this.graph.container.appendChild(this.arrowUp);
     this.graph.container.appendChild(this.arrowDown);

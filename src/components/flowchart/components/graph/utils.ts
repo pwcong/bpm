@@ -17,13 +17,13 @@ export function getDot(points, scale) {
     const yc = (1 - 40 / len) * y + ya;
     return {
       x: xc,
-      y: yc
+      y: yc,
     };
   }
   const allX = xa + xb;
   const allY = ya + yb;
   return {
     x: allX / 2,
-    y: allY / 2
+    y: allY / 2,
   };
 }

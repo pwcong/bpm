@@ -25,6 +25,51 @@
     &-text {
       font-size: 14px;
       color: #666666;
+      position: relative;
+      padding-right: 4px;
+    }
+
+    &-arrow {
+      position: absolute;
+      right: -4px;
+      bottom: 10px;
+      font-size: 0;
+      &::after {
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        border-bottom: 4px solid #666666;
+      }
+    }
+
+    &-popover {
+      .ele-popover-inner-content {
+        padding: 0;
+      }
+    }
+
+    &-zooms {
+      max-height: 144px;
+      overflow: auto;
+    }
+
+    &-zoom {
+      text-align: center;
+      line-height: 24px;
+      height: 24px;
+      font-size: 12px;
+      color: #666666;
+      width: 56px;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(#4285f4, 0.1);
+      }
+
+      &-active {
+        color: #4285f4;
+      }
     }
 
     &-btn {

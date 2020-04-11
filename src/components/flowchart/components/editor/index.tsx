@@ -11,7 +11,7 @@ import {
   mxRectangleShape,
   mxRectangle,
   mxPoint,
-  mxPolyline
+  mxPolyline,
 } from '@/components/mxgraph';
 
 import { getBaseConfig } from '../../utils';
@@ -26,9 +26,6 @@ export default class Editor extends mxEventSource {
   config: IBaseConfig;
   editor: any;
   graph: any;
-
-  maxZoom = 200;
-  minZoom = 30;
 
   undoManager: any;
   undoListener: any;
@@ -55,13 +52,13 @@ export default class Editor extends mxEventSource {
     const graph = this.graph;
     const undoMgr = new mxUndoManager();
 
-    this.undoListener = function(sender, evt) {
+    this.undoListener = function (sender, evt) {
       undoMgr.undoableEditHappened(evt.getProperty('edit'));
     };
 
     // Installs the command history
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const listener = mxUtils.bind(this, function(sender, evt) {
+    const listener = mxUtils.bind(this, function (sender, evt) {
       // @ts-ignore
       this.undoListener.apply(this, arguments);
     });
@@ -70,7 +67,7 @@ export default class Editor extends mxEventSource {
     graph.getView().addListener(mxEvent.UNDO, listener);
 
     // Keeps the selection in sync with the history
-    const undoHandler = function(sender, evt) {
+    const undoHandler = function (sender, evt) {
       const cand = graph.getSelectionCellsForChanges(
         evt.getProperty('edit').changes
       );
@@ -110,11 +107,11 @@ export default class Editor extends mxEventSource {
     this.initPageFormat();
     graph.pageScale = 1;
 
-    graph.getPagePadding = function() {
+    graph.getPagePadding = function () {
       return new mxPoint(130, 110);
     };
 
-    graph.getPageLayout = function() {
+    graph.getPageLayout = function () {
       const size = this.getPageSize();
       const bounds = this.getGraphBounds();
 
@@ -135,7 +132,7 @@ export default class Editor extends mxEventSource {
         return new mxRectangle(x0, y0, w0, h0);
       }
     };
-    graph.getPageSize = function() {
+    graph.getPageSize = function () {
       return new mxRectangle(
         0,
         0,
@@ -143,7 +140,7 @@ export default class Editor extends mxEventSource {
         this.pageFormat.height * this.pageScale
       );
     };
-    graph.updatePageBreaks = function(visible, width, height) {
+    graph.updatePageBreaks = function (visible, width, height) {
       const scale = this.view.scale;
       const tr = this.view.translate;
       const fmt = this.pageFormat;
@@ -180,7 +177,7 @@ export default class Editor extends mxEventSource {
         this.verticalPageBreaks = [];
       }
 
-      const drawPageBreaks = mxUtils.bind(this, function(breaks) {
+      const drawPageBreaks = mxUtils.bind(this, function (breaks) {
         if (breaks != null) {
           const count =
             breaks === this.horizontalPageBreaks
@@ -198,7 +195,7 @@ export default class Editor extends mxEventSource {
                     new mxPoint(
                       Math.round(right),
                       Math.round(bounds2.y + (i + 1) * bounds.height)
-                    )
+                    ),
                   ]
                 : [
                     new mxPoint(
@@ -208,7 +205,7 @@ export default class Editor extends mxEventSource {
                     new mxPoint(
                       Math.round(bounds2.x + (i + 1) * bounds.width),
                       Math.round(bottom)
-                    )
+                    ),
                   ];
 
             if (breaks[i] != null) {
@@ -239,7 +236,7 @@ export default class Editor extends mxEventSource {
     };
 
     const graphSizeDidChange = graph.sizeDidChange;
-    graph.sizeDidChange = function() {
+    graph.sizeDidChange = function () {
       const pages = this.getPageLayout();
       const pad = this.getPagePadding();
       const size = this.getPageSize();
@@ -290,7 +287,7 @@ export default class Editor extends mxEventSource {
     const view = graph.view;
 
     const graphViewValidate = graph.view.validate;
-    view.validate = function() {
+    view.validate = function () {
       if (
         this.graph.container != null &&
         mxUtils.hasScrollbars(this.graph.container)
@@ -311,7 +308,7 @@ export default class Editor extends mxEventSource {
     // view.translate = new mxPoint((iw - pw) / 2, (ih - ph) / 2);
     // view.translate = new mxPoint(0, 0);
 
-    view.validateBackgroundPage = function() {
+    view.validateBackgroundPage = function () {
       const graph = this.graph;
 
       const bounds = this.getBackgroundPageBounds();
@@ -351,7 +348,7 @@ export default class Editor extends mxEventSource {
           mxEvent.addListener(
             this.backgroundPageShape.node,
             'dblclick',
-            mxUtils.bind(this, function(evt) {
+            mxUtils.bind(this, function (evt) {
               graph.dblClick(evt);
             })
           );
@@ -360,10 +357,10 @@ export default class Editor extends mxEventSource {
           // container and finishing the handling of a single gesture
           mxEvent.addGestureListeners(
             this.backgroundPageShape.node,
-            mxUtils.bind(this, function(evt) {
+            mxUtils.bind(this, function (evt) {
               graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new mxMouseEvent(evt));
             }),
-            mxUtils.bind(this, function(evt) {
+            mxUtils.bind(this, function (evt) {
               // Hides the tooltip if mouse is outside container
               if (
                 graph.tooltipHandler != null &&
@@ -376,7 +373,7 @@ export default class Editor extends mxEventSource {
                 graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt));
               }
             }),
-            mxUtils.bind(this, function(evt) {
+            mxUtils.bind(this, function (evt) {
               graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
             })
           );
@@ -390,7 +387,7 @@ export default class Editor extends mxEventSource {
       this.validateBackgroundStyles();
     };
 
-    view.validateBackgroundStyles = function() {
+    view.validateBackgroundStyles = function () {
       const graph = this.graph;
       const color = '#ffffff';
       const gridColor = '#eeeeee';
@@ -454,7 +451,7 @@ export default class Editor extends mxEventSource {
       }
     };
 
-    view.createSvgGrid = function(color) {
+    view.createSvgGrid = function (color) {
       let tmp = this.graph.gridSize * this.scale;
 
       while (tmp < this.minGridSize) {
@@ -516,13 +513,13 @@ export default class Editor extends mxEventSource {
 
       return svg;
     };
-    view.createBackgroundPageShape = function(bounds) {
+    view.createBackgroundPageShape = function (bounds) {
       return new mxRectangleShape(bounds, '#ffffff', 'transparent');
     };
-    view.getGraphBounds = function() {
+    view.getGraphBounds = function () {
       return this.graphBounds;
     };
-    view.getBackgroundPageBounds = function() {
+    view.getBackgroundPageBounds = function () {
       const gb = this.getGraphBounds();
 
       // Computes unscaled, untranslated graph bounds

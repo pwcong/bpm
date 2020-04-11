@@ -16,7 +16,7 @@ export interface IProps extends ICommonProps {
 const cls = 'flowchart-toolbar';
 const itemCls = `${cls}-item`;
 
-const Toolbar: React.FunctionComponent<IProps> = props => {
+const Toolbar: React.FunctionComponent<IProps> = (props) => {
   const { editorUI, className, style, data } = props;
 
   React.useEffect(() => {
@@ -26,8 +26,8 @@ const Toolbar: React.FunctionComponent<IProps> = props => {
   return (
     <div className={classnames(cls, className)} style={style}>
       {data
-        .filter(item => !item.disabled)
-        .map(item => (
+        .filter((item) => !item.disabled)
+        .map((item) => (
           <CellItem
             className={itemCls}
             key={item.key}

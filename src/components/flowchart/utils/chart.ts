@@ -1,5 +1,5 @@
 import { mxUtils, mxCodec, mxClient, mxEvent } from '@/components/mxgraph';
-import { IConfig, IBaseConfig } from '../types';
+import { IConfig, IBaseConfig, ICell, ICellGeometry } from '../types';
 /**
  * 加载绘图数据
  * @param graph 绘图对象
@@ -28,8 +28,8 @@ export function exportXml(graph, pretty?: boolean) {
  * 展开节点
  * @param cells 节点映射
  */
-export function getCells(cells) {
-  return Object.keys(cells).map(k => cells[k]);
+export function expandCells(cells) {
+  return Object.keys(cells).map((k) => cells[k]);
 }
 
 /**
@@ -39,6 +39,66 @@ export function getCells(cells) {
  */
 export function getCell(graph, id: string) {
   return graph.model.getCell(id);
+}
+
+/**
+ * 获取子节点
+ * @param graph 绘图对象
+ * @param id 节点ID
+ * @param first 首节点
+ * @param map 节点字典
+ */
+
+export function getChildCellsMap(
+  graph,
+  id: string,
+  first?: boolean,
+  map?: Map<string, any>
+) {
+  map = map || new Map<string, any>();
+
+  const cell = getCell(graph, id);
+
+  if (!cell) {
+    return map;
+  }
+
+  if (first === false) {
+    map.set(cell.id, cell);
+  }
+
+  const outgoingEdges = graph.model.getOutgoingEdges(cell);
+  for (let i = 0, l = outgoingEdges.length; i < l; i++) {
+    const t = outgoingEdges[i];
+    map.set(t.id, t);
+    if (t.target && !map.has(t.target.id)) {
+      getChildCellsMap(graph, t.target.id, false, map);
+    }
+  }
+
+  return map;
+}
+
+/**
+ * 获取子线条
+ * @param graph 绘图对象
+ * @param id 节点ID
+ */
+export function getChildEdges(graph, id: string) {
+  return Array.from(getChildCellsMap(graph, id).values()).filter((c) =>
+    graph.model.isEdge(c)
+  );
+}
+
+/**
+ * 获取子节点
+ * @param graph 绘图对象
+ * @param id 节点ID
+ */
+export function getChildVertexs(graph, id: string) {
+  return Array.from(getChildCellsMap(graph, id).values()).filter((c) =>
+    graph.model.isVertex(c)
+  );
 }
 
 /**
@@ -60,7 +120,7 @@ export function setStyle(
   const cache = {};
   const newStyleArray = style
     .split(';')
-    .map(t => {
+    .map((t) => {
       if (!t) {
         return;
       }
@@ -90,9 +150,9 @@ export function setStyle(
 
       return `${key}=${value}`;
     })
-    .filter(t => !!t);
+    .filter((t) => !!t);
 
-  Object.keys(newStyle).forEach(k => {
+  Object.keys(newStyle).forEach((k) => {
     if (cache[k]) {
       return;
     }
@@ -121,7 +181,7 @@ export function hasStyle(cell, style: string) {
  */
 export function putStyle(graph, key, style: object) {
   const styleObj = new Object();
-  Object.keys(style).forEach(k => (styleObj[k] = style[k]));
+  Object.keys(style).forEach((k) => (styleObj[k] = style[k]));
   graph.getStylesheet().putCellStyle(key, styleObj);
 }
 
@@ -163,19 +223,53 @@ export function getBaseConfig(config: IConfig): IBaseConfig {
     editable = true,
     menubar = {
       data: [],
-      map: {}
+      map: {},
     },
     toolbar = {
       data: [],
-      map: {}
+      map: {},
     },
-    afterUpdateCells = () => {}
+    afterUpdateCells = () => {},
   } = config;
 
   return {
     editable,
     menubar,
     toolbar,
-    afterUpdateCells
+    afterUpdateCells,
+  };
+}
+
+/**
+ * 获取默认坐标参数
+ * @param cell 节点配置
+ */
+export function getDefaultGeometry(cell: ICell) {
+  const geo = cell.geometry || ({} as ICellGeometry);
+
+  const { x = 0, y = 0, width = 50, height = 50 } = geo;
+
+  return {
+    width,
+    height,
+    x,
+    y,
+  };
+}
+
+/**
+ * 获取中心坐标
+ * @param cell 节点对象
+ */
+export function getCenterGeometry(cell) {
+  const geo = cell.getGeometry() || {};
+
+  const { x = 0, y = 0, width = 50, height = 50 } = geo;
+
+  return {
+    width,
+    height,
+    x: x + width / 2,
+    y: y + height / 2,
   };
 }

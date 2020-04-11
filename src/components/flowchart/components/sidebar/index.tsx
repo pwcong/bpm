@@ -2,6 +2,9 @@ import React from 'react';
 
 import classnames from 'classnames';
 
+// import Popover from '@elements/popover';
+// import Icon from '@elements/icon'
+
 import { mxOutline } from '@/components/mxgraph';
 
 import svgZoomIn from '@/mxgraph/images/sidebar/zoom-in.svg';
@@ -11,9 +14,10 @@ import svgScreen1 from '@/mxgraph/images/sidebar/screen-1.svg';
 import svgOutline from '@/mxgraph/images/sidebar/outline.svg';
 import svgDelete from '@/mxgraph/images/sidebar/delete.svg';
 
-import { EEventName } from '../../../flowchart/types';
+import { EEventName } from '@/components/flowchart/types';
 
 import { ICommonProps } from '../../types';
+// import { getZoomData } from './utils';
 
 import './style.scss';
 
@@ -25,13 +29,12 @@ export interface IProps extends ICommonProps {
 const cls = 'flowchart-sidebar';
 const itemCls = cls + '-item';
 
-const Zoomer: React.FunctionComponent<ICommonProps> = props => {
+const Zoomer: React.FunctionComponent<ICommonProps> = (props) => {
   const { editorUI } = props;
 
   const [zoom, setZoom] = React.useState<number>(
     (editorUI.graph.view.scale || 1) * 100
   );
-
   const _cls = `${cls}-zoomer`;
 
   const zoomTo = (value: number) => {
@@ -54,22 +57,45 @@ const Zoomer: React.FunctionComponent<ICommonProps> = props => {
     <div className={_cls}>
       <div
         className={classnames(`${_cls}-btn`, {
-          [`${_cls}-btn-disabled`]: zoom <= editorUI.editor.minZoom
+          [`${_cls}-btn-disabled`]: zoom <= editorUI.minZoom,
         })}
         style={{
-          backgroundImage: `url(${svgZoomOut})`
+          backgroundImage: `url(${svgZoomOut})`,
         }}
-        onClick={() => zoom > editorUI.editor.minZoom && zoomTo(zoom - 10)}
+        onClick={() => zoom > editorUI.minZoom && zoomTo(zoom - 10)}
       ></div>
-      <div className={`${_cls}-text`}>{zoom + '%'}</div>
+      {/* <Popover
+        overlayStyle={{}}
+        overlayClassName={`${_cls}-popover`}
+        content={
+          <div className={`${_cls}-zooms`}>
+            {getZoomData(editorUI.minZoom, editorUI.maxZoom).map((v) => (
+              <div
+                onClick={() => zoomTo(v)}
+                key={v}
+                className={classnames(`${_cls}-zoom`, {
+                  [`${_cls}-zoom-active`]: zoom === v,
+                })}
+              >
+                {`${v}%`}
+              </div>
+            ))}
+          </div>
+        }
+      >
+        <div className={`${_cls}-text`}>
+          {zoom + '%'}
+          <div className={`${_cls}-arrow`}></div>
+        </div>
+      </Popover> */}
       <div
         className={classnames(`${_cls}-btn`, {
-          [`${_cls}-btn-disabled`]: zoom >= editorUI.editor.maxZoom
+          [`${_cls}-btn-disabled`]: zoom >= editorUI.maxZoom,
         })}
         style={{
-          backgroundImage: `url(${svgZoomIn})`
+          backgroundImage: `url(${svgZoomIn})`,
         }}
-        onClick={() => zoom < editorUI.editor.maxZoom && zoomTo(zoom + 10)}
+        onClick={() => zoom < editorUI.maxZoom && zoomTo(zoom + 10)}
       ></div>
     </div>
   );
@@ -80,20 +106,20 @@ export interface IScreenerProps extends ICommonProps {
   onToggle?: (active: boolean) => void;
 }
 
-const Screener: React.FunctionComponent<IScreenerProps> = props => {
+const Screener: React.FunctionComponent<IScreenerProps> = (props) => {
   const { active, onToggle } = props;
   return (
     <div
       className={`${cls}-screener`}
       style={{
-        backgroundImage: `url(${!active ? svgScreen1 : svgScreen0})`
+        backgroundImage: `url(${!active ? svgScreen1 : svgScreen0})`,
       }}
       onClick={() => onToggle && onToggle(!active)}
     ></div>
   );
 };
 
-const MiniMap: React.FunctionComponent<ICommonProps> = props => {
+const MiniMap: React.FunctionComponent<ICommonProps> = (props) => {
   const { editorUI } = props;
 
   const ref = React.useRef<HTMLDivElement | null>(null);
@@ -124,14 +150,14 @@ const MiniMap: React.FunctionComponent<ICommonProps> = props => {
       <div
         className={_cls}
         style={{
-          backgroundImage: `url(${svgOutline})`
+          backgroundImage: `url(${svgOutline})`,
         }}
         onClick={() => setActive(!active)}
       ></div>
       <div
         className={`${_cls}-modal`}
         style={{
-          display: active ? undefined : 'none'
+          display: active ? undefined : 'none',
         }}
       >
         <div className={`${_cls}-header`}>
@@ -146,7 +172,7 @@ const MiniMap: React.FunctionComponent<ICommonProps> = props => {
   );
 };
 
-const Sidebar: React.FunctionComponent<IProps> = props => {
+const Sidebar: React.FunctionComponent<IProps> = (props) => {
   const { editorUI, className, style } = props;
 
   React.useEffect(() => {

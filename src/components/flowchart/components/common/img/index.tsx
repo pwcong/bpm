@@ -6,7 +6,7 @@ export interface IProps {
   src: string;
 }
 
-const IMG: React.FunctionComponent<IProps> = props => {
+const IMG: React.FunctionComponent<IProps> = (props) => {
   return <img {...props} />;
 };
 
@@ -14,7 +14,7 @@ export interface ITitleSVGProps extends IProps {
   title: React.ReactNode;
 }
 
-export const TitleIMG: React.FunctionComponent<ITitleSVGProps> = props => {
+export const TitleIMG: React.FunctionComponent<ITitleSVGProps> = (props) => {
   const { title, ...restProps } = props;
 
   return (

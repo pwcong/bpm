@@ -30,10 +30,6 @@ export type IConfig = IPicker<IBaseConfig>;
 
 export type IWrappedComponentRef = {
   editorUI: EditorUI | null;
-  events: {
-    mousemove?: MouseEvent;
-    mousedown?: MouseEvent;
-  } | null;
 };
 
 export type IWrappedComponentRefObject = React.RefObject<IWrappedComponentRef>;
@@ -52,14 +48,14 @@ export enum EEventName {
   /** 框选 */
   'rubberband' = 'flowchart_rubberband',
   /** 放大缩小 */
-  'zoom' = 'flowchart_zoom'
+  'zoom' = 'flowchart_zoom',
 }
 
 export enum ECellType {
   /** 节点 */
   'VERTEX' = 'VERTEX',
   /** 线条 */
-  'EDGE' = 'EDGE'
+  'EDGE' = 'EDGE',
 }
 
 export enum ECellKey {
@@ -84,7 +80,7 @@ export enum ECellKey {
   /** 抄送节点 */
   'send' = 'send',
   /** 子流程节点 */
-  'startSubProcess' = 'startSubProcess'
+  'startSubProcess' = 'startSubProcess',
 }
 
 export type ICellListenerCallbackRef = {
@@ -117,7 +113,7 @@ export interface ICell {
   geometry?: ICellGeometry;
   constraints?: ICellConstraints;
   style?: object;
-  status?: { [key: string]: object };
+  status?: { [name: string]: object };
   component?: React.ReactNode;
   getComponent?: (
     component: React.ReactElement,
@@ -131,6 +127,8 @@ export interface ICell {
   onInitial?: (element: HTMLElement, editorUI: EditorUI, cell: ICell) => void;
   afterInitial?: (cell: any) => any;
   onDestroy?: (editorUI: EditorUI, cell: ICell) => void;
+  validations?: { [key: string]: ICellValidator };
+  multiplicities?: Array<ICellMultiplicity>;
 }
 
 export type ICells = Array<ICell>;
@@ -139,7 +137,21 @@ export type ICellConstraints = Array<[number, number]>;
 
 export type ICellMap = { [key: string]: ICell };
 
-export type ICellValue = any & {
+export type ICellValidator = (...args) => void;
+
+export type ICellMultiplicity = {
+  source: boolean;
+  attr?: any;
+  value?: any;
+  min?: number;
+  max?: number;
+  validNeighbors?: Array<string>;
+  countError: string;
+  typeError: string;
+  validNeighborsAllowed?: boolean;
+};
+
+export type ICellValue<T = any> = T & {
   key: string;
   name: string;
 };

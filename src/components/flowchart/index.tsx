@@ -5,11 +5,11 @@ import classnames from 'classnames';
 import EditorUI from './components/editorui';
 import Menubar, {
   data as menubarData,
-  map as menubarMap
+  map as menubarMap,
 } from './components/menubar';
 import Toolbar, {
   data as toolbarData,
-  map as toolbarMap
+  map as toolbarMap,
 } from './components/toolbar';
 import Sidebar from './components/sidebar';
 
@@ -22,7 +22,7 @@ import {
   IBaseProps,
   IConfig,
   IWrappedComponentRef,
-  IWrappedComponentRefObject
+  IWrappedComponentRefObject,
 } from './types';
 
 export * from './utils';
@@ -40,13 +40,13 @@ export interface IProps extends IBaseProps {
 
 const cls = 'flowchart';
 
-export const Chart: React.FunctionComponent<IProps> = props => {
+export const Chart: React.FunctionComponent<IProps> = (props) => {
   const {
     className,
     style,
     onSelectCells,
     wrappedComponentRef,
-    config = {}
+    config = {},
   } = props;
 
   const ref = React.useRef<HTMLDivElement | null>(null);
@@ -55,7 +55,6 @@ export const Chart: React.FunctionComponent<IProps> = props => {
 
   const componentRef = React.useRef<IWrappedComponentRef>({
     editorUI: null,
-    events: null
   });
 
   React.useEffect(() => {
@@ -66,13 +65,13 @@ export const Chart: React.FunctionComponent<IProps> = props => {
       _editorUi = new EditorUI(container, {
         toolbar: {
           data: toolbarData,
-          map: toolbarMap
+          map: toolbarMap,
         },
         menubar: {
           data: menubarData,
-          map: menubarMap
+          map: menubarMap,
         },
-        ...config
+        ...config,
       });
       setEditorUi(_editorUi);
     }
@@ -104,28 +103,7 @@ export const Chart: React.FunctionComponent<IProps> = props => {
 
   React.useEffect(() => {
     componentRef.current.editorUI = editorUI;
-
     wrappedComponentRef && wrappedComponentRef(componentRef);
-
-    const handleEvent = (name: string) => {
-      return e => {
-        const events = (componentRef.current.events =
-          componentRef.current.events || {});
-        events[name] = e;
-      };
-    };
-
-    const events = ['mousemove', 'mousedown'].map(e => ({
-      name: e,
-      callback: handleEvent(e)
-    }));
-
-    events.forEach(e => document.body.addEventListener(e.name, e.callback));
-    return () => {
-      events.forEach(e =>
-        document.body.removeEventListener(e.name, e.callback)
-      );
-    };
   }, [editorUI]);
 
   const _cls = `${cls}-chart`;
@@ -134,26 +112,28 @@ export const Chart: React.FunctionComponent<IProps> = props => {
     <div
       ref={ref}
       className={classnames(_cls, className, {
-        [`${_cls}-readonly`]: config.editable === false
+        [`${_cls}-readonly`]: config.editable === false,
       })}
       style={style}
     ></div>
   );
 };
 
-const FlowChart: React.FunctionComponent<IProps & {
-  onToggleScreen?: (active: boolean) => void;
-  render?: {
-    sidebar?: (cells: Array<any>) => React.ReactNode;
-  };
-}> = props => {
+const FlowChart: React.FunctionComponent<
+  IProps & {
+    onToggleScreen?: (active: boolean) => void;
+    render?: {
+      sidebar?: (cells: Array<any>) => React.ReactNode;
+    };
+  }
+> = (props) => {
   const {
     className,
     style,
     onToggleScreen,
     wrappedComponentRef,
     config = {},
-    render = {}
+    render = {},
   } = props;
 
   const [editorUI, setEditorUi] = React.useState<EditorUI | null>(null);
@@ -162,7 +142,7 @@ const FlowChart: React.FunctionComponent<IProps & {
   const [rightHidden, setRightHidden] = React.useState<boolean>(false);
 
   const redraw = React.useCallback(() => editorUI && editorUI.redraw(300), [
-    editorUI
+    editorUI,
   ]);
   const onSelectCells = React.useCallback((cells: Array<any>) => {
     setTimeout(() => {
@@ -185,7 +165,7 @@ const FlowChart: React.FunctionComponent<IProps & {
       className={classnames(cls, className, {
         [`${cls}-hide-top`]: topHidden,
         [`${cls}-hide-right`]: rightHidden,
-        [`${cls}-readonly`]: config.editable === false
+        [`${cls}-readonly`]: config.editable === false,
       })}
       style={style}
     >
@@ -214,7 +194,7 @@ const FlowChart: React.FunctionComponent<IProps & {
                 redraw();
               }}
               style={{
-                backgroundImage: `url(${topHidden ? svgArrowT0 : svgArrowT1})`
+                backgroundImage: `url(${topHidden ? svgArrowT0 : svgArrowT1})`,
               }}
             ></div>
           </div>
@@ -225,7 +205,7 @@ const FlowChart: React.FunctionComponent<IProps & {
           <Chart
             config={config}
             onSelectCells={onSelectCells}
-            wrappedComponentRef={ref => {
+            wrappedComponentRef={(ref) => {
               ref &&
                 ref.current &&
                 ref.current.editorUI &&
@@ -243,14 +223,16 @@ const FlowChart: React.FunctionComponent<IProps & {
                 redraw();
               }}
               style={{
-                backgroundImage: `url(${rightHidden ? svgArrowR0 : svgArrowR1})`
+                backgroundImage: `url(${
+                  rightHidden ? svgArrowR0 : svgArrowR1
+                })`,
               }}
             ></div>
             {editorUI && (
               <Sidebar
                 editorUI={editorUI}
                 fullscreen={topHidden && rightHidden}
-                onToggleScreen={active => {
+                onToggleScreen={(active) => {
                   setTopHidden(active);
                   setRightHidden(active);
                   redraw();

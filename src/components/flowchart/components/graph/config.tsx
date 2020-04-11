@@ -2,7 +2,7 @@ import { mxConstants, config as mxConfig } from '@/components/mxgraph';
 
 export const defaultVertexStyle = {
   [mxConstants.STYLE_FONTCOLOR]: '#333333',
-  [mxConstants.STYLE_FONTSIZE]: 12
+  [mxConstants.STYLE_FONTSIZE]: 12,
 };
 
 export const defaultEdgeStyle = {
@@ -19,13 +19,13 @@ export const defaultEdgeStyle = {
   [mxConstants.STYLE_ENDFILL]: 1,
   [mxConstants.STYLE_JETTYSIZE]: 'auto',
   [mxConstants.STYLE_ORTHOGONAL_LOOP]: 1,
-  [mxConstants.STYLE_LABEL_PADDING]: 6
+  [mxConstants.STYLE_LABEL_PADDING]: 6,
 };
 
 export const defaultExtraStyle: { [key: string]: object } = {
   edge: defaultEdgeStyle,
   highlightEdge: {
     ...defaultEdgeStyle,
-    [mxConstants.STYLE_STROKECOLOR]: mxConfig.themeColor
-  }
+    [mxConstants.STYLE_STROKECOLOR]: mxConfig.themeColor,
+  },
 };

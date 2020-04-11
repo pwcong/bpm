@@ -3,8 +3,9 @@ import React from 'react';
 import classnames from 'classnames';
 
 import { useClosuer } from '@/components/flowchart/utils/hook';
-import { IBaseProps, ICell, ICellListenerCallback } from '@/components/flowchart/types';
-import EditorUI from '@/components/flowchart/components/editorui';
+
+import { IBaseProps, ICell, ICellListenerCallback } from '../../../types';
+import EditorUI from '../../editorui';
 
 export interface IProps extends IBaseProps {
   editorUI: EditorUI;
@@ -17,7 +18,7 @@ export interface IMenubarItemProps extends IBaseProps {
 
 export const cls = 'flowchart-cell-item';
 
-export const Item: React.FunctionComponent<IMenubarItemProps> = props => {
+export const Item: React.FunctionComponent<IMenubarItemProps> = (props) => {
   const { className, style, editorUI, data } = props;
 
   const ref = React.useRef<HTMLDivElement | null>(null);
@@ -28,18 +29,20 @@ export const Item: React.FunctionComponent<IMenubarItemProps> = props => {
 
   const listenersCallback = {};
   listeners.forEach(
-    l =>
-      (listenersCallback[l.name] = useClosuer<ICellListenerCallback>(event => {
-        l.callback(
-          {
-            event,
-            element: ref.current,
-            render: () => setKey(key + 1)
-          },
-          editorUI,
-          data
-        );
-      }))
+    (l) =>
+      (listenersCallback[l.name] = useClosuer<ICellListenerCallback>(
+        (event) => {
+          l.callback(
+            {
+              event,
+              element: ref.current,
+              render: () => setKey(key + 1),
+            },
+            editorUI,
+            data
+          );
+        }
+      ))
   );
 
   React.useEffect(() => {
@@ -48,13 +51,13 @@ export const Item: React.FunctionComponent<IMenubarItemProps> = props => {
       data.onInitial &&
       data.onInitial(ref.current, editorUI, data);
 
-    listeners.forEach(l =>
+    listeners.forEach((l) =>
       window.addEventListener(l.name, listenersCallback[l.name])
     );
     return () => {
       data.onDestroy && data.onDestroy(editorUI, data);
 
-      listeners.forEach(l =>
+      listeners.forEach((l) =>
         window.removeEventListener(l.name, listenersCallback[l.name])
       );
     };
@@ -62,7 +65,7 @@ export const Item: React.FunctionComponent<IMenubarItemProps> = props => {
 
   const itemProps = {
     style,
-    className: classnames(cls, className)
+    className: classnames(cls, className),
   };
 
   let cmpt = <div {...itemProps}>{data.component}</div>;
@@ -73,7 +76,7 @@ export const Item: React.FunctionComponent<IMenubarItemProps> = props => {
 
   return React.cloneElement(cmpt, {
     ref,
-    key
+    key,
   });
 };
 

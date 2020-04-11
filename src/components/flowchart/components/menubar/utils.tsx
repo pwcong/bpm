@@ -22,7 +22,7 @@ export function getCommonComponent(
     component,
     Object.assign({}, component.props, {
       onClick: () => action && action.funct && action.funct(),
-      children
+      children,
     })
   );
 

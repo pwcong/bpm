@@ -18,7 +18,7 @@ export interface IProps extends ICommonProps {
 export const baseCls = 'flowchart-menubar';
 export const itemCls = `${baseCls}-item`;
 
-const Menubar: React.FunctionComponent<IProps> = props => {
+const Menubar: React.FunctionComponent<IProps> = (props) => {
   const { editorUI, className, style, data, isSub } = props;
 
   React.useEffect(() => {
@@ -28,11 +28,11 @@ const Menubar: React.FunctionComponent<IProps> = props => {
   return (
     <div
       className={classnames(baseCls, className, {
-        [`${baseCls}-sub`]: !!isSub
+        [`${baseCls}-sub`]: !!isSub,
       })}
       style={style}
     >
-      {data.map(item => (
+      {data.map((item) => (
         <CellItem
           className={itemCls}
           key={item.key}

@@ -20,7 +20,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="undo"
           style={{
-            color: editorUI.canUndo() ? '#666666' : '#cccccc'
+            color: editorUI.canUndo() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -29,17 +29,17 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.undo,
-        callback: reRender
+        callback: reRender,
       },
       {
         name: EEventName.redo,
-        callback: reRender
+        callback: reRender,
       },
       {
         name: EEventName.add,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   redo: {
     key: 'redo',
@@ -55,7 +55,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="redo"
           style={{
-            color: editorUI.canRedo() ? '#666666' : '#cccccc'
+            color: editorUI.canRedo() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -64,17 +64,17 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.undo,
-        callback: reRender
+        callback: reRender,
       },
       {
         name: EEventName.redo,
-        callback: reRender
+        callback: reRender,
       },
       {
         name: EEventName.add,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   delete: {
     key: 'delete',
@@ -90,7 +90,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="delete"
           style={{
-            color: editorUI.canDelete() ? '#666666' : '#cccccc'
+            color: editorUI.canDelete() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -99,9 +99,9 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.select,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   rubberband: {
     key: 'rubberband',
@@ -117,7 +117,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="rubberband"
           style={{
-            color: editorUI.canRubberBand() ? '#4285f4' : '#666666'
+            color: editorUI.canRubberBand() ? '#4285f4' : '#666666',
           }}
         />,
         editorUI,
@@ -126,9 +126,9 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.rubberband,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   alignment: {
     key: 'alignment',
@@ -144,7 +144,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="alignment"
           style={{
-            color: editorUI.canAlignment() ? '#666666' : '#cccccc'
+            color: editorUI.canAlignment() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -153,9 +153,9 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.select,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   alignTop: {
     key: 'alignTop',
@@ -171,7 +171,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="alignTop"
           style={{
-            color: editorUI.canAlignment() ? '#666666' : '#cccccc'
+            color: editorUI.canAlignment() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -180,9 +180,9 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.select,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   alignTBCenter: {
     key: 'alignTBCenter',
@@ -198,7 +198,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="alignTBCenter"
           style={{
-            color: editorUI.canAlignment() ? '#666666' : '#cccccc'
+            color: editorUI.canAlignment() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -207,9 +207,9 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.select,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   alignBottom: {
     key: 'alignBottom',
@@ -225,7 +225,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="alignBottom"
           style={{
-            color: editorUI.canAlignment() ? '#666666' : '#cccccc'
+            color: editorUI.canAlignment() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -234,9 +234,9 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.select,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   alignLeft: {
     key: 'alignLeft',
@@ -252,7 +252,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="alignLeft"
           style={{
-            color: editorUI.canAlignment() ? '#666666' : '#cccccc'
+            color: editorUI.canAlignment() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -261,9 +261,9 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.select,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   alignLRCenter: {
     key: 'alignLRCenter',
@@ -279,7 +279,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="alignLRCenter"
           style={{
-            color: editorUI.canAlignment() ? '#666666' : '#cccccc'
+            color: editorUI.canAlignment() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -288,9 +288,9 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.select,
-        callback: reRender
-      }
-    ]
+        callback: reRender,
+      },
+    ],
   },
   alignRight: {
     key: 'alignRight',
@@ -306,7 +306,7 @@ export const map: ICellMap = {
           title={cell.name}
           name="alignRight"
           style={{
-            color: editorUI.canAlignment() ? '#666666' : '#cccccc'
+            color: editorUI.canAlignment() ? '#666666' : '#cccccc',
           }}
         />,
         editorUI,
@@ -315,10 +315,10 @@ export const map: ICellMap = {
     listeners: [
       {
         name: EEventName.select,
-        callback: reRender
-      }
-    ]
-  }
+        callback: reRender,
+      },
+    ],
+  },
 };
 
 export const data: Array<ICell> = [
@@ -333,8 +333,8 @@ export const data: Array<ICell> = [
       map.alignBottom,
       map.alignLeft,
       map.alignLRCenter,
-      map.alignRight
-    ]
-  }
+      map.alignRight,
+    ],
+  },
   // map.rubberband,
 ];

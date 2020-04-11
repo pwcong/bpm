@@ -1,5 +1,8 @@
 import MxGraphFactory from 'mxgraph';
 
+// import message from '@elements/message';
+
+import { parseJSON } from '@/components/flowchart';
 import { getBasePath, getImageBasePath } from './utils';
 import config from './config';
 
@@ -11,7 +14,7 @@ const mxGraphFactory = MxGraphFactory({
   // mxBasePath: './static/mxgraph'
   mxBasePath: getBasePath(),
   // 预加载资源
-  mxLoadResources: true
+  mxLoadResources: true,
 });
 
 export const mxGraph = mxGraphFactory.mxGraph;
@@ -60,6 +63,7 @@ export const mxOutline = mxGraphFactory.mxOutline;
 export const mxClipboard = mxGraphFactory.mxClipboard;
 export const mxSvgCanvas2D = mxGraphFactory.mxSvgCanvas2D;
 export const mxGuide = mxGraphFactory.mxGuide;
+export const mxMultiplicity = mxGraphFactory.mxMultiplicity;
 
 export function mxCellAttributeChange(cell, attribute, value) {
   this.cell = cell;
@@ -67,7 +71,7 @@ export function mxCellAttributeChange(cell, attribute, value) {
   this.value = value;
   this.previous = value;
 }
-mxCellAttributeChange.prototype.execute = function() {
+mxCellAttributeChange.prototype.execute = function () {
   if (this.cell != null) {
     const tmp = this.cell.getAttribute(this.attribute);
 
@@ -84,7 +88,7 @@ mxCellAttributeChange.prototype.execute = function() {
 function globalConfig() {
   // 挂载MxGraph方法至window解决MxGraph内部调用问题
   Object.keys(mxGraphFactory || {}).forEach(
-    k => (window[k] = mxGraphFactory[k])
+    (k) => (window[k] = mxGraphFactory[k])
   );
 
   // 设置线选框颜色
@@ -111,7 +115,7 @@ function globalConfig() {
   // 设置辅助线宽度
   mxConstants.GUIDE_STROKEWIDTH = 1;
   // 设置辅助线为直线
-  mxGuide.prototype.createGuideShape = function() {
+  mxGuide.prototype.createGuideShape = function () {
     const guide = new mxPolyline(
       [],
       mxConstants.GUIDE_COLOR,
@@ -122,12 +126,29 @@ function globalConfig() {
   };
 
   // 设置弹窗
-  // mxGraph.prototype.validationAlert = function(msg) {
+  // mxGraph.prototype.validationAlert = function (msg) {
   //   message.error(msg, 2);
   // };
 
+  // 重写节点校验类型获取方法
+  const originMultiplicityCheckType = mxMultiplicity.prototype.checkType;
+  mxMultiplicity.prototype.checkType = function (
+    graph,
+    value,
+    type,
+    attr,
+    attrValue
+  ) {
+    const key = parseJSON(value, {}).key;
+    if (key !== undefined) {
+      return type === key;
+    }
+
+    return originMultiplicityCheckType.apply(this, arguments);
+  };
+
   // 设置ID生成器
-  mxGraphModel.prototype.createId = function(cell) {
+  mxGraphModel.prototype.createId = function (cell) {
     const id = this.nextId;
     this.nextId++;
 
@@ -158,7 +179,7 @@ function globalConfig() {
 
   // 设置锚点颜色
   mxConstraintHandler.prototype.highlightColor = config.themeColor;
-  mxConstraintHandler.prototype.createHighlightShape = function() {
+  mxConstraintHandler.prototype.createHighlightShape = function () {
     const hl = new mxEllipse(null, this.highlightColor, this.highlightColor, 0);
     hl.opacity = 30;
     return hl;
@@ -166,9 +187,7 @@ function globalConfig() {
 
   // 设置选框宽高锁定
   const originalVertexHandlerUnion = mxVertexHandler.prototype.union;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  mxVertexHandler.prototype.union = function(geo, dxs, dys, index) {
-    // eslint-disable-next-line prefer-rest-params
+  mxVertexHandler.prototype.union = function (geo, dxs, dys, index) {
     const result = originalVertexHandlerUnion.apply(this, arguments);
     // const lock = [0, 2, 5, 7];
     if (
@@ -192,12 +211,11 @@ function globalConfig() {
   // 设置选框触点
   const originalVertexHandlerCreateSizerShape =
     mxVertexHandler.prototype.createSizerShape;
-  mxVertexHandler.prototype.createSizerShape = function(
+  mxVertexHandler.prototype.createSizerShape = function (
     bounds,
     index,
     fillColor
   ) {
-    // eslint-disable-next-line prefer-rest-params
     originalVertexHandlerCreateSizerShape.apply(this, arguments);
     switch (index) {
       case 0:
