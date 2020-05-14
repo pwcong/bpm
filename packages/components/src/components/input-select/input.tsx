@@ -9,14 +9,19 @@ import {
   IOptions,
   IValue,
   IBaseProps,
-  ESelectorType,
   EValueType,
   EHTMLType,
   ISelectorRef,
+  ISelectorRefObject,
 } from './types';
 import { getValue } from './utils';
 
 import './style.scss';
+
+export enum ESelectorType {
+  'dropdown' = 'dropdown',
+  'modal' = 'modal',
+}
 
 const baseCls = 'bpm-components-inputselect';
 const valueCls = `${baseCls}-value`;
@@ -50,7 +55,7 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
       onChange,
       onRenderItem,
       onRenderValue,
-      multi,
+      isMulti,
       htmlType,
       placeholder = '请选择',
       locale = {},
@@ -69,20 +74,20 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
 
     const handleChange = React.useCallback(
       (v: Array<T>, isOk?: boolean) => {
-        if (!multi) {
+        if (!isMulti) {
           v.length > 0 && (v = [v[v.length - 1]]);
         }
 
         setStateValue(v);
         isOk && setVisible(false);
 
-        if (multi) {
+        if (isMulti) {
           onChange && onChange(v);
         } else {
           onChange && onChange(v[0] || null);
         }
       },
-      [multi, onChange]
+      [isMulti, onChange]
     );
 
     const handleOk = React.useCallback(
@@ -93,7 +98,7 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
     );
 
     const handleCancel = React.useCallback(() => {
-      setVisible(false);
+      handleChange([...value], true);
     }, []);
 
     const handleTrigger = React.useCallback(() => {
@@ -147,14 +152,14 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
       [placeholder, onRenderValue, onRenderItem, valueType]
     );
 
-    const selector = React.createElement(
+    const selector = React.cloneElement(
       builder({
         ...props,
         onOk: handleOk,
         onCancel: handleCancel,
         defaultValue: value,
         value,
-        wrappedComponentRef: (ref: React.RefObject<ISelectorRef<Array<T>>>) =>
+        wrappedComponentRef: (ref: ISelectorRefObject<Array<T>>) =>
           (selectorRef.current = ref.current),
       })
     );
@@ -168,7 +173,7 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
         style={style}
       >
         {valueRenderer ? (
-          React.createElement(
+          React.cloneElement(
             valueRenderer({
               ...props,
               onChange: handleChange,
@@ -207,7 +212,6 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
           cancelText={cancelText}
           onCancel={handleCancel}
           onOk={() => {
-            console.log(selectorRef.current);
             selectorRef.current
               ?.handleOk?.()
               .then((v) => handleChange(v, true));

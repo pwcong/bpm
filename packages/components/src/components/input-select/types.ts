@@ -14,11 +14,13 @@ export interface ISelectorRef<T> {
   handleOk?: () => Promise<T>;
 }
 
+export type ISelectorRefObject<T> = React.RefObject<ISelectorRef<T>>;
+
 export interface IBaseProps<T> extends ICommonProps {
   value?: T;
   defaultValue?: T;
   onChange?: (value: T) => void;
-  multi?: boolean;
+  isMulti?: boolean;
   onTrigger?: () => void;
   onRenderItem?: (item: T, index: number, value: Array<T>) => React.ReactNode;
   onRenderValue?: (value: Array<T>) => React.ReactNode;
@@ -39,21 +41,17 @@ export interface ISelectorProps<T> extends IBaseProps<Array<T>> {
   onCancel: () => void;
   defaultValue: Array<T>;
   value: Array<T>;
-  wrappedComponentRef: (ref: React.RefObject<ISelectorRef<Array<T>>>) => void;
+  wrappedComponentRef: (ref: ISelectorRefObject<Array<T>>) => void;
 }
 
 export interface IOptions<T, P> {
   valueType: EValueType;
   valueTextProperty?: string;
   valueKeyProperty?: string;
-  valueRenderer?: (
-    props: IValueRendererProps<T>
-  ) => React.FunctionComponent | React.ComponentClass;
+  valueRenderer?: (props: IValueRendererProps<T>) => React.ReactElement;
   selector: {
     title?: React.ReactNode;
     type: string;
-    builder: (
-      props: ISelectorProps<T> & P
-    ) => React.FunctionComponent | React.ComponentClass;
+    builder: (props: ISelectorProps<T> & P) => React.ReactElement;
   };
 }

@@ -11,7 +11,7 @@ import {
   IValue,
   EValueType,
   ISelectorRef,
-} from '@/components/input-select/types';
+} from '@/components/input-select';
 import { ESelectorType } from './types';
 import { getValue } from './utils';
 
@@ -46,7 +46,7 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
       onChange,
       onRenderItem,
       onRenderValue,
-      multi,
+      isMulti,
       placeholder = '请选择',
       title,
     } = props;
@@ -90,14 +90,14 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
     };
 
     const handleChange = (v: Array<T>, isOk?: boolean) => {
-      if (!multi) {
+      if (!isMulti) {
         v.length > 0 && (v = [v[v.length - 1]]);
       }
 
       setStateValue(v);
       isOk && setPopupVisible(false);
 
-      if (multi) {
+      if (isMulti) {
         onChange && onChange(v);
       } else {
         onChange && onChange(v[0] || null);
@@ -116,7 +116,7 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
       setPopupVisible(true);
     }, []);
 
-    const selector = React.createElement(
+    const selector = React.cloneElement(
       builder({
         ...props,
         onOk: handleOk,
@@ -137,7 +137,7 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
           style={style}
         >
           {valueRenderer ? (
-            React.createElement(
+            React.cloneElement(
               valueRenderer({
                 ...props,
                 onChange: handleChange,

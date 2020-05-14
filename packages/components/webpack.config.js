@@ -49,6 +49,23 @@ const config = (module.exports = {
         use: [...commonCssLoaders, 'sass-loader'],
       },
       {
+        test: /\.less$/,
+        use: [
+          ...commonCssLoaders,
+          {
+            loader: 'less-loader',
+            options: {
+              lessOptions: {
+                modifyVars: {
+                  'primary-color': '#4285f4',
+                },
+                javascriptEnabled: true,
+              },
+            },
+          },
+        ],
+      },
+      {
         test: /\.css$/,
         use: commonCssLoaders,
       },
@@ -65,7 +82,7 @@ const config = (module.exports = {
     alias: {
       '@': srcPath,
     },
-    extensions: ['.js', '.ts', '.tsx'],
+    extensions: ['.js', '.ts', '.d.ts', '.tsx'],
   },
   devServer: {
     historyApiFallback: true,

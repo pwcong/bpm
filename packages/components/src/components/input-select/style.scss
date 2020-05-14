@@ -25,7 +25,7 @@ $cls: bpm-components-inputselect;
       align-items: center;
       text-overflow: ellipsis;
       white-space: nowrap;
-      color: #2a304a;
+      color: #333333;
       font-size: 12px;
       padding: 2px 8px;
       border-radius: 2px;
@@ -41,7 +41,8 @@ $cls: bpm-components-inputselect;
       position: relative;
       font-size: 12px;
       color: #cccccc;
-      margin: 2px;
+      padding: 0 8px;
+      line-height: 30px;
     }
   }
 
@@ -56,7 +57,7 @@ $cls: bpm-components-inputselect;
     height: 100%;
     cursor: pointer;
     font-size: 14px;
-    color: #2a304a;
+    color: #333333;
     &:hover {
       color: #4285f4;
     }
