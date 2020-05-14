@@ -1,3 +1,11 @@
 # BPM
 
-流程相关
+BPM Components written in React for Business.
+
+### Developers
+
+- Pwcong
+
+### Thanks
+
+- mxgraph
