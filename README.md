@@ -1,10 +1,3 @@
-# FlowChart
-FlowChart Component written in React for Business.
+# BPM
 
-### Developers
-
-* Pwcong
-
-### Thanks
-
-* [mxgraph](https://github.com/jgraph/mxgraph)
+流程相关
