@@ -22,6 +22,7 @@ const valueCls = `${baseCls}-value`;
 const valueItemCls = `${valueCls}-item`;
 
 export interface IProps<T> extends IBaseProps<IValue<T>> {
+  beforeChange?: (value: Array<T>) => Promise<Array<T>>
   title?: React.ReactNode;
 }
 
@@ -42,8 +43,10 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
     const {
       className,
       style,
+      value: propsValue,
       defaultValue,
       onChange,
+      beforeChange,
       onRenderItem,
       onRenderValue,
       isMulti,
@@ -53,13 +56,18 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
 
     const selectorRef = React.useRef<ISelectorRef<Array<T>>>();
 
-    const [stateValue, setStateValue] = React.useState<Array<T>>(
+    const [value, setValue] = React.useState<Array<T>>(
       getValue<T>(defaultValue) || []
     );
+    const [tempValue, setTempValue] = React.useState<IValue<T> | undefined>();
     const [popupVisible, setPopupVisible] = React.useState<boolean>(false);
 
-    const value =
-      getValue<T>(props.value !== undefined ? props.value : stateValue) || [];
+    React.useEffect(() => {
+      if (tempValue !== propsValue) {
+        setTempValue(propsValue);
+        setValue(getValue<T>(propsValue) || []);
+      }
+    }, [propsValue]);
 
     const renderValue = (v: Array<T>) => {
       if (v.length <= 0) {
@@ -94,13 +102,22 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
         v.length > 0 && (v = [v[v.length - 1]]);
       }
 
-      setStateValue(v);
-      isOk && setPopupVisible(false);
+      const cb = (_v: Array<T>) => {
+        setValue(_v);
 
-      if (isMulti) {
-        onChange && onChange(v);
+        if (isMulti) {
+          onChange && onChange(_v);
+        } else {
+          onChange && onChange(_v[0] || null);
+        }
+      }
+
+      if (beforeChange) {
+        beforeChange(v).then(cb).catch(() => {
+          // DO NOTHING
+        })
       } else {
-        onChange && onChange(v[0] || null);
+        cb(v)
       }
     };
 
@@ -109,8 +126,8 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
     };
 
     const handleCancel = React.useCallback(() => {
-      setPopupVisible(false);
-    }, []);
+      handleChange([...value], true);
+    }, [value]);
 
     const handleTrigger = React.useCallback(() => {
       setPopupVisible(true);

@@ -41,9 +41,6 @@ export function buildAddress(options: IOptions) {
     const [value, setValue] = React.useState<IValue>(
       propsValue !== undefined ? propsValue : defaultValue
     );
-    const [tempValue, setTempValue] = React.useState<IValue | undefined>(
-      propsValue
-    );
 
     const [options, setOptions] = React.useState<IValue>([]);
 
@@ -71,10 +68,7 @@ export function buildAddress(options: IOptions) {
     }, []);
 
     React.useEffect(() => {
-      if (propsValue !== tempValue) {
-        setValue(propsValue);
-        setTempValue(propsValue);
-      }
+      propsValue && setValue(propsValue);
     }, [propsValue]);
 
     React.useEffect(() => {

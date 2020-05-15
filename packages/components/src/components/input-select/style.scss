@@ -9,6 +9,8 @@ $cls: bpm-components-inputselect;
     padding-right: 32px;
     padding-left: 2px;
     min-height: 30px;
+    border-radius: 2px;
+    transition: all 0.3s;
     &:hover {
       border-color: #4285f4;
     }
@@ -58,6 +60,9 @@ $cls: bpm-components-inputselect;
     cursor: pointer;
     font-size: 14px;
     color: #333333;
+
+    transition: all 0.3s;
+    
     &:hover {
       color: #4285f4;
     }

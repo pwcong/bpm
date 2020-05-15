@@ -30,6 +30,7 @@ const valueItemTitleCls = `${valueItemCls}-title`;
 const valueItemBtnCls = `${valueItemCls}-btn`;
 
 export interface IProps<T> extends IBaseProps<IValue<T>> {
+  beforeChange?: (value: Array<T>) => Promise<Array<T>>
   title?: React.ReactNode;
   htmlType?: EHTMLType;
 }
@@ -52,7 +53,9 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
       className,
       style,
       defaultValue,
+      value: propsValue,
       onChange,
+      beforeChange,
       onRenderItem,
       onRenderValue,
       isMulti,
@@ -64,13 +67,18 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
     const { ok: okText = '确定', cancel: cancelText = '取消' } = locale;
 
     const selectorRef = React.useRef<ISelectorRef<Array<T>>>();
-    const [stateValue, setStateValue] = React.useState<Array<T>>(
+    const [value, setValue] = React.useState<Array<T>>(
       getValue<T>(defaultValue) || []
     );
+    const [tempValue, setTempValue] = React.useState<IValue<T> | undefined>();
     const [visible, setVisible] = React.useState<boolean>(false);
 
-    const value =
-      getValue<T>(props.value !== undefined ? props.value : stateValue) || [];
+    React.useEffect(() => {
+      if (tempValue !== propsValue) {
+        setTempValue(propsValue);
+        setValue(getValue<T>(propsValue) || []);
+      }
+    }, [propsValue]);
 
     const handleChange = React.useCallback(
       (v: Array<T>, isOk?: boolean) => {
@@ -78,14 +86,26 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
           v.length > 0 && (v = [v[v.length - 1]]);
         }
 
-        setStateValue(v);
         isOk && setVisible(false);
 
-        if (isMulti) {
-          onChange && onChange(v);
-        } else {
-          onChange && onChange(v[0] || null);
+        const cb = (_v: Array<T>) => {
+          setValue(_v);
+
+          if (isMulti) {
+            onChange && onChange(_v);
+          } else {
+            onChange && onChange(_v[0] || null);
+          }
         }
+
+        if (beforeChange) {
+          beforeChange(v).then(cb).catch(() => {
+            // DO NOTHING
+          })
+        } else {
+          cb(v)
+        }
+
       },
       [isMulti, onChange]
     );
@@ -99,7 +119,7 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
 
     const handleCancel = React.useCallback(() => {
       handleChange([...value], true);
-    }, []);
+    }, [value]);
 
     const handleTrigger = React.useCallback(() => {
       setVisible(true);
@@ -197,7 +217,7 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
       <Dropdown
         visible={visible}
         trigger={['click']}
-        onVisibleChange={(v) => !v && setVisible(v)}
+        onVisibleChange={(v) => !v && handleCancel()}
         overlay={<div className={`${baseCls}-dropdown`}>{selector}</div>}
       >
         {main}
@@ -206,6 +226,7 @@ export function buildInputSelect<T = any, P = {}>(options: IOptions<T, P>) {
       <React.Fragment>
         {main}
         <Modal
+          maskClosable={false}
           title={title}
           visible={visible}
           okText={okText}
