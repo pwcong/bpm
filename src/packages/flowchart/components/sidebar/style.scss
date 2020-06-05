@@ -1,0 +1,144 @@
+.flowchart-sidebar {
+  display: flex;
+  align-items: center;
+  padding: 12px 12px;
+
+  &-item {
+    &:not(:last-child) {
+      margin-right: 6px;
+    }
+  }
+
+  &-zoomer {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    background-color: #ffffff;
+    border-radius: 2px;
+    border: 1px solid #e0e0e0;
+    padding: 0 8px;
+
+    & > * {
+      margin: 0 4px;
+    }
+
+    &-text {
+      font-size: 14px;
+      color: #666666;
+      position: relative;
+      padding-right: 4px;
+    }
+
+    &-arrow {
+      position: absolute;
+      right: -4px;
+      bottom: 10px;
+      font-size: 0;
+      &::after {
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        border-bottom: 4px solid #666666;
+      }
+    }
+
+    &-popover {
+      .ele-popover-inner-content {
+        padding: 0;
+      }
+    }
+
+    &-zooms {
+      max-height: 144px;
+      overflow: auto;
+    }
+
+    &-zoom {
+      text-align: center;
+      line-height: 24px;
+      height: 24px;
+      font-size: 12px;
+      color: #666666;
+      width: 56px;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(#4285f4, 0.1);
+      }
+      
+      &-active {
+        color: #4285f4;
+      }
+    }
+
+    &-btn {
+      cursor: pointer;
+      width: 22px;
+      height: 22px;
+      background-size: 60% 60%;
+      background-position: center center;
+      background-repeat: no-repeat;
+
+      &-disabled {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &-screener,
+  &-minimap {
+    width: 34px;
+    height: 34px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    cursor: pointer;
+  }
+
+  &-minimap {
+    &-modal {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      transform: translateY(-100%);
+      background-color: #ffffff;
+      box-shadow: 0px 1px 8px #dddddd;
+    }
+    &-header {
+      width: 260px;
+      height: 20px;
+      font-size: 12px;
+      line-height: 20px;
+      padding: 0 8px 0 12px;
+      box-sizing: border-box;
+      background-color: #dedede;
+      user-select: none;
+      position: relative;
+      color: #666666;
+      // border-bottom: 1px solid #dddddd;
+    }
+
+    &-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      img {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+      }
+    }
+
+    &-content {
+      width: 260px;
+      height: 230px;
+    }
+  }
+}

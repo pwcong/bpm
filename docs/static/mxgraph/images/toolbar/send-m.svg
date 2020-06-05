@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>抄送节点</title>
+    <desc>Created with Sketch.</desc>
+    <g id="抄送节点" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组-115">
+            <rect id="矩形复制-70" x="0" y="0" width="20" height="20"></rect>
+            <g id="编组-111" transform="translate(3.500000, 2.000000)">
+                <g id="编组-68" transform="translate(6.500000, 8.000000) scale(1, -1) translate(-6.500000, -8.000000) ">
+                    <polygon id="矩形复制-71" fill="#4285F4" points="0 0 13 0 13 12.225819 9.03795251 16 0 16"></polygon>
+                    <path d="M9.22274262,15.3912899 L12.5296137,12.2676967 C12.5697629,12.2297727 12.5715668,12.1664819 12.5336428,12.1263327 C12.5147521,12.1063336 12.4884567,12.0950001 12.4609463,12.0950001 L9.05407519,12.0950001 L9.05407519,15.3185934 C9.05407519,15.3738219 9.09884671,15.4185934 9.15407519,15.4185934 C9.17961084,15.4185934 9.20417909,15.4088246 9.22274262,15.3912899 Z" id="路径-46" stroke="#4285F4" stroke-width="0.6" fill="#FFFFFF"></path>
+                </g>
+                <polygon id="路径" fill="#FFFFFF" fill-rule="nonzero" points="2.5 8.41824435 5.71631586 10.0742032 8.14505545 8.02217998 6.05262915 10.4372622 7.76207941 13.5773243 10.5 5.55742594"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

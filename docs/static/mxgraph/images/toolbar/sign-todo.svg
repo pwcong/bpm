@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="159px" height="38px" viewBox="0 0 159 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>签字节点未开始</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0.357864376" y="0" width="158" height="38" rx="4"></rect>
+    </defs>
+    <g id="签字节点未开始" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组-119">
+            <g id="编组-108复制">
+                <g id="编组-92">
+                    <rect id="矩形" fill="#F6F6F6" x="2.20786438" y="0" width="155.2" height="38" rx="4"></rect>
+                    <g id="矩形">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <rect stroke="#ADADAD" x="0.857864376" y="0.5" width="157" height="37" rx="4"></rect>
+                        <rect fill="#ADADAD" mask="url(#mask-2)" x="-5.20302161" y="-4" width="9.12177197" height="47.5"></rect>
+                        <rect fill="#ADADAD" opacity="0.1" mask="url(#mask-2)" x="10.6277489" y="5" width="28" height="28" rx="4"></rect>
+                    </g>
+                </g>
+            </g>
+            <g id="编组-117复制-3" transform="translate(14.127749, 8.500000)">
+                <g id="编组-116">
+                    <g id="编组-115复制-5" transform="translate(10.500000, 10.500000) scale(-1, 1) translate(-10.500000, -10.500000) ">
+                        <rect id="矩形复制-70" x="0.590432462" y="0.358346781" width="20" height="20"></rect>
+                    </g>
+                    <g id="编组-106" transform="translate(3.000000, 2.500000)">
+                        <g id="编组-111" transform="translate(6.500000, 8.000000) scale(-1, 1) translate(-6.500000, -8.000000) ">
+                            <g id="编组-68" transform="translate(6.500000, 8.000000) scale(1, -1) translate(-6.500000, -8.000000) ">
+                                <polygon id="矩形复制-71" fill="#4285F4" points="0 0 13 0 13 12.225819 9.03795251 16 0 16"></polygon>
+                                <path d="M9.22274262,15.3912899 L12.5296137,12.2676967 C12.5697629,12.2297727 12.5715668,12.1664819 12.5336428,12.1263327 C12.5147521,12.1063336 12.4884567,12.0950001 12.4609463,12.0950001 L9.05407519,12.0950001 L9.05407519,15.3185934 C9.05407519,15.3738219 9.09884671,15.4185934 9.15407519,15.4185934 C9.17961084,15.4185934 9.20417909,15.4088246 9.22274262,15.3912899 Z" id="路径-46" stroke="#4285F4" stroke-width="0.6" fill="#FFFFFF"></path>
+                            </g>
+                            <g id="编组-68" transform="translate(6.500000, 8.000000) scale(1, -1) translate(-6.500000, -8.000000) ">
+                                <polygon id="矩形复制-71" fill="#ADADAD" points="0 0 13 0 13 12.225819 9.03795251 16 0 16"></polygon>
+                                <path d="M9.22274262,15.3912899 L12.5296137,12.2676967 C12.5697629,12.2297727 12.5715668,12.1664819 12.5336428,12.1263327 C12.5147521,12.1063336 12.4884567,12.0950001 12.4609463,12.0950001 L9.05407519,12.0950001 L9.05407519,15.3185934 C9.05407519,15.3738219 9.09884671,15.4185934 9.15407519,15.4185934 C9.17961084,15.4185934 9.20417909,15.4088246 9.22274262,15.3912899 Z" id="路径-46" stroke="#ADADAD" stroke-width="0.6" fill="#FFFFFF"></path>
+                            </g>
+                        </g>
+                        <polygon id="路径" stroke="#ADADAD" stroke-width="0.8" fill="#FFFFFF" fill-rule="nonzero" points="3.71190434 9.64252536 3.71190434 11.3428493 5.41028277 11.3428493 14.9013636 3.26146391 13.507704 1.43329539"></polygon>
+                        <path d="" id="路径-17" stroke="#979797"></path>
+                        <path d="M7.26991793,10.6934649 L10.5764255,10.6934649" id="路径-25" stroke="#FFFFFF"></path>
+                        <path d="M2.68826326,12.905204 L10.5764255,12.905204" id="路径-60" stroke="#FFFFFF"></path>
+                    </g>
+                </g>
+                <path d="M15.2048262,5.36146043 L16.2984214,6.6734162" id="路径-87" stroke="#ADADAD" stroke-width="0.8"></path>
+            </g>
+        </g>
+    </g>
+</svg>
