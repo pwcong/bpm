@@ -15,7 +15,7 @@ export interface IProps extends ICommonProps {
   };
 }
 
-const cls = 'flowchart-arrow-panel';
+const cls = 'bpm-flowchart-arrow-panel';
 const listCls = cls + '-list';
 const itemCls = cls + '-item';
 

@@ -1,7 +1,7 @@
-import LBPMForm from './form';
-import LBPMDesigner from './designer';
+import Form from './form';
+import Designer from './designer';
 
 import config from './config';
 import * as utils from './utils';
 
-export { LBPMForm, LBPMDesigner, config, utils };
+export { Form, Designer, config, utils };

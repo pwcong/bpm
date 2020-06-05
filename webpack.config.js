@@ -86,7 +86,7 @@ const commonWebpackConfig = {
   devServer: {
     historyApiFallback: true,
     port: 1234,
-    contentBase: [srcPath],
+    contentBase: [rootPath],
     inline: true,
     publicPath: '/',
     hot: true,
@@ -176,20 +176,16 @@ if (isDocs) {
               filename: 'index.min.css',
               allChunks: true,
             }),
-            new CopyWebpackPlugin([
-              {
-                from: path.join(rootPath, 'static'),
-                to: path.join(docsPath, 'static'),
-              },
-            ]),
-          ]
-        : [
-            new HTMLWebpackPlugin({
-              title: `Test for ${pkg.name}`,
-              template: path.join(examplePath, 'index.ejs'),
+            new CopyWebpackPlugin({
+              patterns: [
+                {
+                  from: path.join(rootPath, 'static'),
+                  to: path.join(docsPath, 'static'),
+                },
+              ],
             }),
-            new webpack.HotModuleReplacementPlugin(),
           ]
+        : [new webpack.HotModuleReplacementPlugin()]
     ),
   });
 } else {
@@ -209,12 +205,14 @@ if (isDocs) {
             filename: 'index.min.css',
             allChunks: true,
           }),
-          new CopyWebpackPlugin([
-            {
-              from: path.join(rootPath, 'static'),
-              to: path.join(distPath, 'static'),
-            },
-          ]),
+          new CopyWebpackPlugin({
+            patterns: [
+              {
+                from: path.join(rootPath, 'static'),
+                to: path.join(distPath, 'static'),
+              },
+            ],
+          }),
         ]
       : [
           new HTMLWebpackPlugin({

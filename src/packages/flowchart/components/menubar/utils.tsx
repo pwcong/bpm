@@ -29,7 +29,6 @@ export function getCommonComponent(
     return (
       <Dropdown
         overlay={<Menubar editorUI={editorUI} data={relations} isSub={true} />}
-        // visible={true}
       >
         {component}
       </Dropdown>

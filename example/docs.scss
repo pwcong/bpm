@@ -1,11 +1,17 @@
 $cls: bpm-docs;
 
 .#{$cls} {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
   &-aside {
     font-size: 14px;
-    position: fixed;
+    position: absolute;
     left: 0;
     width: 172px;
+    height: 100%;
     top: 0;
     bottom: 0;
     overflow: hidden;
@@ -58,7 +64,14 @@ $cls: bpm-docs;
   }
 
   &-main {
-    padding-left: 172px;
+    left: 172px;
+    right: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: calc(100% - 172px);
+    height: 100%;
+    overflow: auto;
   }
 
   &-loading {

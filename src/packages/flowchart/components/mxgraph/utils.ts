@@ -1,7 +1,7 @@
 export function getBasePath(path?: string) {
-  return `./static${path ? '/' + path : ''}`;
+  return `./static/mxgraph${path ? '/' + path : ''}`;
 }
 
 export function getImageBasePath(path?: string) {
-  return `./static/images${path ? '/' + path : ''}`;
+  return `./static/mxgraph/images${path ? '/' + path : ''}`;
 }

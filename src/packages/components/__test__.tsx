@@ -1,7 +1,15 @@
 import React from 'react';
 
+import { Desktop, Mobile } from './index';
+
 const Test: React.FunctionComponent = () => {
-  return <div>Hello World!</div>;
+  return (
+    <div style={{padding: '8px'}}>
+      <div>
+        <Desktop.InputAddress.default />
+      </div>
+    </div>
+  );
 };
 
 export default Test;

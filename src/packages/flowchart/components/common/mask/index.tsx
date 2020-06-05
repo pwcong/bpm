@@ -6,7 +6,7 @@ import { IBaseProps } from '../../../types';
 
 import './style.scss';
 
-const cls = 'flowchart-mask';
+const cls = 'bpm-flowchart-mask';
 
 export interface IProps extends IBaseProps {
   children: (close: Function) => React.ReactElement;

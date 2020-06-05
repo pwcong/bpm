@@ -3,10 +3,11 @@ import React from 'react';
 import { withRouter, Route, Switch, RouteComponentProps } from 'react-router';
 import { HashRouter as Router } from 'react-router-dom';
 
-import classNames from 'classNames';
+import classnames from 'classnames';
 
 import packageJSON from '../package.json';
 
+import 'antd/dist/antd.less';
 import './docs.scss';
 
 export type IComponent = {
@@ -70,7 +71,7 @@ const App: React.FunctionComponent<IProps> = (props) => {
             const pathname = history.location.pathname;
             return (
               <div
-                className={classNames(navCls, {
+                className={classnames(navCls, {
                   [`${navCls}-active`]: pathname.substring(1) === name,
                 })}
                 key={navCls + '-' + i}

@@ -36,7 +36,7 @@ export const SVGMapper = {
   alignRight: SVGAlignRight,
 };
 
-const cls = 'flowchart-svg';
+const cls = 'bpm-flowchart-svg';
 
 const SVG: React.FunctionComponent<IProps> = (props) => {
   const { name, className, style } = props;

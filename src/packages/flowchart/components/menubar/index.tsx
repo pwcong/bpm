@@ -15,11 +15,15 @@ export interface IProps extends ICommonProps {
   isSub?: boolean;
 }
 
-export const baseCls = 'flowchart-menubar';
+export interface IForwardedProps extends IProps {
+  forwardedRef: any;
+}
+
+export const baseCls = 'bpm-flowchart-menubar';
 export const itemCls = `${baseCls}-item`;
 
-const Menubar: React.FunctionComponent<IProps> = (props) => {
-  const { editorUI, className, style, data, isSub } = props;
+const Menubar: React.FunctionComponent<IForwardedProps> = (props) => {
+  const { editorUI, className, style, data, isSub, forwardedRef } = props;
 
   React.useEffect(() => {
     // DO NOTHING
@@ -27,6 +31,7 @@ const Menubar: React.FunctionComponent<IProps> = (props) => {
 
   return (
     <div
+      ref={forwardedRef}
       className={classnames(baseCls, className, {
         [`${baseCls}-sub`]: !!isSub,
       })}
@@ -46,4 +51,8 @@ const Menubar: React.FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default Menubar;
+const ForwardedMenubar = React.forwardRef<any, IProps>((props, ref) => (
+  <Menubar {...props} forwardedRef={ref} />
+));
+
+export default ForwardedMenubar;

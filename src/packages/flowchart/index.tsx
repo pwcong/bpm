@@ -40,7 +40,7 @@ export interface IProps extends IBaseProps {
   wrappedComponentRef?: (ref: IWrappedComponentRefObject) => void
 }
 
-const cls = 'flowchart'
+const cls = 'bpm-flowchart'
 
 export const Chart: React.FunctionComponent<IProps> = props => {
   const {

@@ -13,7 +13,7 @@ export interface IProps extends ICommonProps {
   data: Array<ICell>;
 }
 
-const cls = 'flowchart-toolbar';
+const cls = 'bpm-flowchart-toolbar';
 const itemCls = `${cls}-item`;
 
 const Toolbar: React.FunctionComponent<IProps> = (props) => {

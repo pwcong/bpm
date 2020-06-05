@@ -23,7 +23,7 @@ export interface IProps extends ICommonProps {
   onToggleScreen?: (active: boolean) => void;
 }
 
-const cls = 'flowchart-sidebar';
+const cls = 'bpm-flowchart-sidebar';
 const itemCls = cls + '-item';
 
 const Zoomer: React.FunctionComponent<ICommonProps> = (props) => {

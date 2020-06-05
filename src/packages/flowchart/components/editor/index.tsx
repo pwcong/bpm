@@ -350,7 +350,7 @@ export default class Editor extends mxEventSource {
           );
           this.backgroundPageShape.redraw();
 
-          this.backgroundPageShape.node.className = 'flowchart-pager';
+          this.backgroundPageShape.node.className = 'bpm-flowchart-pager';
 
           // Adds listener for double click handling on background
           mxEvent.addListener(

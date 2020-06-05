@@ -1,7 +1,9 @@
 import React from 'react';
 
+import Flowchart from './index';
+
 const Test: React.FunctionComponent = () => {
-  return <div>Hello World!</div>;
+  return <Flowchart />;
 };
 
 export default Test;

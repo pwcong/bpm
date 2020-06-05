@@ -1,4 +1,4 @@
-.flowchart-menubar {
+.bpm-flowchart-menubar {
   display: flex;
   align-items: center;
   &-item {
@@ -17,7 +17,7 @@
     font-size: 12px;
     color: #666666;
     white-space: nowrap;
-    .flowchart-svg {
+    .bpm-flowchart-svg {
       font-size: 0;
     }
     &:hover {
@@ -32,7 +32,7 @@
     // padding: 4px 0;
     display: block;
 
-    .flowchart-svg-title {
+    .bpm-flowchart-svg-title {
       flex-flow: row nowrap;
 
       span {
@@ -40,7 +40,7 @@
       }
     }
 
-    .flowchart-svg {
+    .bpm-flowchart-svg {
       margin: 0;
       margin-right: 8px;
     }
@@ -51,7 +51,7 @@
     margin: 0;
     padding: 4px 8px;
 
-    &:hover .flowchart-svg-title > span {
+    &:hover .bpm-flowchart-svg-title > span {
       color: #4285f4 !important;
     }
   }

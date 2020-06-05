@@ -8,16 +8,12 @@ import EditorUI from '../../editorui';
 
 export interface IProps extends IBaseProps {
   editorUI: EditorUI;
-}
-
-export interface IMenubarItemProps extends IBaseProps {
-  editorUI: EditorUI;
   data: ICell;
 }
 
-export const cls = 'flowchart-cell-item';
+export const cls = 'bpm-flowchart-cell-item';
 
-export const Item: React.FunctionComponent<IMenubarItemProps> = (props) => {
+export const Item: React.FunctionComponent<IProps> = (props) => {
   const { className, style, editorUI, data } = props;
 
   const ref = React.useRef<HTMLDivElement | null>(null);
@@ -53,6 +49,7 @@ export const Item: React.FunctionComponent<IMenubarItemProps> = (props) => {
     listeners.forEach((l) =>
       editorUI.graph.addListener(l.name, listenersCallback[l.name])
     );
+
     return () => {
       data.onDestroy && data.onDestroy(editorUI, data);
 
